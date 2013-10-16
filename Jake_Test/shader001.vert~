@@ -1,0 +1,63 @@
+#version 330
+// saddleshaderinstanced.vert
+
+//////////////// Inputs to shader ////////////////
+// Uniforms:
+uniform mat4 modelMatrix;
+uniform mat4 rotationMatrix;
+uniform mat4 translationMatrix;
+uniform mat4 projectionMatrix;
+
+// Vertex buffers:
+in vec2 texCoord;
+in vec4 position;
+in vec4 normal;
+
+////////////////////////////////////////////////
+
+// Interpolated attributes:
+out vec4 modelPosition;
+out vec4 worldPosition;
+out vec4 fragmentNormal;
+out vec2 fragmentTexCoord;
+out vec4 eye;
+
+float[100] random = float[100](
+  0.22941921, 0.86974665, 0.63025023, 0.53344823, 0.92605449, 0.15893398,
+  0.71720808, 0.91609358, 0.06287015, 0.65819131, 0.78527135, 0.66050883,
+  0.52749455, 0.58936333, 0.14425044, 0.93098165, 0.17748417, 0.71002307,
+  0.21258869, 0.76642721, 0.85191458, 0.86833678, 0.57521905, 0.67769705,
+  0.17753544, 0.60255106, 0.25714909, 0.87651982, 0.46504487, 0.04526995,
+  0.18746420, 0.87039017, 0.06808052, 0.89037200, 0.35113898, 0.73920126,
+  0.47718857, 0.17993217, 0.92239066, 0.05666584, 0.97328650, 0.07030588,
+  0.61710809, 0.87260886, 0.42591789, 0.88371984, 0.52224254, 0.17815335,
+  0.87452556, 0.63680915, 0.96025272, 0.92886427, 0.26626784, 0.48020313,
+  0.26929113, 0.53246790, 0.60267593, 0.92029971, 0.24616718, 0.79499988,
+  0.76305777, 0.67481232, 0.87323335, 0.18994800, 0.73981309, 0.66413364,
+  0.22206478, 0.71020314, 0.24735275, 0.68191943, 0.42466538, 0.09695286,
+  0.55644507, 0.38972943, 0.06198400, 0.88376351, 0.57267604, 0.65193287,
+  0.38054037, 0.88985859, 0.06663280, 0.02453676, 0.18146497, 0.09167660,
+  0.36320082, 0.55995887, 0.26919268, 0.32120799, 0.14141340, 0.13152346,
+  0.93653593, 0.54416693, 0.35546899, 0.66815964, 0.52549747, 0.60255738,
+  0.88379960, 0.79214607, 0.39868022, 0.46279880);
+
+
+
+void main()
+{
+    fragmentTexCoord = texCoord;
+    vec4 pos = position;
+    float factor = 10.0;
+    pos.x += 2*factor*random[gl_InstanceID*3]-factor;
+    pos.y += 2*factor*random[gl_InstanceID*3+1]-factor;
+    pos.z += .2*factor*random[gl_InstanceID*3+2]-.1*factor;
+    mat4 viewMatrix = translationMatrix * rotationMatrix;
+    mat4 mvMatrix = viewMatrix * modelMatrix;
+    fragmentNormal = mvMatrix * normal;
+    worldPosition = mvMatrix * pos;
+    modelPosition = position;
+    eye = -normalize(vec4(worldPosition.xyz, 0.0));
+
+    // Magic variable to tell OpenGL where the vertex is:
+    gl_Position = projectionMatrix * worldPosition;
+}
