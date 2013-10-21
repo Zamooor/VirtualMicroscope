@@ -1,315 +1,409 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'mainWindow.ui'
+# Form implementation generated from reading ui file 'mainwindow.ui'
 #
-# Created: Tue Oct 15 18:40:00 2013
-#      by: PyQt5 UI code generator 5.1
+# Created: Sat Oct 19 18:39:35 2013
+#      by: PyQt4 UI code generator 4.10.3
 #
 # WARNING! All changes made in this file will be lost!
-
-from PyQt4 import QtCore, QtGui, QtWidgets
-from PyQt4.QtWidgets import QApplication, QDialog
+import sys
+import math
+from PyQt4 import QtCore, QtGui,QtOpenGL
 from results import Ui_results
+try:
+    _fromUtf8 = QtCore.QString.fromUtf8
+except AttributeError:
+    def _fromUtf8(s):
+        return s
 
+try:
+    _encoding = QtGui.QApplication.UnicodeUTF8
+    def _translate(context, text, disambig):
+        return QtGui.QApplication.translate(context, text, disambig, _encoding)
+except AttributeError:
+    def _translate(context, text, disambig):
+        return QtGui.QApplication.translate(context, text, disambig)
+
+try:
+    from OpenGL import GL
+except ImportError:
+    app = QtGui.QApplication(sys.argv)
+    QtGui.QMessageBox.critical(None, "OpenGL hellogl",
+            "PyOpenGL must be installed to run this example.")
+    sys.exit(1)
+
+	
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
-        MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(823, 665)
+        MainWindow.setObjectName(_fromUtf8("MainWindow"))
+        MainWindow.resize(999, 792)
+        self.centralWidget = QtGui.QWidget(MainWindow)
+        self.centralWidget.setObjectName(_fromUtf8("centralWidget"))
+        self.glWidget = GLWidget(self.centralWidget)
+
+        self.findButton = QtGui.QPushButton(self.centralWidget)
+        self.findButton.setGeometry(QtCore.QRect(870, 430, 91, 31))
+        self.findButton.setObjectName(_fromUtf8("findButton"))
         
-        self.centralWidget = QtWidgets.QWidget(MainWindow)
-        self.centralWidget.setObjectName("centralWidget")
+		
+        self.groupBox_mag = QtGui.QGroupBox(self.centralWidget)
+        self.groupBox_mag.setGeometry(QtCore.QRect(340, 430, 201, 271))
+        self.groupBox_mag.setTitle(_fromUtf8(""))
+        self.groupBox_mag.setObjectName(_fromUtf8("groupBox_mag"))
         
-        self.findButton = QtWidgets.QPushButton(self.centralWidget)
-        self.findButton.setGeometry(QtCore.QRect(730, 60, 51, 23))
-        self.findButton.setObjectName("findButton")
+        self.label = QtGui.QLabel(self.groupBox_mag)
+        self.label.setGeometry(QtCore.QRect(60, 240, 101, 20))
+        self.label.setObjectName(_fromUtf8("label"))
         
-        self.groupBox_2 = QtWidgets.QGroupBox(self.centralWidget)
-        self.groupBox_2.setGeometry(QtCore.QRect(20, 420, 211, 171))
-        self.groupBox_2.setTitle("")
-        self.groupBox_2.setObjectName("groupBox_2")
+        self.mag_dial = QtGui.QDial(self.groupBox_mag)
+        self.mag_dial.setGeometry(QtCore.QRect(60, 70, 91, 101))
+        self.mag_dial.setMinimum(0)
+        self.mag_dial.setMaximum(100)
+        self.mag_dial.setInvertedAppearance(False)
+        self.mag_dial.setInvertedControls(False)
+        self.mag_dial.setWrapping(True)
+        self.mag_dial.setNotchesVisible(False)
+        self.mag_dial.setObjectName(_fromUtf8("mag_dial"))
         
-        self.label = QtWidgets.QLabel(self.groupBox_2)
-        self.label.setGeometry(QtCore.QRect(60, 130, 101, 20))
-        self.label.setObjectName("label")
+        self.label_4 = QtGui.QLabel(self.groupBox_mag)
+        self.label_4.setGeometry(QtCore.QRect(90, 50, 66, 17))
+        self.label_4.setObjectName(_fromUtf8("label_4"))
+        self.label_5 = QtGui.QLabel(self.groupBox_mag)
+        self.label_5.setGeometry(QtCore.QRect(30, 110, 41, 17))
+        self.label_5.setObjectName(_fromUtf8("label_5"))
+        self.label_6 = QtGui.QLabel(self.groupBox_mag)
+        self.label_6.setGeometry(QtCore.QRect(150, 110, 71, 17))
+        self.label_6.setObjectName(_fromUtf8("label_6"))
+        self.label_7 = QtGui.QLabel(self.groupBox_mag)
+        self.label_7.setGeometry(QtCore.QRect(90, 170, 41, 17))
+        self.label_7.setObjectName(_fromUtf8("label_7"))
         
-        self.horizontalSlider = QtWidgets.QSlider(self.groupBox_2)
-        self.horizontalSlider.setGeometry(QtCore.QRect(30, 110, 160, 29))
-        self.horizontalSlider.setOrientation(QtCore.Qt.Horizontal)
-        self.horizontalSlider.setObjectName("horizontalSlider")
+        self.input_species = QtGui.QLineEdit(self.centralWidget)
+        self.input_species.setGeometry(QtCore.QRect(550, 430, 181, 31))
+        self.input_species.setText(_fromUtf8(""))
+        self.input_species.setObjectName(_fromUtf8("input_species"))
+               
+        self.submit_button = QtGui.QPushButton(self.centralWidget)
+        self.submit_button.setGeometry(QtCore.QRect(640, 660, 231, 41))
+        self.submit_button.setObjectName(_fromUtf8("submit_button"))
+		
+        self.groupBox_move = QtGui.QGroupBox(self.centralWidget)
+        self.groupBox_move.setGeometry(QtCore.QRect(30, 430, 291, 271))
+        self.groupBox_move.setTitle(_fromUtf8(""))
+        self.groupBox_move.setObjectName(_fromUtf8("groupBox_move"))
         
-        self.magnification = QtWidgets.QDial(self.groupBox_2)
-        self.magnification.setGeometry(QtCore.QRect(70, 10, 71, 81))
-        self.magnification.setMinimum(0)
-        self.magnification.setMaximum(100)
-        self.magnification.setInvertedAppearance(False)
-        self.magnification.setInvertedControls(False)
-        self.magnification.setWrapping(True)
-        self.magnification.setNotchesVisible(False)
-        self.magnification.setObjectName("magnification")
+        self.up_button = QtGui.QPushButton(self.groupBox_move)
+        self.up_button.setGeometry(QtCore.QRect(100, 40, 71, 28))
+        self.up_button.setObjectName(_fromUtf8("up_button"))
         
-        self.label_4 = QtWidgets.QLabel(self.groupBox_2)
-        self.label_4.setGeometry(QtCore.QRect(90, 0, 66, 17))
-        self.label_4.setObjectName("label_4")
+        self.pushButton_2 = QtGui.QPushButton(self.groupBox_move)
+        self.pushButton_2.setGeometry(QtCore.QRect(20, 100, 61, 28))
+        self.pushButton_2.setObjectName(_fromUtf8("pushButton_2"))
         
-        self.label_5 = QtWidgets.QLabel(self.groupBox_2)
-        self.label_5.setGeometry(QtCore.QRect(30, 40, 41, 17))
-        self.label_5.setObjectName("label_5")
+        self.right_button = QtGui.QPushButton(self.groupBox_move)
+        self.right_button.setGeometry(QtCore.QRect(192, 100, 71, 28))
+        self.right_button.setObjectName(_fromUtf8("right_button"))
         
-        self.label_6 = QtWidgets.QLabel(self.groupBox_2)
-        self.label_6.setGeometry(QtCore.QRect(150, 40, 71, 17))
-        self.label_6.setObjectName("label_6")
+        self.down_button = QtGui.QPushButton(self.groupBox_move)
+        self.down_button.setGeometry(QtCore.QRect(100, 160, 71, 28))
+        self.down_button.setObjectName(_fromUtf8("down_button"))
         
-        self.label_7 = QtWidgets.QLabel(self.groupBox_2)
-        self.label_7.setGeometry(QtCore.QRect(90, 80, 41, 17))
-        self.label_7.setObjectName("label_7")
+        self.label_2 = QtGui.QLabel(self.groupBox_move)
+        self.label_2.setGeometry(QtCore.QRect(120, 240, 71, 20))
+        self.label_2.setObjectName(_fromUtf8("label_2"))
         
-        self.searchBox = QtWidgets.QLineEdit(self.centralWidget)
-        self.searchBox.setGeometry(QtCore.QRect(510, 60, 201, 20))
-        self.searchBox.setText("")
-        self.searchBox.setObjectName("searchBox")
+        self.input_count = QtGui.QLineEdit(self.centralWidget)
+        self.input_count.setGeometry(QtCore.QRect(750, 430, 111, 31))
+        self.input_count.setText(_fromUtf8(""))
+        self.input_count.setObjectName(_fromUtf8("input_count"))
         
-        self.groupBox = QtWidgets.QGroupBox(self.centralWidget)
-        self.groupBox.setGeometry(QtCore.QRect(250, 420, 241, 171))
-        self.groupBox.setTitle("")
-        self.groupBox.setObjectName("groupBox")
+        self.ans_table = QtGui.QTableView(self.centralWidget)
+        self.ans_table.setGeometry(QtCore.QRect(550, 470, 411, 181))
+        self.ans_table.setObjectName(_fromUtf8("ans_table"))
         
-        self.label_3 = QtWidgets.QLabel(self.groupBox)
-        self.label_3.setGeometry(QtCore.QRect(150, 130, 81, 16))
-        self.label_3.setObjectName("label_3")
-        
-        self.coarseFocus = QtWidgets.QDial(self.groupBox)
-        self.coarseFocus.setGeometry(QtCore.QRect(20, 50, 81, 71))
-        self.coarseFocus.setWrapping(True)
-        self.coarseFocus.setObjectName("coarseFocus")
-        
-        self.fineFocus = QtWidgets.QDial(self.groupBox)
-        self.fineFocus.setGeometry(QtCore.QRect(130, 30, 100, 100))
-        self.fineFocus.setWrapping(True)
-        self.fineFocus.setObjectName("fineFocus")
-        
-        self.label_2 = QtWidgets.QLabel(self.groupBox)
-        self.label_2.setGeometry(QtCore.QRect(10, 130, 91, 16))
-        self.label_2.setObjectName("label_2")
-        
-        self.lightSelect = QtWidgets.QComboBox(self.groupBox)
-        self.lightSelect.setGeometry(QtCore.QRect(20, 10, 201, 22))
-        self.lightSelect.setAutoFillBackground(False)
-        self.lightSelect.setObjectName("lightSelect")
-        self.lightSelect.addItem("")
-        self.lightSelect.addItem("")
-        
-        self.microscope = QtWidgets.QGraphicsView(self.centralWidget)
-        self.microscope.setGeometry(QtCore.QRect(20, 20, 471, 381))
-        self.microscope.setObjectName("microscope")
-        
-        self.submitButton = QtWidgets.QPushButton(self.centralWidget)
-        self.submitButton.setGeometry(QtCore.QRect(500, 530, 301, 41))
-        self.submitButton.setObjectName("submitButton")
-        self.submitButton.clicked[bool].connect(self.test)
-       
-        self.sampleTitle = QtWidgets.QTextBrowser(self.centralWidget)
-        self.sampleTitle.setGeometry(QtCore.QRect(510, 20, 271, 31))
-        self.sampleTitle.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAsNeeded)
-        self.sampleTitle.setObjectName("sampleTitle")
-        
-        self.AlgaeLibrary = QtWidgets.QScrollArea(self.centralWidget)
-        self.AlgaeLibrary.setEnabled(False)
-        self.AlgaeLibrary.setGeometry(QtCore.QRect(500, 100, 301, 421))
-        self.AlgaeLibrary.setMouseTracking(True)
-        self.AlgaeLibrary.setFocusPolicy(QtCore.Qt.NoFocus)
-        self.AlgaeLibrary.setContextMenuPolicy(QtCore.Qt.NoContextMenu)
-        self.AlgaeLibrary.setAcceptDrops(False)
-        self.AlgaeLibrary.setToolTip("")
-        self.AlgaeLibrary.setAccessibleDescription("")
-        self.AlgaeLibrary.setAutoFillBackground(False)
-        self.AlgaeLibrary.setFrameShadow(QtWidgets.QFrame.Sunken)
-        self.AlgaeLibrary.setLineWidth(1)
-        self.AlgaeLibrary.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOn)
-        self.AlgaeLibrary.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
-        self.AlgaeLibrary.setWidgetResizable(True)
-        self.AlgaeLibrary.setObjectName("AlgaeLibrary")
-        
-        self.scrollAreaWidgetContents = QtWidgets.QWidget()
-        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 282, 419))
-        self.scrollAreaWidgetContents.setObjectName("scrollAreaWidgetContents")
-        
-        self.groupBox_7 = QtWidgets.QGroupBox(self.scrollAreaWidgetContents)
-        self.groupBox_7.setGeometry(QtCore.QRect(20, 10, 241, 91))
-        self.groupBox_7.setTitle("")
-        self.groupBox_7.setObjectName("groupBox_7")
-        
-        self.label_11 = QtWidgets.QLabel(self.groupBox_7)
-        self.label_11.setGeometry(QtCore.QRect(130, 10, 81, 16))
-        self.label_11.setAlignment(QtCore.Qt.AlignCenter)
-        self.label_11.setObjectName("label_11")
-        
-        self.lineEdit_6 = QtWidgets.QLineEdit(self.groupBox_7)
-        self.lineEdit_6.setGeometry(QtCore.QRect(120, 50, 111, 20))
-        self.lineEdit_6.setObjectName("lineEdit_6")
-        
-        self.label_12 = QtWidgets.QLabel(self.groupBox_7)
-        self.label_12.setGeometry(QtCore.QRect(120, 30, 81, 16))
-        self.label_12.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignVCenter)
-        self.label_12.setObjectName("label_12")
-        
-        self.graphicsView_7 = QtWidgets.QGraphicsView(self.groupBox_7)
-        self.graphicsView_7.setGeometry(QtCore.QRect(10, 10, 101, 71))
-        self.graphicsView_7.setObjectName("graphicsView_7")
-        
-        self.groupBox_9 = QtWidgets.QGroupBox(self.scrollAreaWidgetContents)
-        self.groupBox_9.setGeometry(QtCore.QRect(20, 120, 241, 91))
-        self.groupBox_9.setFocusPolicy(QtCore.Qt.StrongFocus)
-        self.groupBox_9.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
-        self.groupBox_9.setLayoutDirection(QtCore.Qt.LeftToRight)
-        self.groupBox_9.setTitle("")
-        self.groupBox_9.setObjectName("groupBox_9")
-        
-        self.label_15 = QtWidgets.QLabel(self.groupBox_9)
-        self.label_15.setGeometry(QtCore.QRect(130, 10, 81, 16))
-        self.label_15.setAlignment(QtCore.Qt.AlignCenter)
-        self.label_15.setObjectName("label_15")
-        
-        self.lineEdit_8 = QtWidgets.QLineEdit(self.groupBox_9)
-        self.lineEdit_8.setGeometry(QtCore.QRect(120, 50, 111, 20))
-        self.lineEdit_8.setObjectName("lineEdit_8")
-        
-        self.label_16 = QtWidgets.QLabel(self.groupBox_9)
-        self.label_16.setGeometry(QtCore.QRect(120, 30, 81, 16))
-        self.label_16.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignVCenter)
-        self.label_16.setObjectName("label_16")
-        
-        self.graphicsView_9 = QtWidgets.QGraphicsView(self.groupBox_9)
-        self.graphicsView_9.setGeometry(QtCore.QRect(10, 10, 101, 71))
-        self.graphicsView_9.setObjectName("graphicsView_9")
-        
-        self.groupBox_10 = QtWidgets.QGroupBox(self.scrollAreaWidgetContents)
-        self.groupBox_10.setGeometry(QtCore.QRect(20, 230, 241, 91))
-        self.groupBox_10.setTitle("")
-        self.groupBox_10.setObjectName("groupBox_10")
-        
-        self.label_17 = QtWidgets.QLabel(self.groupBox_10)
-        self.label_17.setGeometry(QtCore.QRect(130, 10, 81, 16))
-        self.label_17.setAlignment(QtCore.Qt.AlignCenter)
-        self.label_17.setObjectName("label_17")
-        
-        self.lineEdit_9 = QtWidgets.QLineEdit(self.groupBox_10)
-        self.lineEdit_9.setGeometry(QtCore.QRect(120, 50, 111, 20))
-        self.lineEdit_9.setObjectName("lineEdit_9")
-        
-        self.label_18 = QtWidgets.QLabel(self.groupBox_10)
-        self.label_18.setGeometry(QtCore.QRect(120, 30, 81, 16))
-        self.label_18.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignVCenter)
-        self.label_18.setObjectName("label_18")
-        
-        self.graphicsView_10 = QtWidgets.QGraphicsView(self.groupBox_10)
-        self.graphicsView_10.setGeometry(QtCore.QRect(10, 10, 101, 71))
-        self.graphicsView_10.setObjectName("graphicsView_10")
-        
-        self.groupBox_11 = QtWidgets.QGroupBox(self.scrollAreaWidgetContents)
-        self.groupBox_11.setGeometry(QtCore.QRect(20, 340, 241, 91))
-        self.groupBox_11.setTitle("")
-        self.groupBox_11.setObjectName("groupBox_11")
-        
-        self.label_19 = QtWidgets.QLabel(self.groupBox_11)
-        self.label_19.setGeometry(QtCore.QRect(130, 10, 81, 16))
-        self.label_19.setAlignment(QtCore.Qt.AlignCenter)
-        self.label_19.setObjectName("label_19")
-        
-        self.lineEdit_10 = QtWidgets.QLineEdit(self.groupBox_11)
-        self.lineEdit_10.setGeometry(QtCore.QRect(120, 50, 111, 20))
-        self.lineEdit_10.setObjectName("lineEdit_10")
-        
-        self.label_20 = QtWidgets.QLabel(self.groupBox_11)
-        self.label_20.setGeometry(QtCore.QRect(120, 30, 81, 16))
-        self.label_20.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignVCenter)
-        self.label_20.setObjectName("label_20")
-        
-        self.graphicsView_11 = QtWidgets.QGraphicsView(self.groupBox_11)
-        self.graphicsView_11.setGeometry(QtCore.QRect(10, 10, 101, 71))
-        self.graphicsView_11.setObjectName("graphicsView_11")
-        
-        self.AlgaeLibrary.setWidget(self.scrollAreaWidgetContents)
-       
         MainWindow.setCentralWidget(self.centralWidget)
-        self.menuBar = QtWidgets.QMenuBar(MainWindow)
-        self.menuBar.setGeometry(QtCore.QRect(0, 0, 823, 21))
-        self.menuBar.setObjectName("menuBar")
-        self.menuFile = QtWidgets.QMenu(self.menuBar)
-        self.menuFile.setObjectName("menuFile")
-        self.menuTools = QtWidgets.QMenu(self.menuBar)
-        self.menuTools.setObjectName("menuTools")
+        
+        self.menuBar = QtGui.QMenuBar(MainWindow)
+        self.menuBar.setGeometry(QtCore.QRect(0, 0, 999, 26))
+        self.menuBar.setObjectName(_fromUtf8("menuBar"))
+        
+        self.menuFile = QtGui.QMenu(self.menuBar)
+        self.menuFile.setObjectName(_fromUtf8("menuFile"))
+        
+        self.menuTools = QtGui.QMenu(self.menuBar)
+        self.menuTools.setObjectName(_fromUtf8("menuTools"))
+        
         MainWindow.setMenuBar(self.menuBar)
-        self.mainToolBar = QtWidgets.QToolBar(MainWindow)
-        self.mainToolBar.setObjectName("mainToolBar")
+        
+        self.mainToolBar = QtGui.QToolBar(MainWindow)
+        self.mainToolBar.setObjectName(_fromUtf8("mainToolBar"))
+        
         MainWindow.addToolBar(QtCore.Qt.TopToolBarArea, self.mainToolBar)
-        self.statusBar = QtWidgets.QStatusBar(MainWindow)
-        self.statusBar.setObjectName("statusBar")
+        
+        self.statusBar = QtGui.QStatusBar(MainWindow)
+        self.statusBar.setObjectName(_fromUtf8("statusBar"))
+        
         MainWindow.setStatusBar(self.statusBar)
-        self.actionOpen = QtWidgets.QAction(MainWindow)
-        self.actionOpen.setObjectName("actionOpen")
-        self.actionSave = QtWidgets.QAction(MainWindow)
-        self.actionSave.setObjectName("actionSave")
-        self.actionAbout = QtWidgets.QAction(MainWindow)
-        self.actionAbout.setObjectName("actionAbout")
-        self.actionControls = QtWidgets.QAction(MainWindow)
-        self.actionControls.setObjectName("actionControls")
-        self.actionImport_Sample = QtWidgets.QAction(MainWindow)
-        self.actionImport_Sample.setObjectName("actionImport_Sample")
-        self.actionCreate_New_Sample = QtWidgets.QAction(MainWindow)
-        self.actionCreate_New_Sample.setObjectName("actionCreate_New_Sample")
+        
+        self.actionOpen = QtGui.QAction(MainWindow)
+        self.actionOpen.setObjectName(_fromUtf8("actionOpen"))
+        
+        self.actionSave = QtGui.QAction(MainWindow)
+        self.actionSave.setObjectName(_fromUtf8("actionSave"))
+        
+        self.actionAbout = QtGui.QAction(MainWindow)
+        self.actionAbout.setObjectName(_fromUtf8("actionAbout"))
+        
+        self.actionControls = QtGui.QAction(MainWindow)
+        self.actionControls.setObjectName(_fromUtf8("actionControls"))
+        
+        self.actionImport_Sample = QtGui.QAction(MainWindow)
+        self.actionImport_Sample.setObjectName(_fromUtf8("actionImport_Sample"))
+        
+        self.actionCreate_New_Sample = QtGui.QAction(MainWindow)
+        self.actionCreate_New_Sample.setObjectName(_fromUtf8("actionCreate_New_Sample"))
+        
         self.menuFile.addAction(self.actionOpen)
         self.menuFile.addAction(self.actionSave)
         self.menuFile.addSeparator()
         self.menuFile.addAction(self.actionImport_Sample)
         self.menuFile.addAction(self.actionCreate_New_Sample)
+        
         self.menuTools.addAction(self.actionAbout)
         self.menuTools.addAction(self.actionControls)
+        
         self.menuBar.addAction(self.menuFile.menuAction())
         self.menuBar.addAction(self.menuTools.menuAction())
-        
         self.resultsDialog=Ui_results()
+        self.submit_button.clicked.connect(self.openResults)
+
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
-    def test(self,val):
-        ui=QDialog();
-        self.resultsDialog.setupUi(ui)
-        ui.show()
-        self.resultsDialog.exec_();
 
     def retranslateUi(self, MainWindow):
-        _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
-        self.findButton.setText(_translate("MainWindow", "Find"))
-        self.label.setText(_translate("MainWindow", "Magnification"))
-        self.label_4.setText(_translate("MainWindow", "200X"))
-        self.label_5.setText(_translate("MainWindow", "100X"))
-        self.label_6.setText(_translate("MainWindow", "400X"))
-        self.label_7.setText(_translate("MainWindow", "600X"))
-        self.label_3.setText(_translate("MainWindow", "Fine Focus"))
-        self.label_2.setText(_translate("MainWindow", "Coarse Focus"))
-        self.lightSelect.setItemText(0, _translate("MainWindow", "Natural  Light"))
-        self.lightSelect.setItemText(1, _translate("MainWindow", "Solar"))
-        self.submitButton.setText(_translate("MainWindow", "Submit"))
-        self.sampleTitle.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-"p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:\'MS Shell Dlg 2\'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"
-"<p align=\"center\" style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;\"><br /></p></body></html>"))
-        self.label_11.setText(_translate("MainWindow", "Name"))
-        self.label_12.setText(_translate("MainWindow", "Count:"))
-        self.label_15.setText(_translate("MainWindow", "Name"))
-        self.label_16.setText(_translate("MainWindow", "Count:"))
-        self.label_17.setText(_translate("MainWindow", "Name"))
-        self.label_18.setText(_translate("MainWindow", "Count:"))
-        self.label_19.setText(_translate("MainWindow", "Name"))
-        self.label_20.setText(_translate("MainWindow", "Count:"))
-        self.menuFile.setTitle(_translate("MainWindow", "File"))
-        self.menuTools.setTitle(_translate("MainWindow", "Help"))
-        self.actionOpen.setText(_translate("MainWindow", "Open"))
-        self.actionSave.setText(_translate("MainWindow", "Save"))
-        self.actionAbout.setText(_translate("MainWindow", "About..."))
-        self.actionControls.setText(_translate("MainWindow", "Controls"))
-        self.actionImport_Sample.setText(_translate("MainWindow", "Import Existing Sample"))
-        self.actionCreate_New_Sample.setText(_translate("MainWindow", "Create New Sample"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow", None))
+        self.findButton.setText(_translate("MainWindow", "Add", None))
+        self.label.setText(_translate("MainWindow", "Magnification", None))
+        self.label_4.setText(_translate("MainWindow", "200X", None))
+        self.label_5.setText(_translate("MainWindow", "100X", None))
+        self.label_6.setText(_translate("MainWindow", "400X", None))
+        self.label_7.setText(_translate("MainWindow", "600X", None))
+        self.submit_button.setText(_translate("MainWindow", "Submit", None))
+        self.up_button.setText(_translate("MainWindow", "UP", None)) 
+        self.pushButton_2.setText(_translate("MainWindow", "Left", None))
+        self.right_button.setText(_translate("MainWindow", "Right", None))
+        self.down_button.setText(_translate("MainWindow", "Down", None))
+        self.label_2.setText(_translate("MainWindow", "Movement", None))
+        self.menuFile.setTitle(_translate("MainWindow", "File", None))
+        self.menuTools.setTitle(_translate("MainWindow", "Help", None))
+        self.actionOpen.setText(_translate("MainWindow", "Open", None))
+        self.actionSave.setText(_translate("MainWindow", "Save", None))
+        self.actionAbout.setText(_translate("MainWindow", "About...", None))
+        self.actionControls.setText(_translate("MainWindow", "Controls", None))
+        self.actionImport_Sample.setText(_translate("MainWindow", "Import Existing Sample", None))
+        self.actionCreate_New_Sample.setText(_translate("MainWindow", "Create New Sample", None))
 
+    def openResults(self,val):
+        ui=QtGui.QDialog();
+        self.resultsDialog.setupUi(ui)
+        ui.show()
+        ui.exec_()         
+    
+            
+            
+            
+class Window(QtGui.QMainWindow):
+    def __init__(self):
+        super(Window, self).__init__()
+        self.ui = Ui_MainWindow()
+       
+        self.ui.setupUi(self)
+
+    def keyPressEvent(self, ev):
+        print "key press"
+    
+   
+       
+  
+            		
+class GLWidget(QtOpenGL.QGLWidget):
+    xRotationChanged = QtCore.pyqtSignal(int)
+    yRotationChanged = QtCore.pyqtSignal(int)
+    zRotationChanged = QtCore.pyqtSignal(int)
+
+    def __init__(self, parent=None):
+        super(GLWidget, self).__init__(parent)
+
+        self.object = 0
+        self.xRot = 0
+        self.yRot = 0
+        self.zRot = 0
+
+        self.lastPos = QtCore.QPoint()
+
+        self.trolltechGreen = QtGui.QColor.fromCmykF(0.40, 0.0, 1.0, 0.0)
+        self.trolltechPurple = QtGui.QColor.fromCmykF(0.39, 0.39, 0.0, 0.0)
+
+    def minimumSizeHint(self):
+        return QtCore.QSize(50, 50)
+
+    def sizeHint(self):
+        return QtCore.QSize(1000, 400)
+
+    def setXRotation(self, angle):
+        angle = self.normalizeAngle(angle)
+        if angle != self.xRot:
+            self.xRot = angle
+            self.xRotationChanged.emit(angle)
+            self.updateGL()
+
+    def setYRotation(self, angle):
+        angle = self.normalizeAngle(angle)
+        if angle != self.yRot:
+            self.yRot = angle
+            self.yRotationChanged.emit(angle)
+            self.updateGL()
+
+    def setZRotation(self, angle):
+        angle = self.normalizeAngle(angle)
+        if angle != self.zRot:
+            self.zRot = angle
+            self.zRotationChanged.emit(angle)
+            self.updateGL()
+
+    def initializeGL(self):
+        self.qglClearColor(self.trolltechPurple.dark())
+        self.object = self.makeObject()
+        GL.glShadeModel(GL.GL_FLAT)
+        GL.glEnable(GL.GL_DEPTH_TEST)
+        GL.glEnable(GL.GL_CULL_FACE)
+
+    def paintGL(self):
+        GL.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT)
+        GL.glLoadIdentity()
+        GL.glTranslated(0.0, 0.0, -10.0)
+        GL.glRotated(self.xRot / 16.0, 1.0, 0.0, 0.0)
+        GL.glRotated(self.yRot / 16.0, 0.0, 1.0, 0.0)
+        GL.glRotated(self.zRot / 16.0, 0.0, 0.0, 1.0)
+        GL.glCallList(self.object)
+
+    def resizeGL(self, width, height):
+        side = min(width, height)
+        if side < 0:
+            return
+
+        GL.glViewport((width - side) / 2, (height - side) / 2, side, side)
+
+        GL.glMatrixMode(GL.GL_PROJECTION)
+        GL.glLoadIdentity()
+        GL.glOrtho(-0.5, +0.5, +0.5, -0.5, 4.0, 15.0)
+        GL.glMatrixMode(GL.GL_MODELVIEW)
+
+    def mousePressEvent(self, event):
+        self.lastPos = event.pos()
+
+    def mouseMoveEvent(self, event):
+        dx = event.x() - self.lastPos.x()
+        dy = event.y() - self.lastPos.y()
+
+        if event.buttons() & QtCore.Qt.LeftButton:
+            self.setXRotation(self.xRot + 8 * dy)
+            self.setYRotation(self.yRot + 8 * dx)
+        elif event.buttons() & QtCore.Qt.RightButton:
+            self.setXRotation(self.xRot + 8 * dy)
+            self.setZRotation(self.zRot + 8 * dx)
+
+        self.lastPos = event.pos()
+        
+    
+
+    def makeObject(self):
+        genList = GL.glGenLists(1)
+        GL.glNewList(genList, GL.GL_COMPILE)
+
+        GL.glBegin(GL.GL_QUADS)
+
+        x1 = +0.06
+        y1 = -0.14
+        x2 = +0.14
+        y2 = -0.06
+        x3 = +0.08
+        y3 = +0.00
+        x4 = +0.30
+        y4 = +0.22
+
+        self.quad(x1, y1, x2, y2, y2, x2, y1, x1)
+        self.quad(x3, y3, x4, y4, y4, x4, y3, x3)
+
+        self.extrude(x1, y1, x2, y2)
+        self.extrude(x2, y2, y2, x2)
+        self.extrude(y2, x2, y1, x1)
+        self.extrude(y1, x1, x1, y1)
+        self.extrude(x3, y3, x4, y4)
+        self.extrude(x4, y4, y4, x4)
+        self.extrude(y4, x4, y3, x3)
+
+        NumSectors = 200
+
+        for i in range(NumSectors):
+            angle1 = (i * 2 * math.pi) / NumSectors
+            x5 = 0.30 * math.sin(angle1)
+            y5 = 0.30 * math.cos(angle1)
+            x6 = 0.20 * math.sin(angle1)
+            y6 = 0.20 * math.cos(angle1)
+
+            angle2 = ((i + 1) * 2 * math.pi) / NumSectors
+            x7 = 0.20 * math.sin(angle2)
+            y7 = 0.20 * math.cos(angle2)
+            x8 = 0.30 * math.sin(angle2)
+            y8 = 0.30 * math.cos(angle2)
+
+            self.quad(x5, y5, x6, y6, x7, y7, x8, y8)
+
+            self.extrude(x6, y6, x7, y7)
+            self.extrude(x8, y8, x5, y5)
+
+        GL.glEnd()
+        GL.glEndList()
+
+        return genList
+
+    def quad(self, x1, y1, x2, y2, x3, y3, x4, y4):
+        self.qglColor(self.trolltechGreen)
+
+        GL.glVertex3d(x1, y1, -0.05)
+        GL.glVertex3d(x2, y2, -0.05)
+        GL.glVertex3d(x3, y3, -0.05)
+        GL.glVertex3d(x4, y4, -0.05)
+
+        GL.glVertex3d(x4, y4, +0.05)
+        GL.glVertex3d(x3, y3, +0.05)
+        GL.glVertex3d(x2, y2, +0.05)
+        GL.glVertex3d(x1, y1, +0.05)
+
+    def extrude(self, x1, y1, x2, y2):
+        self.qglColor(self.trolltechGreen.dark(250 + int(100 * x1)))
+
+        GL.glVertex3d(x1, y1, +0.05)
+        GL.glVertex3d(x2, y2, +0.05)
+        GL.glVertex3d(x2, y2, -0.05)
+        GL.glVertex3d(x1, y1, -0.05)
+
+    def normalizeAngle(self, angle):
+        while angle < 0:
+            angle += 360 * 16
+        while angle > 360 * 16:
+            angle -= 360 * 16
+        return angle
+		
+
+		
+if __name__ == '__main__':
+
+    app = QtGui.QApplication(sys.argv)
+    mwindow = Window()
+
+    mwindow.show()
+    sys.exit(app.exec_())
+		
