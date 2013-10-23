@@ -10,11 +10,15 @@ import math
 from random import randint
 
 # Data
-Total_Algae_Types = 2
+Name_Array = [
+    "Type 1",
+    "Type 2",
+    "type 3"]
+Total_Algae_Types = len(Name_Array)
 Default_Min_Count = 0
 Default_Max_Count = 10
 
-Name_Array = ["" for x in xrange(Total_Algae_Types)]
+#Name_Array = ["NULL" for x in xrange(Total_Algae_Types)]
 Total_Count_Array = [0 for x in xrange(Total_Algae_Types)]
 Min_Count_Array = [Default_Min_Count for x in xrange(Total_Algae_Types)]
 Max_Count_Array = [Default_Max_Count for x in xrange(Total_Algae_Types)]
@@ -44,17 +48,25 @@ def Set_Min_Count(ID, Min):
 def Set_Max_Count(ID, Max):
     Max_Count_Array[ID] = Max
 
+def Generate_Sample():
+    for x in xrange(Total_Algae_Types):
+        Total_Count_Array[x] = randint(Min_Count_Array[x], Max_Count_Array[x])
+
 # Sample Data
-Name_Array = [
-    "Type 1",
-    "Type 2"]
 Min_Count_Array[1] = 3
-Max_Count_Array[1] = 20
+Max_Count_Array[0] = 20
 
 
 # Default program
 if __name__ == '__main__':
     print "Printing tables:"
+    for x in xrange(Total_Algae_Types):
+        print '\n[{}] {}'.format(x, Name_Array[x])
+        print 'Count: {}'.format(Total_Count_Array[x])
+        print 'Biomass: {}'.format(Total_Mass_Array[x])
+
+    print "Generating sample data:"
+    Generate_Sample()
     for x in xrange(Total_Algae_Types):
         print '\n[{}] {}'.format(x, Name_Array[x])
         print 'Count: {}'.format(Total_Count_Array[x])
