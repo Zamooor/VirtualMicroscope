@@ -64,6 +64,7 @@ class Ui_MainWindow(object):
         self.mag_dial.setWrapping(True)
         self.mag_dial.setNotchesVisible(False)
         self.mag_dial.setObjectName(_fromUtf8("mag_dial"))
+        self.mag_dial.keyPressEvent = lambda event: event.ignore()
         
         self.label_4 = QtGui.QLabel(self.groupBox_mag)
         self.label_4.setGeometry(QtCore.QRect(90, 50, 66, 17))
@@ -208,7 +209,7 @@ class Ui_MainWindow(object):
         ui=QtGui.QDialog();
         self.resultsDialog.setupUi(ui)
         ui.show()
-        ui.exec_()         
+        ui.exec_()
     
             
             
@@ -220,8 +221,7 @@ class Window(QtGui.QMainWindow):
        
         self.ui.setupUi(self)
 
-    def keyPressEvent(self, ev):
-        print "key press"
+    
     
    
        
@@ -231,6 +231,9 @@ class GLWidget(QtOpenGL.QGLWidget):
     xRotationChanged = QtCore.pyqtSignal(int)
     yRotationChanged = QtCore.pyqtSignal(int)
     zRotationChanged = QtCore.pyqtSignal(int)
+    x = 0
+    y = 0
+    z = -10
 
     def __init__(self, parent=None):
         super(GLWidget, self).__init__(parent)
@@ -282,7 +285,7 @@ class GLWidget(QtOpenGL.QGLWidget):
     def paintGL(self):
         GL.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT)
         GL.glLoadIdentity()
-        GL.glTranslated(0.0, 0.0, -10.0)
+        GL.glTranslated(self.x,self.y,self.z)
         GL.glRotated(self.xRot / 16.0, 1.0, 0.0, 0.0)
         GL.glRotated(self.yRot / 16.0, 0.0, 1.0, 0.0)
         GL.glRotated(self.zRot / 16.0, 0.0, 0.0, 1.0)
@@ -396,6 +399,15 @@ class GLWidget(QtOpenGL.QGLWidget):
         while angle > 360 * 16:
             angle -= 360 * 16
         return angle
+
+    def moveRight(self):
+        self.x = self.x + 4
+        self.updateGL()
+
+    def keyPressEvent(self, event):
+        print "asdf"
+        if(QtCore.Qt.Right):
+            self.moveRight()
 		
 
 		
