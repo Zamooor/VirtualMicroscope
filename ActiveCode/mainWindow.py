@@ -91,6 +91,7 @@ class Ui_MainWindow(object):
         self.groupBox_move.setGeometry(QtCore.QRect(30, 430, 291, 271))
         self.groupBox_move.setTitle(_fromUtf8(""))
         self.groupBox_move.setObjectName(_fromUtf8("groupBox_move"))
+        self.groupBox_move.keyPressEvent = lambda event: event.ignore()
         
         self.up_button = QtGui.QPushButton(self.groupBox_move)
         self.up_button.setGeometry(QtCore.QRect(100, 40, 71, 28))
@@ -156,7 +157,7 @@ class Ui_MainWindow(object):
         
         self.actionControls = QtGui.QAction(MainWindow)
         self.actionControls.setObjectName(_fromUtf8("actionControls"))
-        
+        .5
         self.actionImport_Sample = QtGui.QAction(MainWindow)
         self.actionImport_Sample.setObjectName(_fromUtf8("actionImport_Sample"))
         
@@ -175,8 +176,13 @@ class Ui_MainWindow(object):
         self.menuBar.addAction(self.menuFile.menuAction())
         self.menuBar.addAction(self.menuTools.menuAction())
         self.resultsDialog=Ui_results()
+        
         self.submit_button.clicked.connect(self.openResults)
-
+        
+        self.right_button.clicked.connect(self.RTrans)
+        self.pushButton_2.clicked.connect(self.LTrans)
+        self.up_button.clicked.connect(self.UTrans)
+        self.down_button.clicked.connect(self.DTrans)
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
@@ -208,7 +214,19 @@ class Ui_MainWindow(object):
         ui=QtGui.QDialog();
         self.resultsDialog.setupUi(ui)
         ui.show()
-        ui.exec_()         
+        ui.exec_()
+
+    def RTrans(self):
+        self.glWidget.setXTrans(.5)
+
+    def LTrans(self):
+        self.glWidget.setXTrans(-.5)
+
+    def DTrans(self):
+        self.glWidget.setYTrans(.5)
+
+    def UTrans(self):
+        self.glWidget.setYTrans(-.5)    
     
             
             
@@ -359,14 +377,14 @@ class GLWidget(QtOpenGL.QGLWidget):
         dx = event.x() - self.lastPos.x()
         dy = event.y() - self.lastPos.y()
         
-        if event.buttons() & QtCore.Qt.LeftButton:
-            self.setXRotation(self.xRot + 8 * dy)
-            self.setYRotation(self.yRot + 8 * dx)
-        elif event.buttons() & QtCore.Qt.RightButton:
-            self.setXRotation(self.xRot + 8 * dy)
-            self.setZRotation(self.zRot + 8 * dx)
-
-        self.lastPos = event.pos()
+##        if event.buttons() & QtCore.Qt.LeftButton:
+##            self.setXRotation(self.xRot + 8 * dy)
+##            self.setYRotation(self.yRot + 8 * dx)
+##        elif event.buttons() & QtCore.Qt.RightButton:
+##            self.setXRotation(self.xRot + 8 * dy)
+##            self.setZRotation(self.zRot + 8 * dx)
+##
+##        self.lastPos = event.pos()
         
     
 
