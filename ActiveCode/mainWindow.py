@@ -28,8 +28,7 @@ try:
     from OpenGL import GL
 except ImportError:
     app = QtGui.QApplication(sys.argv)
-    QtGui.QMessageBox.critical(None, "OpenGL hellogl",
-            "PyOpenGL must be installed to run this example.")
+    QtGui.QMessageBox.critical(None, "OpenGL")
     sys.exit(1)
 
 	
@@ -64,6 +63,7 @@ class Ui_MainWindow(object):
         self.mag_dial.setWrapping(True)
         self.mag_dial.setNotchesVisible(False)
         self.mag_dial.setObjectName(_fromUtf8("mag_dial"))
+        self.mag_dial.keyPressEvent = lambda event: event.ignore()
         
         self.label_4 = QtGui.QLabel(self.groupBox_mag)
         self.label_4.setGeometry(QtCore.QRect(90, 50, 66, 17))
@@ -219,16 +219,43 @@ class Window(QtGui.QMainWindow):
         self.ui = Ui_MainWindow()
        
         self.ui.setupUi(self)
-
+    #detect arrow keys and translates the sample accordingly
     def keyPressEvent(self, ev):
-        print "Window key press"
-        if ev.key() == QtCore.Qt.Key_Escape:
-            self.close()
-        elif ev.key() == QtCore.Qt.Key_Left:
-            print "Left"
-            self.ui.keyPressEvent(self.ui, event)
+         if ev.key() == QtCore.Qt.Key_Right:
+            self.ui.glWidget.setXTrans(0.5)
+         elif ev.key() == QtCore.Qt.Key_Left:
+            self.ui.glWidget.setXTrans(-0.5)
+         elif ev.key() == QtCore.Qt.Key_Down:
+            self.ui.glWidget.setYTrans(0.5)
+         elif ev.key() == QtCore.Qt.Key_Up:
+            self.ui.glWidget.setYTrans(-0.5)
+    
    
-       
+class algae(object):
+    #position:(x,y)
+    #size: number insdicating the size of the plane to represent the algae
+    #texture:pass name of image to be uses as texture?
+    def __init__(self, position, size):
+        self.position = position
+        self.size = size
+        #self.texture=texture
+
+    def makeObject(self):
+        genList = GL.glGenLists(1)
+        GL.glNewList(genList, GL.GL_COMPILE)
+
+        GL.glBegin(GL.GL_QUADS)
+
+        x1 = +0.08
+        y1 = -0.15
+        x2 = +0.15
+        y2 = -0.08
+
+        self.quad(x1, y1, x2, y2, y2, x2, y1, x1)
+        GL.glEnd()
+        GL.glEndList()
+
+        return genList          
   
             		
 class GLWidget(QtOpenGL.QGLWidget):
@@ -243,10 +270,14 @@ class GLWidget(QtOpenGL.QGLWidget):
         self.xRot = 0
         self.yRot = 0
         self.zRot = 0
+        self.xTrans = 0
+        self.yTrans = 0
+
+        self.algae = []
 
         self.lastPos = QtCore.QPoint()
 
-        self.trolltechGreen = QtGui.QColor.fromCmykF(0.40, 0.0, 1.0, 0.0)
+        self.trolltechGreen = QtGui.QColor.fromCmykF(0.450, 0.0, 1.0, 0.0)
         self.trolltechPurple = QtGui.QColor.fromCmykF(0.39, 0.39, 0.0, 0.0)
 
     def minimumSizeHint(self):
@@ -274,9 +305,24 @@ class GLWidget(QtOpenGL.QGLWidget):
         if angle != self.zRot:
             self.zRot = angle
             self.zRotationChanged.emit(angle)
+            self.updateGL() #calls glDraw() which calls paintGl()
+
+    def setXTrans(self, trans):
+        trans = trans+self.xTrans;
+        if trans != self.xTrans:
+            self.xTrans = trans
+            #self.yRotationChanged.emit(angle)
             self.updateGL()
 
+    def setYTrans(self, trans):
+        trans = trans+self.yTrans;
+        if trans != self.yTrans:
+            self.yTrans = trans
+            #self.yRotationChanged.emit(angle)
+            self.updateGL()           
+
     def initializeGL(self):
+        #print "Iniialize GLcalled"
         self.qglClearColor(self.trolltechPurple.dark())
         self.object = self.makeObject()
         GL.glShadeModel(GL.GL_FLAT)
@@ -284,9 +330,10 @@ class GLWidget(QtOpenGL.QGLWidget):
         GL.glEnable(GL.GL_CULL_FACE)
 
     def paintGL(self):
+        #print "PaintGl called"
         GL.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT)
         GL.glLoadIdentity()
-        GL.glTranslated(0.0, 0.0, -10.0)
+        GL.glTranslated(self.xTrans, self.yTrans, -10.0)
         GL.glRotated(self.xRot / 16.0, 1.0, 0.0, 0.0)
         GL.glRotated(self.yRot / 16.0, 0.0, 1.0, 0.0)
         GL.glRotated(self.zRot / 16.0, 0.0, 0.0, 1.0)
@@ -296,12 +343,13 @@ class GLWidget(QtOpenGL.QGLWidget):
         side = min(width, height)
         if side < 0:
             return
-
-        GL.glViewport((width - side) / 2, (height - side) / 2, side, side)
+        
+        GL.glViewport(0,0,width,height)
 
         GL.glMatrixMode(GL.GL_PROJECTION)
         GL.glLoadIdentity()
-        GL.glOrtho(-0.5, +0.5, +0.5, -0.5, 4.0, 15.0)
+        #clipping? 
+        GL.glOrtho(-1, +1, +0.5, -0.5, 4.0, 15.0)
         GL.glMatrixMode(GL.GL_MODELVIEW)
 
     def mousePressEvent(self, event):
@@ -310,7 +358,7 @@ class GLWidget(QtOpenGL.QGLWidget):
     def mouseMoveEvent(self, event):
         dx = event.x() - self.lastPos.x()
         dy = event.y() - self.lastPos.y()
-
+        
         if event.buttons() & QtCore.Qt.LeftButton:
             self.setXRotation(self.xRot + 8 * dy)
             self.setYRotation(self.yRot + 8 * dx)
@@ -319,14 +367,8 @@ class GLWidget(QtOpenGL.QGLWidget):
             self.setZRotation(self.zRot + 8 * dx)
 
         self.lastPos = event.pos()
-
-    def keyPressEvent(self, event):
-        print "key press"
-        if event.key() == QtCore.Qt.Key_Escape:
-            self.close()
-        elif event.key() == QtCore.Qt.Key_Left:
-            self.setXRotation(self.xRot + 8 * 34)
-            self.setZRotation(self.zRot + 8 * 400)
+        
+    
 
     def makeObject(self):
         genList = GL.glGenLists(1)
@@ -334,45 +376,14 @@ class GLWidget(QtOpenGL.QGLWidget):
 
         GL.glBegin(GL.GL_QUADS)
 
-        x1 = +0.06
-        y1 = -0.14
-        x2 = +0.14
-        y2 = -0.06
-        x3 = +0.08
-        y3 = +0.00
-        x4 = +0.30
-        y4 = +0.22
+        x1 = +0.08
+        y1 = -0.15
+        x2 = +0.15
+        y2 = -0.08
 
         self.quad(x1, y1, x2, y2, y2, x2, y1, x1)
-        self.quad(x3, y3, x4, y4, y4, x4, y3, x3)
-
-        self.extrude(x1, y1, x2, y2)
-        self.extrude(x2, y2, y2, x2)
-        self.extrude(y2, x2, y1, x1)
-        self.extrude(y1, x1, x1, y1)
-        self.extrude(x3, y3, x4, y4)
-        self.extrude(x4, y4, y4, x4)
-        self.extrude(y4, x4, y3, x3)
-
-        NumSectors = 200
-
-        for i in range(NumSectors):
-            angle1 = (i * 2 * math.pi) / NumSectors
-            x5 = 0.30 * math.sin(angle1)
-            y5 = 0.30 * math.cos(angle1)
-            x6 = 0.20 * math.sin(angle1)
-            y6 = 0.20 * math.cos(angle1)
-
-            angle2 = ((i + 1) * 2 * math.pi) / NumSectors
-            x7 = 0.20 * math.sin(angle2)
-            y7 = 0.20 * math.cos(angle2)
-            x8 = 0.30 * math.sin(angle2)
-            y8 = 0.30 * math.cos(angle2)
-
-            self.quad(x5, y5, x6, y6, x7, y7, x8, y8)
-
-            self.extrude(x6, y6, x7, y7)
-            self.extrude(x8, y8, x5, y5)
+                  
+        
 
         GL.glEnd()
         GL.glEndList()
@@ -392,13 +403,6 @@ class GLWidget(QtOpenGL.QGLWidget):
         GL.glVertex3d(x2, y2, +0.05)
         GL.glVertex3d(x1, y1, +0.05)
 
-    def extrude(self, x1, y1, x2, y2):
-        self.qglColor(self.trolltechGreen.dark(250 + int(100 * x1)))
-
-        GL.glVertex3d(x1, y1, +0.05)
-        GL.glVertex3d(x2, y2, +0.05)
-        GL.glVertex3d(x2, y2, -0.05)
-        GL.glVertex3d(x1, y1, -0.05)
 
     def normalizeAngle(self, angle):
         while angle < 0:
