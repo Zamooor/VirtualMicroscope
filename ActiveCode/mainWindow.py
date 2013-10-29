@@ -8,6 +8,7 @@
 # WARNING! All changes made in this file will be lost!
 import sys
 import math
+from random import randint
 from PyQt4 import QtCore, QtGui,QtOpenGL
 from results import Ui_results
 try:
@@ -249,31 +250,23 @@ class Window(QtGui.QMainWindow):
             self.ui.glWidget.setYTrans(-0.5)
     
    
-class algae(object):
-    #position:(x,y)
-    #size: number insdicating the size of the plane to represent the algae
+class algaes:
     #texture:pass name of image to be uses as texture?
-    def __init__(self, position, size):
-        self.position = position
-        self.size = size
+    def __init__(self, x,y):
+        #will contain the name of the list
+        self.object = 0
+        self.d =((randint(0,10) / 10.00) - 0.5)
+        self.x1 = x + self.d
+        self.y1 = y + self.d
+        self.x2 = -y + self.d
+        self.y2 = -x + self.d
+        self.posX=0;
+        self.posY=0;
         #self.texture=texture
 
-    def makeObject(self):
-        genList = GL.glGenLists(1)
-        GL.glNewList(genList, GL.GL_COMPILE)
+    def Textureize(self):
+        self.y = 0
 
-        GL.glBegin(GL.GL_QUADS)
-
-        x1 = +0.08
-        y1 = -0.15
-        x2 = +0.15
-        y2 = -0.08
-
-        self.quad(x1, y1, x2, y2, y2, x2, y1, x1)
-        GL.glEnd()
-        GL.glEndList()
-
-        return genList          
   
             		
 class GLWidget(QtOpenGL.QGLWidget):
@@ -285,13 +278,10 @@ class GLWidget(QtOpenGL.QGLWidget):
         super(GLWidget, self).__init__(parent)
 
         self.object = 0
-        self.xRot = 0
-        self.yRot = 0
-        self.zRot = 0
         self.xTrans = 0
         self.yTrans = 0
 
-        self.algae = []
+        self.algaeList = []
 
         self.lastPos = QtCore.QPoint()
 
@@ -304,58 +294,34 @@ class GLWidget(QtOpenGL.QGLWidget):
     def sizeHint(self):
         return QtCore.QSize(1000, 400)
 
-    def setXRotation(self, angle):
-        angle = self.normalizeAngle(angle)
-        if angle != self.xRot:
-            self.xRot = angle
-            self.xRotationChanged.emit(angle)
-            self.updateGL()
-
-    def setYRotation(self, angle):
-        angle = self.normalizeAngle(angle)
-        if angle != self.yRot:
-            self.yRot = angle
-            self.yRotationChanged.emit(angle)
-            self.updateGL()
-
-    def setZRotation(self, angle):
-        angle = self.normalizeAngle(angle)
-        if angle != self.zRot:
-            self.zRot = angle
-            self.zRotationChanged.emit(angle)
-            self.updateGL() #calls glDraw() which calls paintGl()
-
     def setXTrans(self, trans):
-        trans = trans+self.xTrans;
-        if trans != self.xTrans:
-            self.xTrans = trans
+        for algae in self.algaeList:
+            algae.posX = trans+algae.posX
             #self.yRotationChanged.emit(angle)
-            self.updateGL()
+            self.updateGL()#calls glDraw() which calls paintGl()
 
     def setYTrans(self, trans):
-        trans = trans+self.yTrans;
-        if trans != self.yTrans:
-            self.yTrans = trans
+        for algae in self.algaeList:
+            algae.posY = trans+algae.posY;
             #self.yRotationChanged.emit(angle)
-            self.updateGL()           
+            self.updateGL()#calls glDraw() which calls paintGl()         
 
     def initializeGL(self):
-        #print "Iniialize GLcalled"
         self.qglClearColor(self.trolltechPurple.dark())
-        self.object = self.makeObject()
+        self.makeObject()
         GL.glShadeModel(GL.GL_FLAT)
         GL.glEnable(GL.GL_DEPTH_TEST)
         GL.glEnable(GL.GL_CULL_FACE)
 
     def paintGL(self):
-        #print "PaintGl called"
         GL.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT)
+        #replace current matrix with identity matrix
         GL.glLoadIdentity()
-        GL.glTranslated(self.xTrans, self.yTrans, -10.0)
-        GL.glRotated(self.xRot / 16.0, 1.0, 0.0, 0.0)
-        GL.glRotated(self.yRot / 16.0, 0.0, 1.0, 0.0)
-        GL.glRotated(self.zRot / 16.0, 0.0, 0.0, 1.0)
-        GL.glCallList(self.object)
+
+        for algae in self.algaeList:
+            GL.glTranslated(algae.posX, algae.posY, -10.0)
+            #calls the list saved in object variable
+            GL.glCallList(algae.object)
 
     def resizeGL(self, width, height):
         side = min(width, height)
@@ -386,48 +352,65 @@ class GLWidget(QtOpenGL.QGLWidget):
 ##
 ##        self.lastPos = event.pos()
         
-    
+
 
     def makeObject(self):
+        #reserves a name for the list
         genList = GL.glGenLists(1)
+        #uses name created above to make a list?
         GL.glNewList(genList, GL.GL_COMPILE)
 
         GL.glBegin(GL.GL_QUADS)
-
-        x1 = +0.08
-        y1 = -0.15
-        x2 = +0.15
-        y2 = -0.08
-
-        self.quad(x1, y1, x2, y2, y2, x2, y1, x1)
-                  
-        
-
+        #everything between here and "end" is in list?
+        x = 0.5
+        y = -0.05
+        #create a new algae object
+        self.algaeList.append(algaes(x,y))
+        self.quad(self.algaeList[-1].x1, self.algaeList[-1].y1,
+                  self.algaeList[-1].x2, self.algaeList[-1].y2,
+                  self.algaeList[-1].y2, self.algaeList[-1].x2,
+                  self.algaeList[-1].y1, self.algaeList[-1].x1,self.trolltechGreen)
         GL.glEnd()
+        #GL.glEndList()
+        self.algaeList[-1].object=genList
+        self.algaeList[-1].posX= ((randint(0,10) / 10.00) - 0.5)
+        print genList
+        #enList = GL.glGenLists(1)
+        #GL.glNewList(enList, GL.GL_COMPILE)
+
+        GL.glBegin(GL.GL_QUADS)
+        x = 0.5
+        y = -0.12
+        self.algaeList.append(algaes(x,y))
+        self.quad(self.algaeList[-1].x1, self.algaeList[-1].y1,
+                  self.algaeList[-1].x2, self.algaeList[-1].y2,
+                  self.algaeList[-1].y2, self.algaeList[-1].x2,
+                  self.algaeList[-1].y1, self.algaeList[-1].x1,self.trolltechPurple)
+        GL.glEnd()
+        self.algaeList[-1].posY= ((randint(0,10) / 10.00) - 0.5)
         GL.glEndList()
+        self.algaeList[-1].object=genList
+        self.algaeList[-1].posY= ((randint(0,10) / 10.00) - 0.5)
+        #self.algaeList[-1].object=enList
+        self.algaeList[-1].posX=-0.5
+        print "two"
+        #print enList
+    
+    #makes vertices
+    def quad(self, x1, y1, x2, y2, x3, y3, x4, y4,color):
+        self.qglColor(color)
 
-        return genList
+        GL.glVertex2d(x1, y1)
+        GL.glVertex2d(x2, y2)
+        GL.glVertex2d(x3, y3)
+        GL.glVertex2d(x4, y4)
 
-    def quad(self, x1, y1, x2, y2, x3, y3, x4, y4):
-        self.qglColor(self.trolltechGreen)
+#dont know what this does...........
+##        GL.glVertex2d(x4, y4)
+##        GL.glVertex2d(x3, y3)
+##        GL.glVertex2d(x2, y2)
+##        GL.glVertex2d(x1, y1)
 
-        GL.glVertex3d(x1, y1, -0.05)
-        GL.glVertex3d(x2, y2, -0.05)
-        GL.glVertex3d(x3, y3, -0.05)
-        GL.glVertex3d(x4, y4, -0.05)
-
-        GL.glVertex3d(x4, y4, +0.05)
-        GL.glVertex3d(x3, y3, +0.05)
-        GL.glVertex3d(x2, y2, +0.05)
-        GL.glVertex3d(x1, y1, +0.05)
-
-
-    def normalizeAngle(self, angle):
-        while angle < 0:
-            angle += 360 * 16
-        while angle > 360 * 16:
-            angle -= 360 * 16
-        return angle
 		
 
 		
