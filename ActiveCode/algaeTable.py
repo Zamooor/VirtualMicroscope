@@ -18,7 +18,6 @@ Total_Algae_Types = len(Name_Array)
 Default_Min_Count = 0
 Default_Max_Count = 10
 
-#Name_Array = ["NULL" for x in xrange(Total_Algae_Types)]
 Total_Count_Array = [0 for x in xrange(Total_Algae_Types)]
 Min_Count_Array = [Default_Min_Count for x in xrange(Total_Algae_Types)]
 Max_Count_Array = [Default_Max_Count for x in xrange(Total_Algae_Types)]
