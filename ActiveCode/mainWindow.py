@@ -260,13 +260,12 @@ class algaes:
         self.y1 = y + self.d
         self.x2 = -y + self.d
         self.y2 = -x + self.d
-        self.posX=0;
-        self.posY=0;
+        self.posX=((randint(0,10) / 10.00) - 0.5);
+        self.posY=((randint(0,10) / 10.00) - 0.5);
         #self.texture=texture
 
     def Textureize(self):
         self.y = 0
-
   
             		
 class GLWidget(QtOpenGL.QGLWidget):
@@ -362,14 +361,12 @@ class GLWidget(QtOpenGL.QGLWidget):
 
         GL.glBegin(GL.GL_QUADS)
         #everything between here and "end" is in list?
-        x = 0.5
-        y = -0.05
+        x = 0.2
+        y = -0.0
         #create a new algae object
         self.algaeList.append(algaes(x,y))
-        self.quad(self.algaeList[-1].x1, self.algaeList[-1].y1,
-                  self.algaeList[-1].x2, self.algaeList[-1].y2,
-                  self.algaeList[-1].y2, self.algaeList[-1].x2,
-                  self.algaeList[-1].y1, self.algaeList[-1].x1,self.trolltechGreen)
+        self.Create_Square(self.algaeList[-1].x1, self.algaeList[-1].y1,
+                            self.algaeList[-1].x2, self.algaeList[-1].y2,self.trolltechGreen)
         GL.glEnd()
         #GL.glEndList()
         self.algaeList[-1].object=genList
@@ -388,6 +385,26 @@ class GLWidget(QtOpenGL.QGLWidget):
                   self.algaeList[-1].y1, self.algaeList[-1].x1,self.trolltechPurple)
         GL.glEnd()
         self.algaeList[-1].posY= ((randint(0,10) / 10.00) - 0.5)
+        self.algaeList[-1].posX= ((randint(0,10) / 10.00) - 0.5)
+        self.algaeList[-1].object=genList
+        self.algaeList[-1].posY= ((randint(0,10) / 10.00) - 0.5)
+        self.algaeList[-1].posX= ((randint(0,10) / 10.00) - 0.5)
+        print genList
+        #enList = GL.glGenLists(1)
+        #GL.glNewList(enList, GL.GL_COMPILE)
+
+        GL.glBegin(GL.GL_QUADS)
+        x = 0.5
+        y = -0.12
+        self.algaeList.append(algaes(x,y))
+        self.quad(self.algaeList[-1].x1, self.algaeList[-1].y1,
+                  self.algaeList[-1].x2, self.algaeList[-1].y2,
+                  self.algaeList[-1].y2, self.algaeList[-1].x2,
+                  self.algaeList[-1].y1, self.algaeList[-1].x1,self.trolltechPurple)
+        GL.glEnd()
+        self.algaeList[-1].posY= ((randint(0,10) / 10.00) - 0.5)
+
+        
         GL.glEndList()
         self.algaeList[-1].object=genList
         self.algaeList[-1].posY= ((randint(0,10) / 10.00) - 0.5)
@@ -395,6 +412,9 @@ class GLWidget(QtOpenGL.QGLWidget):
         self.algaeList[-1].posX=-0.5
         print "two"
         #print enList
+
+
+    
     
     #makes vertices
     def quad(self, x1, y1, x2, y2, x3, y3, x4, y4,color):
@@ -404,6 +424,14 @@ class GLWidget(QtOpenGL.QGLWidget):
         GL.glVertex2d(x2, y2)
         GL.glVertex2d(x3, y3)
         GL.glVertex2d(x4, y4)
+
+    def Create_Square(self, x1, x2, y1, y2,color):
+        self.qglColor(color)
+
+        GL.glVertex2d(0.2, 0.2)
+        GL.glVertex2d(0.2, -0.2)
+        GL.glVertex2d(-0.2, -0.2)
+        GL.glVertex2d(-0.2, 0.2)
 
 #dont know what this does...........
 ##        GL.glVertex2d(x4, y4)
