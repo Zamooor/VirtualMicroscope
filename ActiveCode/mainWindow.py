@@ -33,37 +33,6 @@ except ImportError:
     sys.exit(1)
 #####################################################################################
 #####################################################################################
-#This is a class that Sound. is creating for inserting an image and seeing if
-#we can add transparency and code used from (second link provided)
-class ImageCh(QtGui.QWidget) :
-    def _init_(self,image, parent=None) :
-        super(ImageCh, self)._init_(parent)
-
-        self.comboBox = QtGui.QComboBox(self)
-        self.comboBox.addItems(images)
-
-        self.layout = QtGui.QVBoxLayout(self)
-        self.layout.addWidget(self.comboBox)
-
-class MyWindow(QtGui.QWidget):
-    def _init_(self,images, parent=None):
-        super(MyWindow, self)._init_(parent)
-        self.label = QTGui.QLabel(self)
-
-        self.imageChanger = ImageCh(images)
-        self.imageChanger = move(self.imageChanger.pos().y(), self.imageChanger.pos().x() + 100)
-        self.imageChanger.show()
-        self.ImageChanger.comboBox.currentIndexChanger[str].connect(self.ChangeImage)
-
-        self.layout = QtGui.QVBoxLayout(self)
-        self.layout.addWidget(self.label)
-    @QtCore.pyqtSlot(str)
-    def changeImage(self, pathToImage):
-        pixmap = QtGui.QPixmap(pathToImage)
-        self.label.setPixmap(pixmap)
-        
-#####################################################################################
-#####################################################################################
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -300,8 +269,42 @@ class algaes:
 
     def Textureize(self):
         self.y = 0
+        
 #####################################################################################
-#####################################################################################  
+#####################################################################################
+ #This is a class that Sound. is creating for inserting an image and seeing if
+#we can add transparency and code used from (second link provided)
+    #Still need to figure out things like incorporating vertices for the picture
+    #on the the screen and stuff.
+class ImageCh(QtGui.QWidget) :
+    def _init_(self,image, parent=None) :
+        super(ImageCh, self)._init_(parent)
+
+        self.comboBox = QtGui.QComboBox(self)
+        self.comboBox.addItems(images)
+
+        self.layout = QtGui.QVBoxLayout(self)
+        self.layout.addWidget(self.comboBox)
+
+class MyWindow(QtGui.QWidget):
+    def _init_(self,images, parent=None):
+        super(MyWindow, self)._init_(parent)
+        self.label = QTGui.QLabel(self)
+
+        self.imageChanger = ImageCh(images)
+        self.imageChanger = move(self.imageChanger.pos().y(), self.imageChanger.pos().x() + 100)
+        self.imageChanger.show()
+        self.ImageChanger.comboBox.currentIndexChanger[str].connect(self.ChangeImage)
+
+        self.layout = QtGui.QVBoxLayout(self)
+        self.layout.addWidget(self.label)
+    @QtCore.pyqtSlot(str)
+    def changeImage(self, pathToImage):
+        pixmap = QtGui.QPixmap(pathToImage)
+        self.label.setPixmap(pixmap)
+        
+#####################################################################################
+#####################################################################################
 class GLWidget(QtOpenGL.QGLWidget):
     xRotationChanged = QtCore.pyqtSignal(int)
     yRotationChanged = QtCore.pyqtSignal(int)
