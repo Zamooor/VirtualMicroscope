@@ -32,7 +32,7 @@ except ImportError:
     QtGui.QMessageBox.critical(None, "OpenGL")
     sys.exit(1)
 
-	
+
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName(_fromUtf8("MainWindow"))
