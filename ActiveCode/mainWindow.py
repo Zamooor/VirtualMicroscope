@@ -6,11 +6,14 @@
 #      by: PyQt4 UI code generator 4.10.3
 #
 # WARNING! All changes made in this file will be lost!
-import sys
+import sys, os
 import math
 from random import randint
 from PyQt4 import QtCore, QtGui,QtOpenGL
+from PyQt4.QtCore import *
+from PyQt4.QtGui import *
 from results import Ui_results
+from PIL import Image
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
 except AttributeError:
@@ -41,6 +44,14 @@ class Ui_MainWindow(object):
         self.centralWidget = QtGui.QWidget(MainWindow)
         self.centralWidget.setObjectName(_fromUtf8("centralWidget"))
         self.glWidget = GLWidget(self.centralWidget)
+
+        # Puts images in the glWidget!!!!!
+        pic = QtGui.QLabel(self.glWidget)
+        pic.setGeometry(10,10,636,502)
+        pic.setPixmap(QtGui.QPixmap(os.getcwd() + "/Assets/attempt001.png"))
+        pic.setScaledContents(True)
+        pic.setStyleSheet("background-color: rgba(255,255,255,0)")
+        pic.setAttribute(Qt.WA_TranslucentBackground, True)
 
         self.findButton = QtGui.QPushButton(self.centralWidget)
         self.findButton.setGeometry(QtCore.QRect(870, 430, 91, 31))
