@@ -37,6 +37,14 @@ except ImportError:
 #####################################################################################
 #####################################################################################
 
+
+# Please keep the values in the following two variables the same
+# This is terrible, please find a way to convert QColor to the csv in backGroundColorString
+# Or find a way to set the pic (a QLabel) background color without a style sheet
+backGroundColor = QColor(44,121,176,255)
+backGroundColorString = "44,121,176,255"
+
+
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName(_fromUtf8("MainWindow"))
@@ -47,12 +55,30 @@ class Ui_MainWindow(object):
 
         # Puts images in the glWidget!!!!!
         pic = QtGui.QLabel(self.glWidget)
-        pic.setGeometry(10,10,636,502)
+        pic.setGeometry(10,10,79.5,62.75)
         pic.setPixmap(QtGui.QPixmap(os.getcwd() + "/Assets/attempt001.png"))
         pic.setScaledContents(True)
-        pic.setStyleSheet("background-color: rgba(255,255,255,0)")
-        pic.setAttribute(Qt.WA_TranslucentBackground, True)
+        pic.setStyleSheet("background-color: rgba("+backGroundColorString+")" )
 
+        pic = QtGui.QLabel(self.glWidget)
+        pic.setGeometry(350,277,79.5,62.75)
+        pic.setPixmap(QtGui.QPixmap(os.getcwd() + "/Assets/attempt001.png"))
+        pic.setScaledContents(True)
+        pic.setStyleSheet("background-color: rgba("+backGroundColorString+")" )
+
+        pic = QtGui.QLabel(self.glWidget)
+        pic.setGeometry(115,347,79.5,62.75)
+        pic.setPixmap(QtGui.QPixmap(os.getcwd() + "/Assets/attempt001.png"))
+        pic.setScaledContents(True)
+        pic.setStyleSheet("background-color: rgba("+backGroundColorString+")" )
+
+        pic = QtGui.QLabel(self.glWidget)
+        pic.setGeometry(377,100,79.5,62.75)
+        pic.setPixmap(QtGui.QPixmap(os.getcwd() + "/Assets/attempt001.png"))
+        pic.setScaledContents(True)
+        pic.setStyleSheet("background-color: rgba("+backGroundColorString+")" )
+
+        # Controls
         self.findButton = QtGui.QPushButton(self.centralWidget)
         self.findButton.setGeometry(QtCore.QRect(870, 430, 91, 31))
         self.findButton.setObjectName(_fromUtf8("findButton"))
@@ -334,6 +360,7 @@ class GLWidget(QtOpenGL.QGLWidget):
 
         self.trolltechGreen = QtGui.QColor.fromCmykF(0.450, 0.0, 1.0, 0.0)
         self.trolltechPurple = QtGui.QColor.fromCmykF(0.39, 0.39, 0.0, 0.0)
+        
 
     def minimumSizeHint(self):
         return QtCore.QSize(50, 50)
@@ -354,7 +381,7 @@ class GLWidget(QtOpenGL.QGLWidget):
             self.updateGL()#calls glDraw() which calls paintGl()         
 
     def initializeGL(self):
-        self.qglClearColor(self.trolltechPurple.dark())
+        self.qglClearColor(backGroundColor)
         self.makeObject()
         GL.glShadeModel(GL.GL_FLAT)
         GL.glEnable(GL.GL_DEPTH_TEST)
