@@ -78,11 +78,6 @@ class Ui_MainWindow(object):
         pic.setScaledContents(True)
         pic.setStyleSheet("background-color: rgba("+backGroundColorString+")" )
 
-        # Controls
-        self.findButton = QtGui.QPushButton(self.centralWidget)
-        self.findButton.setGeometry(QtCore.QRect(870, 430, 91, 31))
-        self.findButton.setObjectName(_fromUtf8("findButton"))
-        
 		
         self.groupBox_mag = QtGui.QGroupBox(self.centralWidget)
         self.groupBox_mag.setGeometry(QtCore.QRect(340, 430, 201, 271))
@@ -120,17 +115,24 @@ class Ui_MainWindow(object):
         self.input_species = QtGui.QLineEdit(self.centralWidget)
         self.input_species.setGeometry(QtCore.QRect(550, 430, 181, 31))
         self.input_species.setText(_fromUtf8(""))
+        self.input_species.setPlaceholderText ("Enter Name of Algae")
         self.input_species.setObjectName(_fromUtf8("input_species"))
-               
-        self.submit_button = QtGui.QPushButton(self.centralWidget)
-        self.submit_button.setGeometry(QtCore.QRect(640, 660, 231, 41))
-        self.submit_button.setObjectName(_fromUtf8("submit_button"))
+
 		
         self.groupBox_move = QtGui.QGroupBox(self.centralWidget)
         self.groupBox_move.setGeometry(QtCore.QRect(30, 430, 291, 271))
         self.groupBox_move.setTitle(_fromUtf8(""))
         self.groupBox_move.setObjectName(_fromUtf8("groupBox_move"))
         self.groupBox_move.keyPressEvent = lambda event: event.ignore()
+
+        #buttons 
+        self.findButton = QtGui.QPushButton(self.centralWidget)
+        self.findButton.setGeometry(QtCore.QRect(870, 430, 91, 31))
+        self.findButton.setObjectName(_fromUtf8("findButton"))
+     
+        self.submit_button = QtGui.QPushButton(self.centralWidget)
+        self.submit_button.setGeometry(QtCore.QRect(640, 660, 231, 41))
+        self.submit_button.setObjectName(_fromUtf8("submit_button"))
         
         self.up_button = QtGui.QPushButton(self.groupBox_move)
         self.up_button.setGeometry(QtCore.QRect(100, 40, 71, 28))
@@ -156,10 +158,16 @@ class Ui_MainWindow(object):
         self.input_count.setGeometry(QtCore.QRect(750, 430, 111, 31))
         self.input_count.setText(_fromUtf8(""))
         self.input_count.setObjectName(_fromUtf8("input_count"))
+        self.input_count.setPlaceholderText ("Enter Count")
         
-        self.ans_table = QtGui.QTableView(self.centralWidget)
+        #answer Table
+        self.ans_table = QtGui.QTableWidget(self.centralWidget)
         self.ans_table.setGeometry(QtCore.QRect(550, 470, 411, 181))
         self.ans_table.setObjectName(_fromUtf8("ans_table"))
+        self.ans_table.setColumnCount(2)
+        self.ans_table.horizontalHeader().setResizeMode(QtGui.QHeaderView.Stretch)
+        self.ans_table.verticalHeader().setVisible(False)
+        self.ans_table.setHorizontalHeaderLabels(['Name', 'Count'])
         
         MainWindow.setCentralWidget(self.centralWidget)
         
@@ -215,13 +223,14 @@ class Ui_MainWindow(object):
         self.menuBar.addAction(self.menuFile.menuAction())
         self.menuBar.addAction(self.menuTools.menuAction())
         self.resultsDialog=Ui_results()
-        
+        # button actions
         self.submit_button.clicked.connect(self.openResults)
         
         self.right_button.clicked.connect(self.RTrans)
         self.pushButton_2.clicked.connect(self.LTrans)
         self.up_button.clicked.connect(self.UTrans)
         self.down_button.clicked.connect(self.DTrans)
+        self.findButton.clicked.connect(self.addToChart)
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
@@ -254,7 +263,23 @@ class Ui_MainWindow(object):
         self.resultsDialog.setupUi(ui)
         ui.show()
         ui.exec_()
+        
+    def addToChart(self):
+        #cheks if "count" value is a number and if the "name" field is not empty 
+        # adds them to the table. and sorts them alphabeticaly by name
+        try:
+            number=int(self.input_count.text())
+            if not (self.input_species.text().isEmpty()):
+                self.ans_table.insertRow(0)
+                self.ans_table.setItem(0,1,QtGui.QTableWidgetItem(self.input_count.text()))
+                self.ans_table.setItem(0,0,QtGui.QTableWidgetItem(self.input_species.text()))
+                self.ans_table.sortItems(0,Qt.AscendingOrder)
+        except Exception:
+            #QtGui.QMessageBox.about(MainWindow,'Error','Input can only be a number')
+            pass
 
+        
+        
     def RTrans(self):
         self.glWidget.setXTrans(.5)
 
@@ -526,9 +551,6 @@ if __name__ == '__main__':
     mwindow.show()
     sys.exit(app.exec_())
 
-    images = [ "/testpic1",
-               "/testpic2"
-               ]
     app = QtGui.QApplication(sys.argv)
     app.setApplication('MyWindow')
 
