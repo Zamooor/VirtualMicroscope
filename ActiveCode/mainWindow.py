@@ -315,13 +315,13 @@ class Window(QtGui.QMainWindow):
         self.ui.setupUi(self)
     #detect arrow keys and translates the sample accordingly
     def keyPressEvent(self, ev):
-         if ev.key() == QtCore.Qt.Key_Right:
+         if ev.key() == QtCore.Qt.Key_D:
             self.ui.RTrans()
-         elif ev.key() == QtCore.Qt.Key_Left:
+         elif ev.key() == QtCore.Qt.Key_A:
             self.ui.LTrans()
-         elif ev.key() == QtCore.Qt.Key_Down:
+         elif ev.key() == QtCore.Qt.Key_S:
             self.ui.DTrans()
-         elif ev.key() == QtCore.Qt.Key_Up:
+         elif ev.key() == QtCore.Qt.Key_W:
             self.ui.UTrans()
     
 #####################################################################################
