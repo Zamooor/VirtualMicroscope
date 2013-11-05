@@ -11,7 +11,7 @@ from random import randint
 
 # Data
 Name_Array = [
-    "Type 1",
+    "Attempt001",
     "Type 2",
     "type 3"]
 Total_Algae_Types = len(Name_Array)
@@ -50,6 +50,7 @@ def Set_Max_Count(ID, Max):
 def Generate_Sample():
     for x in xrange(Total_Algae_Types):
         Total_Count_Array[x] = randint(Min_Count_Array[x], Max_Count_Array[x])
+        
 
 # Sample Data
 Min_Count_Array[1] = 3

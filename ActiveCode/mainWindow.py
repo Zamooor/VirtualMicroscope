@@ -8,6 +8,9 @@
 # WARNING! All changes made in this file will be lost!
 import sys, os
 import math
+import algaeTable
+from algaeTable import *
+import random
 from random import randint
 from PyQt4 import QtCore, QtGui,QtOpenGL
 from PyQt4.QtCore import *
@@ -45,6 +48,12 @@ backGroundColor = QColor(44,121,176,255)
 backGroundColorString = "44,121,176,255"
 
 algaeList = []
+algaeTable.Generate_Sample()
+random.seed()
+
+
+        
+                    
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -54,6 +63,18 @@ class Ui_MainWindow(object):
         self.centralWidget.setObjectName(_fromUtf8("centralWidget"))
         self.glWidget = GLWidget(self.centralWidget)
 
+
+        for x in xrange(Total_Algae_Types):
+            for y in xrange(Total_Count_Array[x]):
+                print "make a "
+                print Name_Array[x]
+                print "\n"
+                pic = QtGui.QLabel(self.glWidget)
+                pic.setGeometry(randint(-1000,1000),randint(-1000,1000),79.5,62.75)
+                pic.setPixmap(QtGui.QPixmap(os.getcwd() + "/Assets/"+Name_Array[x] + ".png"))
+                pic.setScaledContents(True)
+                pic.setStyleSheet("background-color: rgba("+backGroundColorString+")" )
+                algaeList.append(pic)
         # Puts images in the glWidget!!!!!
         pic = QtGui.QLabel(self.glWidget)
         pic.setGeometry(10,10,79.5,62.75)
