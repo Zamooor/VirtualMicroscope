@@ -44,6 +44,7 @@ except ImportError:
 backGroundColor = QColor(44,121,176,255)
 backGroundColorString = "44,121,176,255"
 
+algaeList = []
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -59,26 +60,30 @@ class Ui_MainWindow(object):
         pic.setPixmap(QtGui.QPixmap(os.getcwd() + "/Assets/attempt001.png"))
         pic.setScaledContents(True)
         pic.setStyleSheet("background-color: rgba("+backGroundColorString+")" )
-
+        algaeList.append(pic)
+        
         pic = QtGui.QLabel(self.glWidget)
         pic.setGeometry(350,277,79.5,62.75)
         pic.setPixmap(QtGui.QPixmap(os.getcwd() + "/Assets/attempt001.png"))
         pic.setScaledContents(True)
         pic.setStyleSheet("background-color: rgba("+backGroundColorString+")" )
-
+        algaeList.append(pic)
+        
         pic = QtGui.QLabel(self.glWidget)
         pic.setGeometry(115,347,79.5,62.75)
         pic.setPixmap(QtGui.QPixmap(os.getcwd() + "/Assets/attempt001.png"))
         pic.setScaledContents(True)
         pic.setStyleSheet("background-color: rgba("+backGroundColorString+")" )
+        algaeList.append(pic)
 
         pic = QtGui.QLabel(self.glWidget)
         pic.setGeometry(377,100,79.5,62.75)
         pic.setPixmap(QtGui.QPixmap(os.getcwd() + "/Assets/attempt001.png"))
         pic.setScaledContents(True)
         pic.setStyleSheet("background-color: rgba("+backGroundColorString+")" )
+        algaeList.append(pic)
 
-		
+        # Controls		
         self.groupBox_mag = QtGui.QGroupBox(self.centralWidget)
         self.groupBox_mag.setGeometry(QtCore.QRect(340, 430, 201, 271))
         self.groupBox_mag.setTitle(_fromUtf8(""))
@@ -86,7 +91,7 @@ class Ui_MainWindow(object):
         
         self.label = QtGui.QLabel(self.groupBox_mag)
         self.label.setGeometry(QtCore.QRect(60, 240, 101, 20))
-        self.label.setObjectName(_fromUtf8("label"))
+        self.label.setObjectName(_fromUtf8("label"))        
         
         self.mag_dial = QtGui.QDial(self.groupBox_mag)
         self.mag_dial.setGeometry(QtCore.QRect(60, 70, 91, 101))
@@ -125,7 +130,13 @@ class Ui_MainWindow(object):
         self.groupBox_move.setObjectName(_fromUtf8("groupBox_move"))
         self.groupBox_move.keyPressEvent = lambda event: event.ignore()
 
-        #buttons 
+        self.cameraLabel = QtGui.QLabel(self.groupBox_move)
+        self.cameraLabel.setGeometry(QtCore.QRect(110, 95, 50, 50))
+        self.cameraLabel.setPixmap(QtGui.QPixmap(os.getcwd() + "/Assets/camera.png"))
+        self.cameraLabel.setScaledContents(True)
+
+        #buttons
+        
         self.findButton = QtGui.QPushButton(self.centralWidget)
         self.findButton.setGeometry(QtCore.QRect(870, 430, 91, 31))
         self.findButton.setObjectName(_fromUtf8("findButton"))
@@ -138,9 +149,9 @@ class Ui_MainWindow(object):
         self.up_button.setGeometry(QtCore.QRect(100, 40, 71, 28))
         self.up_button.setObjectName(_fromUtf8("up_button"))
         
-        self.pushButton_2 = QtGui.QPushButton(self.groupBox_move)
-        self.pushButton_2.setGeometry(QtCore.QRect(20, 100, 61, 28))
-        self.pushButton_2.setObjectName(_fromUtf8("pushButton_2"))
+        self.left_button = QtGui.QPushButton(self.groupBox_move)
+        self.left_button.setGeometry(QtCore.QRect(20, 100, 61, 28))
+        self.left_button.setObjectName(_fromUtf8("pushButton_2"))
         
         self.right_button = QtGui.QPushButton(self.groupBox_move)
         self.right_button.setGeometry(QtCore.QRect(192, 100, 71, 28))
@@ -226,11 +237,14 @@ class Ui_MainWindow(object):
         # button actions
         self.submit_button.clicked.connect(self.openResults)
         
-        self.right_button.clicked.connect(self.RTrans)
-        self.pushButton_2.clicked.connect(self.LTrans)
-        self.up_button.clicked.connect(self.UTrans)
-        self.down_button.clicked.connect(self.DTrans)
-        self.findButton.clicked.connect(self.addToChart)
+        self.right_button.pressed.connect(self.RTrans)
+        self.right_button.setAutoRepeat(True)
+        self.left_button.pressed.connect(self.LTrans)
+        self.left_button.setAutoRepeat(True)
+        self.up_button.pressed.connect(self.UTrans)
+        self.up_button.setAutoRepeat(True)
+        self.down_button.pressed.connect(self.DTrans)
+        self.down_button.setAutoRepeat(True)  
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
@@ -245,7 +259,7 @@ class Ui_MainWindow(object):
         self.label_7.setText(_translate("MainWindow", "600X", None))
         self.submit_button.setText(_translate("MainWindow", "Submit", None))
         self.up_button.setText(_translate("MainWindow", "UP", None)) 
-        self.pushButton_2.setText(_translate("MainWindow", "Left", None))
+        self.left_button.setText(_translate("MainWindow", "Left", None))
         self.right_button.setText(_translate("MainWindow", "Right", None))
         self.down_button.setText(_translate("MainWindow", "Down", None))
         self.label_2.setText(_translate("MainWindow", "Movement", None))
@@ -276,21 +290,19 @@ class Ui_MainWindow(object):
                 self.ans_table.sortItems(0,Qt.AscendingOrder)
         except Exception:
             #QtGui.QMessageBox.about(MainWindow,'Error','Input can only be a number')
-            pass
-
-        
+            pass        
         
     def RTrans(self):
-        self.glWidget.setXTrans(.5)
+        self.glWidget.setXTrans(-10)
 
     def LTrans(self):
-        self.glWidget.setXTrans(-.5)
+        self.glWidget.setXTrans(10)
 
     def DTrans(self):
-        self.glWidget.setYTrans(.5)
+        self.glWidget.setYTrans(-10)
 
     def UTrans(self):
-        self.glWidget.setYTrans(-.5)    
+        self.glWidget.setYTrans(10) 
     
 #####################################################################################
 #####################################################################################         
@@ -304,13 +316,13 @@ class Window(QtGui.QMainWindow):
     #detect arrow keys and translates the sample accordingly
     def keyPressEvent(self, ev):
          if ev.key() == QtCore.Qt.Key_Right:
-            self.ui.glWidget.setXTrans(0.5)
+            self.ui.RTrans()
          elif ev.key() == QtCore.Qt.Key_Left:
-            self.ui.glWidget.setXTrans(-0.5)
+            self.ui.LTrans()
          elif ev.key() == QtCore.Qt.Key_Down:
-            self.ui.glWidget.setYTrans(0.5)
+            self.ui.DTrans()
          elif ev.key() == QtCore.Qt.Key_Up:
-            self.ui.glWidget.setYTrans(-0.5)
+            self.ui.UTrans()
     
 #####################################################################################
 #####################################################################################
@@ -394,20 +406,19 @@ class GLWidget(QtOpenGL.QGLWidget):
         return QtCore.QSize(1000, 400)
 
     def setXTrans(self, trans):
-        for algae in self.algaeList:
-            algae.posX = trans+algae.posX
+        for label in algaeList:
+            label.move(label.pos().x() + trans,label.pos().y())
             #self.yRotationChanged.emit(angle)
-            self.updateGL()#calls glDraw() which calls paintGl()
+            #self.updateGL()#calls glDraw() which calls paintGl()
 
     def setYTrans(self, trans):
-        for algae in self.algaeList:
-            algae.posY = trans+algae.posY;
+        for label in algaeList:
+            label.move(label.pos().x(),label.pos().y() + trans)
             #self.yRotationChanged.emit(angle)
-            self.updateGL()#calls glDraw() which calls paintGl()         
+            #self.updateGL()#calls glDraw() which calls paintGl()         
 
     def initializeGL(self):
         self.qglClearColor(backGroundColor)
-        self.makeObject()
         GL.glShadeModel(GL.GL_FLAT)
         GL.glEnable(GL.GL_DEPTH_TEST)
         GL.glEnable(GL.GL_CULL_FACE)
@@ -453,65 +464,7 @@ class GLWidget(QtOpenGL.QGLWidget):
         
 
 
-    def makeObject(self):
-        #reserves a name for the list
-        genList = GL.glGenLists(1)
-        #uses name created above to make a list?
-        GL.glNewList(genList, GL.GL_COMPILE)
-
-        GL.glBegin(GL.GL_QUADS)
-        #everything between here and "end" is in list?
-        x = 0.2
-        y = -0.0
-        #create a new algae object
-        self.algaeList.append(algaes(x,y))
-        self.Create_Square(self.algaeList[-1].x1, self.algaeList[-1].y1,
-                            self.algaeList[-1].x2, self.algaeList[-1].y2,self.trolltechGreen)
-        GL.glEnd()
-        #GL.glEndList()
-        self.algaeList[-1].object=genList
-        self.algaeList[-1].posX= ((randint(0,10) / 10.00) - 0.5)
-        print genList
-        #enList = GL.glGenLists(1)
-        #GL.glNewList(enList, GL.GL_COMPILE)
-
-        GL.glBegin(GL.GL_QUADS)
-        x = 0.5
-        y = -0.12
-        self.algaeList.append(algaes(x,y))
-        self.quad(self.algaeList[-1].x1, self.algaeList[-1].y1,
-                  self.algaeList[-1].x2, self.algaeList[-1].y2,
-                  self.algaeList[-1].y2, self.algaeList[-1].x2,
-                  self.algaeList[-1].y1, self.algaeList[-1].x1,self.trolltechPurple)
-        GL.glEnd()
-        self.algaeList[-1].posY= ((randint(0,10) / 10.00) - 0.5)
-        self.algaeList[-1].posX= ((randint(0,10) / 10.00) - 0.5)
-        self.algaeList[-1].object=genList
-        self.algaeList[-1].posY= ((randint(0,10) / 10.00) - 0.5)
-        self.algaeList[-1].posX= ((randint(0,10) / 10.00) - 0.5)
-        print genList
-        #enList = GL.glGenLists(1)
-        #GL.glNewList(enList, GL.GL_COMPILE)
-
-        GL.glBegin(GL.GL_QUADS)
-        x = 0.5
-        y = -0.12
-        self.algaeList.append(algaes(x,y))
-        self.quad(self.algaeList[-1].x1, self.algaeList[-1].y1,
-                  self.algaeList[-1].x2, self.algaeList[-1].y2,
-                  self.algaeList[-1].y2, self.algaeList[-1].x2,
-                  self.algaeList[-1].y1, self.algaeList[-1].x1,self.trolltechPurple)
-        GL.glEnd()
-        self.algaeList[-1].posY= ((randint(0,10) / 10.00) - 0.5)
-
-        
-        GL.glEndList()
-        self.algaeList[-1].object=genList
-        self.algaeList[-1].posY= ((randint(0,10) / 10.00) - 0.5)
-        #self.algaeList[-1].object=enList
-        self.algaeList[-1].posX=-0.5
-        print "two"
-        #print enList
+    
 
 
     
