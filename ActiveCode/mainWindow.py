@@ -200,7 +200,7 @@ class Ui_MainWindow(object):
         self.ans_table.horizontalHeader().setResizeMode(QtGui.QHeaderView.Stretch)
         self.ans_table.verticalHeader().setVisible(False)
         self.ans_table.setHorizontalHeaderLabels(['Name', 'Count'])
-        
+        self.ans_table.keyPressEvent = lambda event: event.ignore()
         MainWindow.setCentralWidget(self.centralWidget)
         
         self.menuBar = QtGui.QMenuBar(MainWindow)
@@ -257,7 +257,7 @@ class Ui_MainWindow(object):
         self.resultsDialog=Ui_results()
         # button actions
         self.submit_button.clicked.connect(self.openResults)
-        
+        self.findButton.clicked.connect(self.addToChart)
         self.right_button.pressed.connect(self.RTrans)
         self.right_button.setAutoRepeat(True)
         self.left_button.pressed.connect(self.LTrans)
