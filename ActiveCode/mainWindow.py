@@ -73,39 +73,12 @@ class Ui_MainWindow(object):
             for y in xrange(algaeTable.Total_Count_Array[x]):
                 #print "Drawing: " + algaeTable.Name_Array[x]
                 pic = QtGui.QLabel(self.glWidget)
-                pic.setGeometry(randint(-1000,1000),randint(-1000,1000),79.5,62.75)
-                pic.setPixmap(QtGui.QPixmap(os.getcwd() + "/Assets/"+algaeTable.Name_Array[x] + ".png"))
+                pic.setPixmap(QtGui.QPixmap(os.getcwd() + "/Assets/20um/"+algaeTable.Name_Array[x] + ".png"))
+                pic.setGeometry(randint(-1000,1000),randint(-1000,1000),pic.pixmap().width()/8,pic.pixmap().height()/8)
                 pic.setScaledContents(True)
                 pic.setStyleSheet("background-color: rgba("+backGroundColorString+")" )
                 algaeList.append(pic)
-        # Puts images in the glWidget!!!!!
-        pic = QtGui.QLabel(self.glWidget)
-        pic.setGeometry(10,10,79.5,62.75)
-        pic.setPixmap(QtGui.QPixmap(os.getcwd() + "/Assets/attempt001.png"))
-        pic.setScaledContents(True)
-        pic.setStyleSheet("background-color: rgba("+backGroundColorString+")" )
-        algaeList.append(pic)
         
-        pic = QtGui.QLabel(self.glWidget)
-        pic.setGeometry(350,277,79.5,62.75)
-        pic.setPixmap(QtGui.QPixmap(os.getcwd() + "/Assets/attempt001.png"))
-        pic.setScaledContents(True)
-        pic.setStyleSheet("background-color: rgba("+backGroundColorString+")" )
-        algaeList.append(pic)
-        
-        pic = QtGui.QLabel(self.glWidget)
-        pic.setGeometry(115,347,79.5,62.75)
-        pic.setPixmap(QtGui.QPixmap(os.getcwd() + "/Assets/attempt001.png"))
-        pic.setScaledContents(True)
-        pic.setStyleSheet("background-color: rgba("+backGroundColorString+")" )
-        algaeList.append(pic)
-
-        pic = QtGui.QLabel(self.glWidget)
-        pic.setGeometry(377,100,79.5,62.75)
-        pic.setPixmap(QtGui.QPixmap(os.getcwd() + "/Assets/attempt001.png"))
-        pic.setScaledContents(True)
-        pic.setStyleSheet("background-color: rgba("+backGroundColorString+")" )
-        algaeList.append(pic)
 
         # Controls		
         self.groupBox_mag = QtGui.QGroupBox(self.centralWidget)
@@ -326,7 +299,17 @@ class Ui_MainWindow(object):
         self.glWidget.setYTrans(-10)
 
     def UTrans(self):
-        self.glWidget.setYTrans(10) 
+        self.glWidget.setYTrans(10)
+
+    def Bigger(self):
+        scale = 1.5
+        for pic in algaeList:
+            pic.setGeometry(pic.x() * scale, pic.y() * scale,pic.width() * scale,pic.height() * scale)
+    def Smaller(self):
+        scale = 1.5
+        for pic in algaeList:
+            pic.setGeometry(pic.x() / scale, pic.y() / scale, pic.width() / scale, pic.height() / scale)
+    
     
 #####################################################################################
 #####################################################################################         
@@ -339,14 +322,22 @@ class Window(QtGui.QMainWindow):
         self.ui.setupUi(self)
     #detect arrow keys and translates the sample accordingly
     def keyPressEvent(self, ev):
-         if ev.key() == QtCore.Qt.Key_D:
+        if ev.key() == QtCore.Qt.Key_D:
             self.ui.RTrans()
-         elif ev.key() == QtCore.Qt.Key_A:
+        elif ev.key() == QtCore.Qt.Key_A:
             self.ui.LTrans()
-         elif ev.key() == QtCore.Qt.Key_S:
+        elif ev.key() == QtCore.Qt.Key_S:
             self.ui.DTrans()
-         elif ev.key() == QtCore.Qt.Key_W:
+        elif ev.key() == QtCore.Qt.Key_W:
             self.ui.UTrans()
+
+    # test for scaling!
+    def wheelEvent(self, ev):
+        if ev.delta() > 0:
+            self.ui.Bigger()
+        else:
+            self.ui.Smaller()
+        
     
 #####################################################################################
 #####################################################################################
