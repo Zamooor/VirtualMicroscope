@@ -9,65 +9,63 @@ import sys
 import math
 from random import randint
 
-# Data
-Name_Array = [
-    "Attempt001",
-    "Type 2",
-    "type 3"]
-Total_Algae_Types = len(Name_Array)
-Default_Min_Count = 0
-Default_Max_Count = 10
+class AlgaeTable:
 
-Total_Count_Array = [0 for x in xrange(Total_Algae_Types)]
-Min_Count_Array = [Default_Min_Count for x in xrange(Total_Algae_Types)]
-Max_Count_Array = [Default_Max_Count for x in xrange(Total_Algae_Types)]
-Total_Mass_Array = [0.00 for x in xrange(Total_Algae_Types)]
+    def __init__(self):
+        # Data
+        self.Name_Array = [
+            "Attempt001",
+            "Type 2",
+            "type 3"]
+        self.Total_Algae_Types = len(self.Name_Array)
+        self.Default_Min_Count = 20
+        self.Default_Max_Count = 40
 
-# Exported Functions
-def Get_Name(ID):
-    return Name_Array[ID]
+        self.Total_Count_Array = [0 for x in xrange(self.Total_Algae_Types)]
+        self.Min_Count_Array = [self.Default_Min_Count for x in xrange(self.Total_Algae_Types)]
+        self.Max_Count_Array = [self.Default_Max_Count for x in xrange(self.Total_Algae_Types)]
+        self.Total_Mass_Array = [0.00 for x in xrange(self.Total_Algae_Types)]
 
-def Get_Count(ID):
-    return Total_Count_Array[ID]
+    # Exported Functions
+    def Get_Name(self,ID):
+        return self.Name_Array[ID]
 
-def Get_Biomass(ID):
-    return Total_Mass_Array[ID]
+    def Get_Count(self,ID):
+        return self.Total_Count_Array[ID]
 
-def Get_ID(Name):
-    for x in xrange(Total_Algae_Types):
-        if Name == Name_Array[x]: return x
+    def Get_Biomass(self, ID):
+        return self.Total_Mass_Array[ID]
 
-def Set_Count_Range(ID, Min, Max):
-    Min_Count_Array[ID] = Min
-    Max_Count_Array[ID] = Max
+    def Get_ID(self, Name):
+        for x in xrange(self.Total_Algae_Types):
+            if Name == self.Name_Array[x]: return x
 
-def Set_Min_Count(ID, Min):
-    Min_Count_Array[ID] = Min
+    def Set_Count_Range(self, ID, Min, Max):
+        self.Min_Count_Array[ID] = Min
+        self.Max_Count_Array[ID] = Max
 
-def Set_Max_Count(ID, Max):
-    Max_Count_Array[ID] = Max
+    def Set_Min_Count(self, ID, Min):
+        self.Min_Count_Array[ID] = Min
 
-def Generate_Sample():
-    for x in xrange(Total_Algae_Types):
-        Total_Count_Array[x] = randint(Min_Count_Array[x], Max_Count_Array[x])
-        
+    def Set_Max_Count(self, ID, Max):
+        self.Max_Count_Array[ID] = Max
 
-# Sample Data
-Min_Count_Array[1] = 3
-Max_Count_Array[0] = 20
-
+    def Generate_Sample(self):
+        for x in xrange(self.Total_Algae_Types):
+            self.Total_Count_Array[x] = randint(self.Min_Count_Array[x], self.Max_Count_Array[x])
+            
 
 # Default program
-if __name__ == '__main__':
+"""if __name__ == '__main__':
     print "Printing tables:"
     for x in xrange(Total_Algae_Types):
-        print '\n[{}] {}'.format(x, Name_Array[x])
-        print 'Count: {}'.format(Total_Count_Array[x])
-        print 'Biomass: {}'.format(Total_Mass_Array[x])
+        print '\n[{}] {}'.format(x, self.Name_Array[x])
+        print 'Count: {}'.format(self.Total_Count_Array[x])
+        print 'Biomass: {}'.format(self.Total_Mass_Array[x])
 
     print "Generating sample data:"
     Generate_Sample()
     for x in xrange(Total_Algae_Types):
-        print '\n[{}] {}'.format(x, Name_Array[x])
-        print 'Count: {}'.format(Total_Count_Array[x])
-        print 'Biomass: {}'.format(Total_Mass_Array[x])
+        print '\n[{}] {}'.format(x, self.Name_Array[x])
+        print 'Count: {}'.format(self.Total_Count_Array[x])
+        print 'Biomass: {}'.format(self.Total_Mass_Array[x])"""

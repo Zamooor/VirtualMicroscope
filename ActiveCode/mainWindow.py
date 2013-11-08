@@ -44,6 +44,10 @@ except ImportError:
 # Please keep the values in the following two variables the same
 # This is terrible, please find a way to convert QColor to the csv in backGroundColorString
 # Or find a way to set the pic (a QLabel) background color without a style sheet
+
+algaeTable = AlgaeTable()
+
+
 backGroundColor = QColor(44,121,176,255)
 backGroundColorString = "44,121,176,255"
 
@@ -52,7 +56,7 @@ algaeTable.Generate_Sample()
 random.seed()
 
 
-        
+
                     
 
 class Ui_MainWindow(object):
@@ -63,15 +67,14 @@ class Ui_MainWindow(object):
         self.centralWidget.setObjectName(_fromUtf8("centralWidget"))
         self.glWidget = GLWidget(self.centralWidget)
 
-
-        for x in xrange(Total_Algae_Types):
-            for y in xrange(Total_Count_Array[x]):
-                print "make a "
-                print Name_Array[x]
-                print "\n"
+        print "Generating algae..."
+        for x in xrange(algaeTable.Total_Algae_Types):
+            print str(algaeTable.Get_Name(x)) + ": " + str(algaeTable.Get_Count(x))
+            for y in xrange(algaeTable.Total_Count_Array[x]):
+                #print "Drawing: " + algaeTable.Name_Array[x]
                 pic = QtGui.QLabel(self.glWidget)
                 pic.setGeometry(randint(-1000,1000),randint(-1000,1000),79.5,62.75)
-                pic.setPixmap(QtGui.QPixmap(os.getcwd() + "/Assets/"+Name_Array[x] + ".png"))
+                pic.setPixmap(QtGui.QPixmap(os.getcwd() + "/Assets/"+algaeTable.Name_Array[x] + ".png"))
                 pic.setScaledContents(True)
                 pic.setStyleSheet("background-color: rgba("+backGroundColorString+")" )
                 algaeList.append(pic)
