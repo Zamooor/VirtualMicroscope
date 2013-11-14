@@ -78,7 +78,9 @@ class Ui_MainWindow(object):
                 pic.setPixmap(QtGui.QPixmap(os.getcwd() + "/Assets/20um/"+algaeTable.Name_Array[x] + ".png"))
                 pic.setGeometry(randint(-1000,1000),randint(-1000,1000),pic.pixmap().width()/8,pic.pixmap().height()/8)
                 pic.setScaledContents(True)
-                pic.setStyleSheet("background-color: rgba("+backGroundColorString+")" )
+##                pic.setStyleSheet("background-color: rgba("+backGroundColorString+")" )
+                pic.setStyleSheet("background-color: rgba(255 255 255 0)" )
+                pic.setAttribute(QtCore.Qt.WA_TranslucentBackground)
                 algaeList.append(pic)
         
 
@@ -428,11 +430,15 @@ class GLWidget(QtOpenGL.QGLWidget):
             #self.yRotationChanged.emit(angle)
             #self.updateGL()#calls glDraw() which calls paintGl()
 
+        self.updateGL
+
     def setYTrans(self, trans):
         for label in algaeList:
             label.move(label.pos().x(),label.pos().y() + trans)
             #self.yRotationChanged.emit(angle)
-            #self.updateGL()#calls glDraw() which calls paintGl()         
+            #self.updateGL()#calls glDraw() which calls paintGl()
+
+        self.updateGL
 
     def initializeGL(self):
         self.qglClearColor(backGroundColor)
@@ -445,10 +451,10 @@ class GLWidget(QtOpenGL.QGLWidget):
         #replace current matrix with identity matrix
         GL.glLoadIdentity()
 
-        for algae in self.algaeList:
-            GL.glTranslated(algae.posX, algae.posY, -10.0)
-            #calls the list saved in object variable
-            GL.glCallList(algae.object)
+##        for algae in self.algaeList:
+##            GL.glTranslated(algae.posX, algae.posY, -10.0)
+##            #calls the list saved in object variable
+##            GL.glCallList(algae.object)
 
     def resizeGL(self, width, height):
         side = min(width, height)
