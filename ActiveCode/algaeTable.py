@@ -22,7 +22,8 @@ class AlgaeTable:
         self.Name_Array = [
             "Attempt001",
             "eucapsis_jul6_11_400N_JUD",
-            "Attempt001"]
+            "Attempt001",
+            "Type 4"]
         self.Total_Algae_Types = len(self.Name_Array)
         self.Default_Min_Count = 20
         self.Default_Max_Count = 40

@@ -7,7 +7,11 @@
 #
 # WARNING! All changes made in this file will be lost!
 
+
+import sys, os
+
 from PyQt4 import QtCore, QtGui
+from algaeTable import *
 
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
@@ -24,7 +28,7 @@ except AttributeError:
         return QtGui.QApplication.translate(context, text, disambig)
 
 class Ui_results(object):
-    def setupUi(self, results):
+    def setupUi(self, results, AlgaeSample):
         results.setObjectName(_fromUtf8("results"))
         results.resize(755, 569)
         self.pushButton = QtGui.QPushButton(results)
@@ -56,7 +60,8 @@ class Ui_results(object):
         self.formLayout = QtGui.QFormLayout(self.scrollAreaWidgetContents)
         self.formLayout.setFieldGrowthPolicy(QtGui.QFormLayout.AllNonFixedFieldsGrow)
         self.formLayout.setObjectName(_fromUtf8("formLayout"))
-        self.graphicsView_2 = QtGui.QGraphicsView(self.scrollAreaWidgetContents)
+
+        """self.graphicsView_2 = QtGui.QGraphicsView(self.scrollAreaWidgetContents)
         self.graphicsView_2.setObjectName(_fromUtf8("graphicsView_2"))
         self.formLayout.setWidget(0, QtGui.QFormLayout.LabelRole, self.graphicsView_2)
         self.groupBox_3 = QtGui.QGroupBox(self.scrollAreaWidgetContents)
@@ -158,8 +163,9 @@ class Ui_results(object):
         self.lineEdit_14 = QtGui.QLineEdit(self.layoutWidget_3)
         self.lineEdit_14.setObjectName(_fromUtf8("lineEdit_14"))
         self.gridLayout_3.addWidget(self.lineEdit_14, 1, 2, 1, 1)
-        self.formLayout.setWidget(2, QtGui.QFormLayout.FieldRole, self.groupBox_5)
-        self.groupBox_12 = QtGui.QGroupBox(self.scrollAreaWidgetContents)
+        self.formLayout.setWidget(2, QtGui.QFormLayout.FieldRole, self.groupBox_5)"""
+        
+        """self.groupBox_12 = QtGui.QGroupBox(self.scrollAreaWidgetContents)
         self.groupBox_12.setTitle(_fromUtf8(""))
         self.groupBox_12.setObjectName(_fromUtf8("groupBox_12"))
         self.layoutWidget_4 = QtGui.QWidget(self.groupBox_12)
@@ -189,8 +195,9 @@ class Ui_results(object):
         self.lineEdit_22 = QtGui.QLineEdit(self.layoutWidget_4)
         self.lineEdit_22.setObjectName(_fromUtf8("lineEdit_22"))
         self.gridLayout_4.addWidget(self.lineEdit_22, 1, 2, 1, 1)
-        self.formLayout.setWidget(3, QtGui.QFormLayout.FieldRole, self.groupBox_12)
-        self.graphicsView_5 = QtGui.QGraphicsView(self.scrollAreaWidgetContents)
+        self.formLayout.setWidget(3, QtGui.QFormLayout.FieldRole, self.groupBox_12)"""
+        
+        """self.graphicsView_5 = QtGui.QGraphicsView(self.scrollAreaWidgetContents)
         self.graphicsView_5.setObjectName(_fromUtf8("graphicsView_5"))
         self.formLayout.setWidget(3, QtGui.QFormLayout.LabelRole, self.graphicsView_5)
         self.graphicsView_6 = QtGui.QGraphicsView(self.scrollAreaWidgetContents)
@@ -198,9 +205,10 @@ class Ui_results(object):
         self.formLayout.setWidget(4, QtGui.QFormLayout.LabelRole, self.graphicsView_6)
         self.graphicsView_7 = QtGui.QGraphicsView(self.scrollAreaWidgetContents)
         self.graphicsView_7.setObjectName(_fromUtf8("graphicsView_7"))
-        self.formLayout.setWidget(5, QtGui.QFormLayout.LabelRole, self.graphicsView_7)
-        self.groupBox_13 = QtGui.QGroupBox(self.scrollAreaWidgetContents)
-        self.groupBox_13.setTitle(_fromUtf8(""))
+        self.formLayout.setWidget(5, QtGui.QFormLayout.LabelRole, self.graphicsView_7)"""
+        
+        """self.groupBox_13 = QtGui.QGroupBox(self.scrollAreaWidgetContents)
+        self.groupBox_13.setTitle(_fromUtf8("Test Box"))
         self.groupBox_13.setObjectName(_fromUtf8("groupBox_13"))
         self.layoutWidget_5 = QtGui.QWidget(self.groupBox_13)
         self.layoutWidget_5.setGeometry(QtCore.QRect(10, 20, 413, 47))
@@ -229,8 +237,86 @@ class Ui_results(object):
         self.lineEdit_28 = QtGui.QLineEdit(self.layoutWidget_5)
         self.lineEdit_28.setObjectName(_fromUtf8("lineEdit_28"))
         self.gridLayout_6.addWidget(self.lineEdit_28, 1, 2, 1, 1)
-        self.formLayout.setWidget(4, QtGui.QFormLayout.FieldRole, self.groupBox_13)
-        self.groupBox_14 = QtGui.QGroupBox(self.scrollAreaWidgetContents)
+        self.formLayout.setWidget(4, QtGui.QFormLayout.FieldRole, self.groupBox_13)"""
+
+        for x in xrange(AlgaeSample.Total_Algae_Types):
+            Index = 7 + x
+            CurrentGroupBox = QtGui.QGroupBox(self.scrollAreaWidgetContents)
+            CurrentGroupBox.setTitle(_fromUtf8(AlgaeSample.Get_Name(x)))
+            CurrentGroupBox.setObjectName(_fromUtf8("CurrentGroupBox"))
+            CurrentLayoutWidget = QtGui.QWidget(CurrentGroupBox)
+            CurrentLayoutWidget.setGeometry(QtCore.QRect(10, 20, 413, 47))
+            CurrentLayoutWidget.setObjectName(_fromUtf8("CurrentLayoutWidget"))
+            CurrentGridLayout = QtGui.QGridLayout(CurrentLayoutWidget)
+            CurrentGridLayout.setMargin(0)
+            CurrentGridLayout.setObjectName(_fromUtf8("CurrentGridLayout"))
+            CurrentLabel_Your_Answer = QtGui.QLabel(CurrentLayoutWidget)
+            CurrentLabel_Your_Answer.setAlignment(QtCore.Qt.AlignCenter)
+            CurrentLabel_Your_Answer.setObjectName(_fromUtf8("CurrentLabel_Your_Answer"))
+            CurrentGridLayout.addWidget(CurrentLabel_Your_Answer, 0, 0, 1, 1)
+            CurrentLabel_Correct_Answer = QtGui.QLabel(CurrentLayoutWidget)
+            CurrentLabel_Correct_Answer.setAlignment(QtCore.Qt.AlignCenter)
+            CurrentLabel_Correct_Answer.setObjectName(_fromUtf8("CurrentLabel_Correct_Answer"))
+            CurrentGridLayout.addWidget(CurrentLabel_Correct_Answer, 0, 1, 1, 1)
+            CurrentLabel_Difference = QtGui.QLabel(CurrentLayoutWidget)
+            CurrentLabel_Difference.setAlignment(QtCore.Qt.AlignCenter)
+            CurrentLabel_Difference.setObjectName(_fromUtf8("label_36"))
+            CurrentGridLayout.addWidget(CurrentLabel_Difference, 0, 2, 1, 1)
+            lineEdit_26 = QtGui.QLineEdit(CurrentLayoutWidget)
+            lineEdit_26.setObjectName(_fromUtf8("lineEdit_26"))
+            CurrentGridLayout.addWidget(lineEdit_26, 1, 0, 1, 1)
+            CurrentLineEdit_Correct_Answer = QtGui.QLineEdit(CurrentLayoutWidget)
+            CurrentLineEdit_Correct_Answer.setObjectName(_fromUtf8("lineEdit_27"))
+            CurrentGridLayout.addWidget(CurrentLineEdit_Correct_Answer, 1, 1, 1, 1)
+            lineEdit_28 = QtGui.QLineEdit(CurrentLayoutWidget)
+            lineEdit_28.setObjectName(_fromUtf8("lineEdit_28"))
+            CurrentGridLayout.addWidget(lineEdit_28, 1, 2, 1, 1)
+            self.formLayout.setWidget(Index, QtGui.QFormLayout.FieldRole, CurrentGroupBox)
+
+            CurrentLabel_Your_Answer.setText(_translate("results", "Your Answer", None))
+            CurrentLabel_Correct_Answer.setText(_translate("results", "Correct Answer", None))
+            CurrentLabel_Difference.setText(_translate("results", "Difference", None))
+            CurrentLineEdit_Correct_Answer.setText(_translate("results", str(AlgaeSample.Get_Count(x)), None))
+            lineEdit_26.setText(_translate("results", "Searching...", None))
+            lineEdit_28.setText(_translate("results", str(0 - AlgaeSample.Get_Count(x)), None))
+
+            # Add graphic
+            #CurrentGraphicsView = QtGui.QGraphicsView(self.scrollAreaWidgetContents)
+            CurrentGraphicsView = QtGui.QLabel(self.scrollAreaWidgetContents)
+            CurrentGraphicsView.setObjectName(_fromUtf8("CurrentGraphicsView"))
+            self.formLayout.setWidget(Index, QtGui.QFormLayout.LabelRole, CurrentGraphicsView)
+            CurrentGraphicsView.setPixmap(QtGui.QPixmap(os.getcwd() + "/Assets/20um/"+AlgaeSample.Get_Name(x) + ".png"))
+            CurrentGraphicsView.setFixedWidth(75)
+            CurrentGraphicsView.setFixedHeight(75)
+            #CurrentGraphicsView.setGeometry(0,0,90,90)
+            CurrentGraphicsView.setScaledContents(True)
+            backGroundColorString = "44,121,176,255"
+            CurrentGraphicsView.setStyleSheet("background-color: rgba("+backGroundColorString+")" )
+            
+            """#print "Drawing: " + algaeTable.Name_Array[x]
+            pic = QtGui.QLabel(self.glWidget)
+            pic.setPixmap(QtGui.QPixmap(os.getcwd() + "/Assets/20um/"+algaeTable.Name_Array[x] + ".png"))
+            pic.setGeometry(randint(-1000,1000),randint(-1000,1000),pic.pixmap().width()/8,pic.pixmap().height()/8)
+            pic.setScaledContents(True)
+            pic.setStyleSheet("background-color: rgba("+backGroundColorString+")" )
+            algaeList.append(pic)"""
+
+        """
+        self.groupBox_test = QtGui.QGroupBox(self.scrollAreaWidgetContents)
+        self.groupBox_test.setTitle(_fromUtf8(""))
+        self.groupBox_test.setObjectName(_fromUtf8("groupBox_test"))
+        self.layoutWidget_test = QtGui.QWidget(self.groupBox_test)
+        self.layoutWidget_test.setGeometry(QtCore.QRect(10, 20, 413, 47))
+        self.layoutWidget_test.setObjectName(_fromUtf8("layoutWidget_test"))
+        self.gridLayout_test = QtGui.QGridLayout(self.layoutWidget_test)
+        self.gridLayout_test.setMargin(0)
+        self.gridLayout_test.setObjectName(_fromUtf8("gridLayout_test"))
+        
+        self.Print_Row(self, "Attempt001", 20, AlgaeSample)
+        self.Print_Row(self, "Attempt002", 50, AlgaeSample)"""
+
+        
+        """self.groupBox_14 = QtGui.QGroupBox(self.scrollAreaWidgetContents)
         self.groupBox_14.setTitle(_fromUtf8(""))
         self.groupBox_14.setObjectName(_fromUtf8("groupBox_14"))
         self.layoutWidget_6 = QtGui.QWidget(self.groupBox_14)
@@ -260,7 +346,8 @@ class Ui_results(object):
         self.lineEdit_31 = QtGui.QLineEdit(self.layoutWidget_6)
         self.lineEdit_31.setObjectName(_fromUtf8("lineEdit_31"))
         self.gridLayout_7.addWidget(self.lineEdit_31, 1, 2, 1, 1)
-        self.formLayout.setWidget(5, QtGui.QFormLayout.FieldRole, self.groupBox_14)
+        self.formLayout.setWidget(5, QtGui.QFormLayout.FieldRole, self.groupBox_14)"""
+
         self.AlgaeLibrary.setWidget(self.scrollAreaWidgetContents)
         self.groupBox = QtGui.QGroupBox(results)
         self.groupBox.setGeometry(QtCore.QRect(8, 10, 731, 51))
@@ -279,15 +366,18 @@ class Ui_results(object):
         self.lineEdit = QtGui.QLineEdit(results)
         self.lineEdit.setGeometry(QtCore.QRect(350, 520, 181, 31))
         self.lineEdit.setObjectName(_fromUtf8("lineEdit"))
+        
 
-        self.retranslateUi(results)
+        self.retranslateUi(results, AlgaeSample)
         QtCore.QMetaObject.connectSlotsByName(results)
 
-    def retranslateUi(self, results):
+    def retranslateUi(self, results, AlgaeSample):
         results.setWindowTitle(_translate("results", "Dialog", None))
         self.pushButton.setText(_translate("results", "Continue", None))
-        self.label.setText(_translate("results", "Oveall Score", None))
-        self.label_26.setText(_translate("results", "Your Answer", None))
+        self.label.setText(_translate("results", "Overall Score", None))
+        """self.label_26.setText(_translate("results", "Your Answer", None))
+        #self.label_26.setText(_translate("results", AlgaeSample.Get_Name(1), None))
+        #self.lineEdit_26.setText(_translate("results", AlgaeSample.Get_Name(1), None))
         self.label_28.setText(_translate("results", "Correct Answer", None))
         self.label_27.setText(_translate("results", "Difference", None))
         self.label_23.setText(_translate("results", "Your Answer", None))
@@ -299,11 +389,10 @@ class Ui_results(object):
         self.label_9.setText(_translate("results", "Your Answer", None))
         self.label_29.setText(_translate("results", "Correct Answer", None))
         self.label_30.setText(_translate("results", "Difference", None))
-        self.label_34.setText(_translate("results", "Your Answer", None))
-        self.label_35.setText(_translate("results", "Correct Answer", None))
-        self.label_36.setText(_translate("results", "Difference", None))
+        #self.label_34.setText(_translate("results", "Your Answer", None))
+        #self.label_35.setText(_translate("results", "Correct Answer", None))
+        #self.label_36.setText(_translate("results", "Difference", None))
         self.label_37.setText(_translate("results", "Your Answer", None))
         self.label_38.setText(_translate("results", "Correct Answer", None))
-        self.label_39.setText(_translate("results", "Difference", None))
+        self.label_39.setText(_translate("results", "Difference", None))"""
         self.label_41.setText(_translate("results", "Results", None))
-

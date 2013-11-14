@@ -52,8 +52,9 @@ backGroundColor = QColor(44,121,176,255)
 backGroundColorString = "44,121,176,255"
 
 algaeList = []
-algaeTable.Generate_Sample()
 random.seed()
+algaeTable.Generate_Sample()
+
 
 
 
@@ -66,8 +67,9 @@ class Ui_MainWindow(object):
         self.centralWidget = QtGui.QWidget(MainWindow)
         self.centralWidget.setObjectName(_fromUtf8("centralWidget"))
         self.glWidget = GLWidget(self.centralWidget)
+        self.Beaker = algaeTable
 
-        print "Generating algae..."
+        print "Printing algae..."
         for x in xrange(algaeTable.Total_Algae_Types):
             print str(algaeTable.Get_Name(x)) + ": " + str(algaeTable.Get_Count(x))
             for y in xrange(algaeTable.Total_Count_Array[x]):
@@ -271,7 +273,7 @@ class Ui_MainWindow(object):
 
     def openResults(self,val):
         ui=QtGui.QDialog();
-        self.resultsDialog.setupUi(ui)
+        self.resultsDialog.setupUi(ui, self.Beaker)
         ui.show()
         ui.exec_()
         
