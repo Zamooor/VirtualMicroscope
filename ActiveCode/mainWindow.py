@@ -65,6 +65,32 @@ offsetMaxY = 11718.75/2
 offsetMinX = -offsetMaxX
 offsetMinY = -offsetMaxY
 magLevel = 400
+magLevelMin = 60
+
+def isColliding(candidate, testCase):
+    cLeft = candidate.pos().x()
+    cRight = candidate.pos().x() + candidate.width()
+    cTop = candidate.pos().y()
+    cBottom = candidate.pos().y() + candidate.height()
+
+    tLeft = testCase.pos().x()
+    tRight = testCase.pos().x() + testCase.width()
+    tTop = testCase.pos().y()
+    tBottom = testCase.pos().y() + testCase.height()
+
+    if cBottom <= tTop:
+        return False
+
+    if cTop >= tBottom:
+        return False
+
+    if cRight <= tLeft:
+        return False
+
+    if cLeft >= tRight:
+        return False
+
+    return True
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -80,15 +106,24 @@ class Ui_MainWindow(object):
         global magLevel
         self.magLabel.setText("%dX" % magLevel)
         self.magLabel.setStyleSheet("font: 18pt;" )
-
+        
         print "Printing algae..."
+        # this algae gen algorithm's run time is terrible
         for x in xrange(algaeTable.Total_Algae_Types):
             print str(algaeTable.Get_Name(x)) + ": " + str(algaeTable.Get_Count(x))
             for y in xrange(algaeTable.Total_Count_Array[x]):
                 #print "Drawing: " + algaeTable.Name_Array[x]
                 pic = QtGui.QLabel(self.glWidget)
                 pic.setPixmap(QtGui.QPixmap(os.getcwd() + "/Assets/20um/"+algaeTable.Name_Array[x] + ".png"))
-                pic.setGeometry(randint(-1000,1000),randint(-1000,1000),pic.pixmap().width()/8,pic.pixmap().height()/8)
+                
+                collidedTest = True
+                while(collidedTest):
+                    pic.setGeometry(randint(-5000,5000),randint(-5000,5000),pic.pixmap().width()/8,pic.pixmap().height()/8)
+                    collidedTest = False
+                    for testpic in algaeList:
+                        if(isColliding(pic, testpic)):
+                            collidedTest = True
+
                 pic.setScaledContents(True)
                 pic.setStyleSheet("background-color: rgba("+backGroundColorString+")" )
                 algaeList.append(pic)
@@ -332,15 +367,16 @@ class Ui_MainWindow(object):
     def Smaller(self):
         scale = 1.5
         global magLevel
-        
-        magLevel = magLevel/scale
-        self.magLabel.setText("%.2fX" %magLevel)
-        global offsetMinX
-        offsetMinX = offsetMinX/scale
-        global offsetMinY
-        offsetMinY = offsetMinY/scale
-        for pic in algaeList:
-            pic.setGeometry(pic.x() / scale, pic.y() / scale, pic.width() / scale, pic.height() / scale)
+        # an expiremental temp fix
+        if(magLevel/scale > magLevelMin):
+            magLevel = magLevel/scale
+            self.magLabel.setText("%.2fX" %magLevel)
+            global offsetMinX
+            offsetMinX = offsetMinX/scale
+            global offsetMinY
+            offsetMinY = offsetMinY/scale
+            for pic in algaeList:
+                pic.setGeometry(pic.x() / scale, pic.y() / scale, pic.width() / scale, pic.height() / scale)
 
 
     
