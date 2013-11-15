@@ -512,12 +512,6 @@ class GLWidget(QtOpenGL.QGLWidget):
 ##            self.setZRotation(self.zRot + 8 * dx)
 ##
 ##        self.lastPos = event.pos()
-        
-
-
-    
-
-
     
     
     #makes vertices
