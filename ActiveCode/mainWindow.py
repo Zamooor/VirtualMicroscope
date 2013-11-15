@@ -56,9 +56,15 @@ random.seed()
 algaeTable.Generate_Sample()
 
 
-
-
-                    
+## 2um scale is 557/8px long
+## so initialy a 75mm*25mm slide is 167343px wide and 11718px high
+offsetX = 0.0
+offsetY = 0.0
+offsetMaxX = 167343.75/2
+offsetMaxY = 11718.75/2
+offsetMinX = -offsetMaxX
+offsetMinY = -offsetMaxY
+magLevel = 400
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -68,6 +74,12 @@ class Ui_MainWindow(object):
         self.centralWidget.setObjectName(_fromUtf8("centralWidget"))
         self.glWidget = GLWidget(self.centralWidget)
         self.Beaker = algaeTable
+
+        self.magLabel = QtGui.QLabel(self.centralWidget)
+        self.magLabel.setGeometry(900, 405, 90, 30)
+        global magLevel
+        self.magLabel.setText("%dX" % magLevel)
+        self.magLabel.setStyleSheet("font: 18pt;" )
 
         print "Printing algae..."
         for x in xrange(algaeTable.Total_Algae_Types):
@@ -303,14 +315,34 @@ class Ui_MainWindow(object):
     def UTrans(self):
         self.glWidget.setYTrans(10)
 
+    
+
     def Bigger(self):
         scale = 1.5
+        global magLevel
+        
+        magLevel = magLevel * scale
+        self.magLabel.setText("%.2fX" %magLevel)
+        global offsetMaxX
+        offsetMaxX = offsetMaxX * scale
+        global offsetMaxY
+        offsetMaxY = offsetMaxY * scale
         for pic in algaeList:
             pic.setGeometry(pic.x() * scale, pic.y() * scale,pic.width() * scale,pic.height() * scale)
     def Smaller(self):
         scale = 1.5
+        global magLevel
+        
+        magLevel = magLevel/scale
+        self.magLabel.setText("%.2fX" %magLevel)
+        global offsetMinX
+        offsetMinX = offsetMinX/scale
+        global offsetMinY
+        offsetMinY = offsetMinY/scale
         for pic in algaeList:
             pic.setGeometry(pic.x() / scale, pic.y() / scale, pic.width() / scale, pic.height() / scale)
+
+
     
     
 #####################################################################################
@@ -423,16 +455,18 @@ class GLWidget(QtOpenGL.QGLWidget):
         return QtCore.QSize(1000, 400)
 
     def setXTrans(self, trans):
-        for label in algaeList:
-            label.move(label.pos().x() + trans,label.pos().y())
-            #self.yRotationChanged.emit(angle)
-            #self.updateGL()#calls glDraw() which calls paintGl()
+        if offsetX + trans <= offsetMaxX or offsetX + trans >= offsetMinX:
+            global offsetX
+            offsetX = offsetX + trans
+            for label in algaeList:
+                label.move(label.pos().x() + trans,label.pos().y())
 
     def setYTrans(self, trans):
-        for label in algaeList:
-            label.move(label.pos().x(),label.pos().y() + trans)
-            #self.yRotationChanged.emit(angle)
-            #self.updateGL()#calls glDraw() which calls paintGl()         
+        if offsetY + trans <= offsetMaxY or offsetY + trans >= offsetMinY:
+            global offsetY
+            offsetY = offsetY + trans
+            for label in algaeList:
+                label.move(label.pos().x(),label.pos().y() + trans)       
 
     def initializeGL(self):
         self.qglClearColor(backGroundColor)
