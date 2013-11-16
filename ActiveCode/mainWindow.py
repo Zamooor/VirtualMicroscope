@@ -317,10 +317,12 @@ class Ui_MainWindow(object):
         self.actionControls.setText(_translate("MainWindow", "Controls", None))
         self.actionImport_Sample.setText(_translate("MainWindow", "Import Existing Sample", None))
         self.actionCreate_New_Sample.setText(_translate("MainWindow", "Create New Sample", None))
-
+        
+    
+            
     def openResults(self,val):
         ui=QtGui.QDialog();
-        self.resultsDialog.setupUi(ui, self.Beaker)
+        self.resultsDialog.setupUi(ui, self.Beaker,self.ans_table)
         ui.show()
         ui.exec_()
         
@@ -334,6 +336,8 @@ class Ui_MainWindow(object):
                 self.ans_table.setItem(0,1,QtGui.QTableWidgetItem(self.input_count.text()))
                 self.ans_table.setItem(0,0,QtGui.QTableWidgetItem(self.input_species.text()))
                 self.ans_table.sortItems(0,Qt.AscendingOrder)
+
+                
         except Exception:
             #QtGui.QMessageBox.about(MainWindow,'Error','Input can only be a number')
             pass        
