@@ -1,0 +1,12 @@
+Notes from Meeting on 11/15/2013 : 
+
+1. One of our main goals that we talked about for the first prototype is to convert
+    to canvas by using QCanvas, such as using operation with QDials, and Animated Dials.
+    We will be removing openGl operations.
+2. Link a Gui item to the interface using Callback in PyQt? 
+   For Zoom we discussed how the change or click event is made, like value added for zoom functions.
+3. Our goal for Friday is to get a prototype such that we can have out client do trial runs and provide feedback
+    make the test fun, and seem interactive, might be nice to add more graphics to the results page etc. 
+4. We can then later work on instant feedback. But this will be after we get one case that is working fine. 
+5. 1st Phase, create a simple application [ Coordinate Graphics into the answer]
+6. We also have 20 min presentations during dead\finals week.
