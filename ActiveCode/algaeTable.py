@@ -14,14 +14,12 @@ class AlgaeTable:
     def __init__(self):
         # Data
         self.Name_Array = [
-            "Type 1",
+            "Lepo Ovalis",
             "Eucapsis",
-            "Attempt001",
             "Aphaniz Akinetes"]
         self.File_Name_Array = [
             "Attempt001",
             "eucapsis_jul6_11_400N_JUD",
-            "Attempt001",
             "aphaniz_akinetes_sep16_10_200N_TBIRD"]
         self.Total_Algae_Types = len(self.Name_Array)
         self.Default_Min_Count = 20
