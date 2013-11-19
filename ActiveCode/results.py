@@ -31,9 +31,12 @@ class Ui_results(object):
     def setupUi(self, results, AlgaeSample,ansTable):
         results.setObjectName(_fromUtf8("results"))
         results.resize(755, 569)
+
         self.pushButton = QtGui.QPushButton(results)
         self.pushButton.setGeometry(QtCore.QRect(558, 520, 181, 31))
         self.pushButton.setObjectName(_fromUtf8("pushButton"))
+        self.pushButton.clicked.connect(results.done)
+
         self.label = QtGui.QLabel(results)
         self.label.setGeometry(QtCore.QRect(248, 523, 91, 21))
         self.label.setAlignment(QtCore.Qt.AlignCenter)
@@ -67,42 +70,53 @@ class Ui_results(object):
             CurrentGroupBox = QtGui.QGroupBox(self.scrollAreaWidgetContents)
             CurrentGroupBox.setTitle(_fromUtf8(AlgaeSample.Get_Name(x)))
             CurrentGroupBox.setObjectName(_fromUtf8("CurrentGroupBox"))
+
             CurrentLayoutWidget = QtGui.QWidget(CurrentGroupBox)
-            CurrentLayoutWidget.setGeometry(QtCore.QRect(10, 20, 413, 47))
+            CurrentLayoutWidget.setGeometry(QtCore.QRect(10, 20, 600, 47))
             CurrentLayoutWidget.setObjectName(_fromUtf8("CurrentLayoutWidget"))
+
             CurrentGridLayout = QtGui.QGridLayout(CurrentLayoutWidget)
             CurrentGridLayout.setMargin(0)
             CurrentGridLayout.setObjectName(_fromUtf8("CurrentGridLayout"))
+
             CurrentLabel_Your_Answer = QtGui.QLabel(CurrentLayoutWidget)
             CurrentLabel_Your_Answer.setAlignment(QtCore.Qt.AlignCenter)
             CurrentLabel_Your_Answer.setObjectName(_fromUtf8("CurrentLabel_Your_Answer"))
             CurrentGridLayout.addWidget(CurrentLabel_Your_Answer, 0, 0, 1, 1)
+
             CurrentLabel_Correct_Answer = QtGui.QLabel(CurrentLayoutWidget)
             CurrentLabel_Correct_Answer.setAlignment(QtCore.Qt.AlignCenter)
             CurrentLabel_Correct_Answer.setObjectName(_fromUtf8("CurrentLabel_Correct_Answer"))
             CurrentGridLayout.addWidget(CurrentLabel_Correct_Answer, 0, 1, 1, 1)
+
             CurrentLabel_Difference = QtGui.QLabel(CurrentLayoutWidget)
             CurrentLabel_Difference.setAlignment(QtCore.Qt.AlignCenter)
             CurrentLabel_Difference.setObjectName(_fromUtf8("label_36"))
             CurrentGridLayout.addWidget(CurrentLabel_Difference, 0, 2, 1, 1)
-            lineEdit_26 = QtGui.QLineEdit(CurrentLayoutWidget)
-            lineEdit_26.setObjectName(_fromUtf8("lineEdit_26"))
-            CurrentGridLayout.addWidget(lineEdit_26, 1, 0, 1, 1)
-            CurrentLineEdit_Correct_Answer = QtGui.QLineEdit(CurrentLayoutWidget)
-            CurrentLineEdit_Correct_Answer.setObjectName(_fromUtf8("lineEdit_27"))
-            CurrentGridLayout.addWidget(CurrentLineEdit_Correct_Answer, 1, 1, 1, 1)
-            lineEdit_28 = QtGui.QLineEdit(CurrentLayoutWidget)
-            lineEdit_28.setObjectName(_fromUtf8("lineEdit_28"))
-            CurrentGridLayout.addWidget(lineEdit_28, 1, 2, 1, 1)
+            
+            Label_User_Answer = QtGui.QLabel(CurrentLayoutWidget)
+            Label_User_Answer.setObjectName(_fromUtf8("Label_User_Answer"))
+            Label_User_Answer.setAlignment(QtCore.Qt.AlignCenter)
+            CurrentGridLayout.addWidget(Label_User_Answer, 1, 0, 1, 1)
+
+            Label_Correct_Answer = QtGui.QLabel(CurrentLayoutWidget)
+            Label_Correct_Answer.setObjectName(_fromUtf8("Label_Correct_Answer"))
+            Label_Correct_Answer.setAlignment(QtCore.Qt.AlignCenter)
+            CurrentGridLayout.addWidget(Label_Correct_Answer, 1, 1, 1, 1)
+
+            Label_Num_Difference = QtGui.QLabel(CurrentLayoutWidget)
+            Label_Num_Difference.setObjectName(_fromUtf8("Label_Num_Difference"))
+            Label_Num_Difference.setAlignment(QtCore.Qt.AlignCenter)
+            CurrentGridLayout.addWidget( Label_Num_Difference, 1, 2, 1, 1)
             self.formLayout.setWidget(Index, QtGui.QFormLayout.FieldRole, CurrentGroupBox)
 
             CurrentLabel_Your_Answer.setText(_translate("results", "Your Answer", None))
             CurrentLabel_Correct_Answer.setText(_translate("results", "Correct Answer", None))
             CurrentLabel_Difference.setText(_translate("results", "Difference", None))
-            CurrentLineEdit_Correct_Answer.setText(_translate("results",str(AlgaeSample.Get_Count(x)), None))
+            Label_Correct_Answer.setText(_translate("results",str(AlgaeSample.Get_Count(x)), None))
              
-            lineEdit_26.setText(_translate("results", self.getUserCount(x,AlgaeSample,ansTable), None))
-            lineEdit_28.setText(_translate("results", str(int(lineEdit_26.text()) - int(CurrentLineEdit_Correct_Answer.text())), None))
+            Label_User_Answer.setText(_translate("results", self.getUserCount(x,AlgaeSample,ansTable), None))
+            Label_Num_Difference.setText(_translate("results", str(int(Label_User_Answer.text()) - int(Label_Correct_Answer.text())), None))
 
             # Add graphic
             #CurrentGraphicsView = QtGui.QGraphicsView(self.scrollAreaWidgetContents)
@@ -157,9 +171,13 @@ class Ui_results(object):
             return ansTable.item(tableItem[0].row(),1).text()
         else:
             return "0"
+        
+    def closeEvent(self):
+        print("event")
+        
     
     def retranslateUi(self, results, AlgaeSample):
-        results.setWindowTitle(_translate("results", "Dialog", None))
+        results.setWindowTitle(_translate("Counting Results", "Dialog", None))
         self.pushButton.setText(_translate("results", "Continue", None))
         self.label.setText(_translate("results", "Overall Score", None))
         self.label_41.setText(_translate("results", "Results", None))

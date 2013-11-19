@@ -323,7 +323,7 @@ class Ui_MainWindow(object):
     def openResults(self,val):
         ui=QtGui.QDialog();
         self.resultsDialog.setupUi(ui, self.Beaker,self.ans_table)
-        ui.show()
+        ui.setModal(True) 
         ui.exec_()
         
     def addToChart(self):
