@@ -107,25 +107,8 @@ class Ui_MainWindow(object):
         
         self.scene = QtGui.QGraphicsScene(0, 0, 999, 400)
         self.view = QtGui.QGraphicsView(self.scene, self.centralWidget)
-        print "Printing algae..."
-        # this algae gen algorithm's run time is terrible
-        for x in xrange(algaeTable.Total_Algae_Types):
-            print str(algaeTable.Get_Name(x)) + ": " + str(algaeTable.Get_Count(x))
-            for y in xrange(algaeTable.Total_Count_Array[x]):
-                #print "Drawing: " + algaeTable.Name_Array[x]
-                pic = Pixmap(QtGui.QPixmap(os.getcwd() + "/Assets/20um/"+algaeTable.Get_File_Name(x)))
-                pic.pos = QtCore.QPointF(random.randint(0, 900), random.randint(0, 320))
-    ##                collidedTest = True
-    ##                while(collidedTest):
-    ##                    pic.setGeometry(randint(-5000,5000),randint(-5000,5000),pic.pixmap().width()/8,pic.pixmap().height()/8)
-    ##                    collidedTest = False
-    ##                    for testpic in algaeList:
-    ##                        if(isColliding(pic, testpic)):
-    ##                            collidedTest = True
 
-                algaeList.append(pic)
-                self.scene.addItem(pic.pixmap_item)
-
+        self.setUpScene(self.scene, self.view)
         self.centralWidget.centralWidget = self.view
 
         # Controls		
@@ -215,6 +198,21 @@ class Ui_MainWindow(object):
         self.input_count.setText(_fromUtf8(""))
         self.input_count.setObjectName(_fromUtf8("input_count"))
         self.input_count.setPlaceholderText ("Enter Count")
+
+        # button actions
+        self.submit_button.clicked.connect(self.openResults)
+        self.findButton.clicked.connect(self.addToChart)
+#########################
+##        DISABLED
+#########################
+##        self.right_button.pressed.connect(self.RTrans)
+##        self.right_button.setAutoRepeat(True)
+##        self.left_button.pressed.connect(self.LTrans)
+##        self.left_button.setAutoRepeat(True)
+##        self.up_button.pressed.connect(self.UTrans)
+##        self.up_button.setAutoRepeat(True)
+##        self.down_button.pressed.connect(self.DTrans)
+##        self.down_button.setAutoRepeat(True)
         
         #answer Table
         self.ans_table = QtGui.QTableWidget(self.centralWidget)
@@ -225,13 +223,9 @@ class Ui_MainWindow(object):
         self.ans_table.verticalHeader().setVisible(False)
         self.ans_table.setHorizontalHeaderLabels(['Name', 'Count'])
         self.ans_table.keyPressEvent = lambda event: event.ignore()
-
-        for x in xrange(algaeTable.Total_Algae_Types):
-            self.ans_table.insertRow(0)
-            self.ans_table.setItem(0,0,QtGui.QTableWidgetItem(algaeTable.Get_Name(x)))
-            self.ans_table.setItem(0,1,QtGui.QTableWidgetItem("0"))
-            self.ans_table.item(0,0).setFlags(Qt.NoItemFlags)
-            self.ans_table.sortItems(0,Qt.AscendingOrder)
+        #presets the algae names in the table
+        self.setNames()
+        
         
         MainWindow.setCentralWidget(self.centralWidget)
         
@@ -287,24 +281,30 @@ class Ui_MainWindow(object):
         self.menuBar.addAction(self.menuFile.menuAction())
         self.menuBar.addAction(self.menuTools.menuAction())
         self.resultsDialog=Ui_results()
-        # button actions
-        self.submit_button.clicked.connect(self.openResults)
-        self.findButton.clicked.connect(self.addToChart)
-#########################
-##        DISABLED
-#########################
-##        self.right_button.pressed.connect(self.RTrans)
-##        self.right_button.setAutoRepeat(True)
-##        self.left_button.pressed.connect(self.LTrans)
-##        self.left_button.setAutoRepeat(True)
-##        self.up_button.pressed.connect(self.UTrans)
-##        self.up_button.setAutoRepeat(True)
-##        self.down_button.pressed.connect(self.DTrans)
-##        self.down_button.setAutoRepeat(True)  
+        
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
+    def setUpScene(self,scene,view ):
+        print "Printing algae..."
+        # this algae gen algorithm's run time is terrible
+        for x in xrange(algaeTable.Total_Algae_Types):
+            print str(algaeTable.Get_Name(x)) + ": " + str(algaeTable.Get_Count(x))
+            for y in xrange(algaeTable.Total_Count_Array[x]):
+                #print "Drawing: " + algaeTable.Name_Array[x]
+                pic = Pixmap(QtGui.QPixmap(os.getcwd() + "/Assets/20um/"+algaeTable.Get_File_Name(x)))
+                pic.pos = QtCore.QPointF(random.randint(0, 900), random.randint(0, 320))
+    ##                collidedTest = True
+    ##                while(collidedTest):
+    ##                    pic.setGeometry(randint(-5000,5000),randint(-5000,5000),pic.pixmap().width()/8,pic.pixmap().height()/8)
+    ##                    collidedTest = False
+    ##                    for testpic in algaeList:
+    ##                        if(isColliding(pic, testpic)):
+    ##                            collidedTest = True
 
+                algaeList.append(pic)
+                self.scene.addItem(pic.pixmap_item)
+        
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow", None))
         self.findButton.setText(_translate("MainWindow", "Add", None))
@@ -328,13 +328,28 @@ class Ui_MainWindow(object):
         self.actionImport_Sample.setText(_translate("MainWindow", "Import Existing Sample", None))
         self.actionCreate_New_Sample.setText(_translate("MainWindow", "Create New Sample", None))
         
-    
+    def setNames(self):
+        for x in xrange(algaeTable.Total_Algae_Types):
+            self.ans_table.insertRow(0)
+            self.ans_table.setItem(0,0,QtGui.QTableWidgetItem(algaeTable.Get_Name(x)))
+            self.ans_table.setItem(0,1,QtGui.QTableWidgetItem("0"))
+            self.ans_table.item(0,0).setFlags(Qt.NoItemFlags)
+            self.ans_table.sortItems(0,Qt.AscendingOrder)
             
     def openResults(self,val):
         ui=QtGui.QDialog();
         self.resultsDialog.setupUi(ui, self.Beaker,self.ans_table)
         ui.setModal(True) 
         ui.exec_()
+        
+        #after Results page closes generate new sample and reset forms
+        self.input_species.clear()
+        self.input_count.clear()
+        self.scene.clear()
+        self.ans_table.clearContents()
+        self.setNames()
+        algaeTable.Generate_Sample()
+        self.setUpScene(self.scene, self.view)
         
     def addToChart(self):
         #cheks if "count" value is a number and if the "name" field is not empty 
