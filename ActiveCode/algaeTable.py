@@ -13,19 +13,19 @@ class AlgaeTable:
 
     def __init__(self):
         # Data
-        # DEAR JEFF!!!!!
-        # Remember to add a different array
-        # for file names, rather than continueing
-        # to use the following array that should be for
-        # algae names only!!!!!!!!
-        # -Jeff(11/8/2013)
         self.Name_Array = [
+            "Type 1",
+            "Eucapsis",
+            "Attempt001",
+            "Aphaniz Akinetes"]
+        self.File_Name_Array = [
             "Attempt001",
             "eucapsis_jul6_11_400N_JUD",
-            "Attempt001"]
+            "Attempt001",
+            "aphaniz_akinetes_sep16_10_200N_TBIRD"]
         self.Total_Algae_Types = len(self.Name_Array)
         self.Default_Min_Count = 20
-        self.Default_Max_Count = 200
+        self.Default_Max_Count = 60
 
         self.Total_Count_Array = [0 for x in xrange(self.Total_Algae_Types)]
         self.Min_Count_Array = [self.Default_Min_Count for x in xrange(self.Total_Algae_Types)]
@@ -35,6 +35,9 @@ class AlgaeTable:
     # Exported Functions
     def Get_Name(self,ID):
         return self.Name_Array[ID]
+
+    def Get_File_Name(self,ID):
+        return self.File_Name_Array[ID] + ".png"
 
     def Get_Count(self,ID):
         return self.Total_Count_Array[ID]
