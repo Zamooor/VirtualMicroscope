@@ -58,39 +58,35 @@ algaeTable.Generate_Sample()
 
 ## 2um scale is 557/8px long
 ## so initialy a 75mm*25mm slide is 167343px wide and 11718px high
-offsetX = 0.0
-offsetY = 0.0
-offsetMaxX = 167343.75/2
-offsetMaxY = 11718.75/2
-offsetMinX = -offsetMaxX
-offsetMinY = -offsetMaxY
-magLevel = 400
-magLevelMin = 60
+##====================================================
+##  scaling and moving have been disabled ##
+##=============================================
+##offsetX = 0.0
+##offsetY = 0.0
+##offsetMaxX = 167343.75/2
+##offsetMaxY = 11718.75/2
+##offsetMinX = -offsetMaxX
+##offsetMinY = -offsetMaxY
+##magLevel = 400
+##magLevelMin = 60
 
-def isColliding(candidate, testCase):
-    cLeft = candidate.pos().x()
-    cRight = candidate.pos().x() + candidate.width()
-    cTop = candidate.pos().y()
-    cBottom = candidate.pos().y() + candidate.height()
 
-    tLeft = testCase.pos().x()
-    tRight = testCase.pos().x() + testCase.width()
-    tTop = testCase.pos().y()
-    tBottom = testCase.pos().y() + testCase.height()
 
-    if cBottom <= tTop:
-        return False
+### Class borrowed from animatedtiles demo:
+# PyQt doesn't support deriving from more than one wrapped class so we use
+# composition and delegate the property.
+class Pixmap(QtCore.QObject):
+    def __init__(self, pix):
+        super(Pixmap, self).__init__()
 
-    if cTop >= tBottom:
-        return False
+        self.pixmap_item = QtGui.QGraphicsPixmapItem(pix)
+        self.pixmap_item.setCacheMode(QtGui.QGraphicsItem.DeviceCoordinateCache)
+        self.pixmap_item.setScale(.03)
+    def _set_pos(self, pos):
+        self.pixmap_item.setPos(pos)
 
-    if cRight <= tLeft:
-        return False
 
-    if cLeft >= tRight:
-        return False
-
-    return True
+    pos = QtCore.pyqtProperty(QtCore.QPointF, fset=_set_pos)
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -98,36 +94,39 @@ class Ui_MainWindow(object):
         MainWindow.resize(999, 792)
         self.centralWidget = QtGui.QWidget(MainWindow)
         self.centralWidget.setObjectName(_fromUtf8("centralWidget"))
-        self.glWidget = GLWidget(self.centralWidget)
         self.Beaker = algaeTable
 
-        self.magLabel = QtGui.QLabel(self.centralWidget)
-        self.magLabel.setGeometry(900, 405, 90, 30)
-        global magLevel
-        self.magLabel.setText("%dX" % magLevel)
-        self.magLabel.setStyleSheet("font: 18pt;" )
+###################
+##        DISABLED
+########################
+##        self.magLabel = QtGui.QLabel(self.centralWidget)
+##        self.magLabel.setGeometry(900, 405, 90, 30)
+##        global magLevel
+##        self.magLabel.setText("%dX" % magLevel)
+##        self.magLabel.setStyleSheet("font: 18pt;" )
         
+        self.scene = QtGui.QGraphicsScene(0, 0, 999, 400)
+        self.view = QtGui.QGraphicsView(self.scene, self.centralWidget)
         print "Printing algae..."
         # this algae gen algorithm's run time is terrible
         for x in xrange(algaeTable.Total_Algae_Types):
             print str(algaeTable.Get_Name(x)) + ": " + str(algaeTable.Get_Count(x))
             for y in xrange(algaeTable.Total_Count_Array[x]):
                 #print "Drawing: " + algaeTable.Name_Array[x]
-                pic = QtGui.QLabel(self.glWidget)
-                pic.setPixmap(QtGui.QPixmap(os.getcwd() + "/Assets/20um/"+algaeTable.Name_Array[x] + ".png"))
-                
-                collidedTest = True
-                while(collidedTest):
-                    pic.setGeometry(randint(-5000,5000),randint(-5000,5000),pic.pixmap().width()/8,pic.pixmap().height()/8)
-                    collidedTest = False
-                    for testpic in algaeList:
-                        if(isColliding(pic, testpic)):
-                            collidedTest = True
+                pic = Pixmap(QtGui.QPixmap(os.getcwd() + "/Assets/20um/"+algaeTable.Name_Array[x] + ".png"))
+                pic.pos = QtCore.QPointF(random.randint(0, 900), random.randint(0, 320))
+    ##                collidedTest = True
+    ##                while(collidedTest):
+    ##                    pic.setGeometry(randint(-5000,5000),randint(-5000,5000),pic.pixmap().width()/8,pic.pixmap().height()/8)
+    ##                    collidedTest = False
+    ##                    for testpic in algaeList:
+    ##                        if(isColliding(pic, testpic)):
+    ##                            collidedTest = True
 
-                pic.setScaledContents(True)
-                pic.setStyleSheet("background-color: rgba("+backGroundColorString+")" )
                 algaeList.append(pic)
-        
+                self.scene.addItem(pic.pixmap_item)
+
+        self.centralWidget.centralWidget = self.view
 
         # Controls		
         self.groupBox_mag = QtGui.QGroupBox(self.centralWidget)
@@ -283,14 +282,17 @@ class Ui_MainWindow(object):
         # button actions
         self.submit_button.clicked.connect(self.openResults)
         self.findButton.clicked.connect(self.addToChart)
-        self.right_button.pressed.connect(self.RTrans)
-        self.right_button.setAutoRepeat(True)
-        self.left_button.pressed.connect(self.LTrans)
-        self.left_button.setAutoRepeat(True)
-        self.up_button.pressed.connect(self.UTrans)
-        self.up_button.setAutoRepeat(True)
-        self.down_button.pressed.connect(self.DTrans)
-        self.down_button.setAutoRepeat(True)  
+#########################
+##        DISABLED
+#########################
+##        self.right_button.pressed.connect(self.RTrans)
+##        self.right_button.setAutoRepeat(True)
+##        self.left_button.pressed.connect(self.LTrans)
+##        self.left_button.setAutoRepeat(True)
+##        self.up_button.pressed.connect(self.UTrans)
+##        self.up_button.setAutoRepeat(True)
+##        self.down_button.pressed.connect(self.DTrans)
+##        self.down_button.setAutoRepeat(True)  
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
@@ -341,46 +343,48 @@ class Ui_MainWindow(object):
         except Exception:
             #QtGui.QMessageBox.about(MainWindow,'Error','Input can only be a number')
             pass        
-        
-    def RTrans(self):
-        self.glWidget.setXTrans(-10)
-
-    def LTrans(self):
-        self.glWidget.setXTrans(10)
-
-    def DTrans(self):
-        self.glWidget.setYTrans(-10)
-
-    def UTrans(self):
-        self.glWidget.setYTrans(10)
-
-    
-
-    def Bigger(self):
-        scale = 1.5
-        global magLevel
-        
-        magLevel = magLevel * scale
-        self.magLabel.setText("%.2fX" %magLevel)
-        global offsetMaxX
-        offsetMaxX = offsetMaxX * scale
-        global offsetMaxY
-        offsetMaxY = offsetMaxY * scale
-        for pic in algaeList:
-            pic.setGeometry(pic.x() * scale, pic.y() * scale,pic.width() * scale,pic.height() * scale)
-    def Smaller(self):
-        scale = 1.5
-        global magLevel
-        # an expiremental temp fix
-        if(magLevel/scale > magLevelMin):
-            magLevel = magLevel/scale
-            self.magLabel.setText("%.2fX" %magLevel)
-            global offsetMinX
-            offsetMinX = offsetMinX/scale
-            global offsetMinY
-            offsetMinY = offsetMinY/scale
-            for pic in algaeList:
-                pic.setGeometry(pic.x() / scale, pic.y() / scale, pic.width() / scale, pic.height() / scale)
+####################
+##        DISABLED
+########################
+##    def RTrans(self):
+##        self.glWidget.setXTrans(-10)
+##
+##    def LTrans(self):
+##        self.glWidget.setXTrans(10)
+##
+##    def DTrans(self):
+##        self.glWidget.setYTrans(-10)
+##
+##    def UTrans(self):
+##        self.glWidget.setYTrans(10)
+##
+##    
+##
+##    def Bigger(self):
+##        scale = 1.5
+##        global magLevel
+##        
+##        magLevel = magLevel * scale
+##        self.magLabel.setText("%.2fX" %magLevel)
+##        global offsetMaxX
+##        offsetMaxX = offsetMaxX * scale
+##        global offsetMaxY
+##        offsetMaxY = offsetMaxY * scale
+##        for pic in algaeList:
+##            pic.setGeometry(pic.x() * scale, pic.y() * scale,pic.width() * scale,pic.height() * scale)
+##    def Smaller(self):
+##        scale = 1.5
+##        global magLevel
+##        # an expiremental temp fix
+##        if(magLevel/scale > magLevelMin):
+##            magLevel = magLevel/scale
+##            self.magLabel.setText("%.2fX" %magLevel)
+##            global offsetMinX
+##            offsetMinX = offsetMinX/scale
+##            global offsetMinY
+##            offsetMinY = offsetMinY/scale
+##            for pic in algaeList:
+##                pic.setGeometry(pic.x() / scale, pic.y() / scale, pic.width() / scale, pic.height() / scale)
 
 
     
@@ -392,191 +396,37 @@ class Window(QtGui.QMainWindow):
     def __init__(self):
         super(Window, self).__init__()
         self.ui = Ui_MainWindow()
-       
+        
         self.ui.setupUi(self)
-    #detect arrow keys and translates the sample accordingly
-    def keyPressEvent(self, ev):
-        if ev.key() == QtCore.Qt.Key_D:
-            self.ui.RTrans()
-        elif ev.key() == QtCore.Qt.Key_A:
-            self.ui.LTrans()
-        elif ev.key() == QtCore.Qt.Key_S:
-            self.ui.DTrans()
-        elif ev.key() == QtCore.Qt.Key_W:
-            self.ui.UTrans()
 
-    # test for scaling!
-    def wheelEvent(self, ev):
-        if ev.delta() > 0:
-            self.ui.Bigger()
-        else:
-            self.ui.Smaller()
+
         
-    
-#####################################################################################
-#####################################################################################
-   
-class algaes:
-    #texture:pass name of image to be uses as texture?
-    def __init__(self, x,y):
-        #will contain the name of the list
-        self.object = 0
-        self.d =((randint(0,10) / 10.00) - 0.5)
-        self.x1 = x + self.d
-        self.y1 = y + self.d
-        self.x2 = -y + self.d
-        self.y2 = -x + self.d
-        self.posX=((randint(0,10) / 10.00) - 0.5);
-        self.posY=((randint(0,10) / 10.00) - 0.5);
-        #self.texture=texture
-
-    def Textureize(self):
-        self.y = 0
-        
-#####################################################################################
-#####################################################################################
- #This is a class that Sound. is creating for inserting an image and seeing if
-#we can add transparency and code used from (second link provided)
-    #Still need to figure out things like incorporating vertices for the picture
-    #on the the screen and stuff.
-class ImageCh(QtGui.QWidget) :
-    def _init_(self,image, parent=None) :
-        super(ImageCh, self)._init_(parent)
-
-        self.comboBox = QtGui.QComboBox(self)
-        self.comboBox.addItems(images)
-
-        self.layout = QtGui.QVBoxLayout(self)
-        self.layout.addWidget(self.comboBox)
-
-class MyWindow(QtGui.QWidget):
-    def _init_(self,images, parent=None):
-        super(MyWindow, self)._init_(parent)
-        self.label = QTGui.QLabel(self)
-
-        self.imageChanger = ImageCh(images)
-        self.imageChanger = move(self.imageChanger.pos().y(), self.imageChanger.pos().x() + 100)
-        self.imageChanger.show()
-        self.ImageChanger.comboBox.currentIndexChanger[str].connect(self.ChangeImage)
-
-        self.layout = QtGui.QVBoxLayout(self)
-        self.layout.addWidget(self.label)
-    @QtCore.pyqtSlot(str)
-    def changeImage(self, pathToImage):
-        pixmap = QtGui.QPixmap(pathToImage)
-        self.label.setPixmap(pixmap)
-        
-#####################################################################################
-#####################################################################################
-class GLWidget(QtOpenGL.QGLWidget):
-    xRotationChanged = QtCore.pyqtSignal(int)
-    yRotationChanged = QtCore.pyqtSignal(int)
-    zRotationChanged = QtCore.pyqtSignal(int)
-
-    def __init__(self, parent=None):
-        super(GLWidget, self).__init__(parent)
-
-        self.object = 0
-        self.xTrans = 0
-        self.yTrans = 0
-
-        self.algaeList = []
-
-        self.lastPos = QtCore.QPoint()
-
-        self.trolltechGreen = QtGui.QColor.fromCmykF(0.450, 0.0, 1.0, 0.0)
-        self.trolltechPurple = QtGui.QColor.fromCmykF(0.39, 0.39, 0.0, 0.0)
         
 
-    def minimumSizeHint(self):
-        return QtCore.QSize(50, 50)
+###########################
+##  DISABLED
+#########################
+##    #detect arrow keys and translates the sample accordingly
+##    def keyPressEvent(self, ev):
+##        if ev.key() == QtCore.Qt.Key_D:
+##            self.ui.RTrans()
+##        elif ev.key() == QtCore.Qt.Key_A:
+##            self.ui.LTrans()
+##        elif ev.key() == QtCore.Qt.Key_S:
+##            self.ui.DTrans()
+##        elif ev.key() == QtCore.Qt.Key_W:
+##            self.ui.UTrans()
 
-    def sizeHint(self):
-        return QtCore.QSize(1000, 400)
+##    # test for scaling!
+##    def wheelEvent(self, ev):
+##        if ev.delta() > 0:
+##            self.ui.Bigger()
+##        else:
+##            self.ui.Smaller()
 
-    def setXTrans(self, trans):
-        if offsetX + trans <= offsetMaxX or offsetX + trans >= offsetMinX:
-            global offsetX
-            offsetX = offsetX + trans
-            for label in algaeList:
-                label.move(label.pos().x() + trans,label.pos().y())
-
-    def setYTrans(self, trans):
-        if offsetY + trans <= offsetMaxY or offsetY + trans >= offsetMinY:
-            global offsetY
-            offsetY = offsetY + trans
-            for label in algaeList:
-                label.move(label.pos().x(),label.pos().y() + trans)       
-
-    def initializeGL(self):
-        self.qglClearColor(backGroundColor)
-        GL.glShadeModel(GL.GL_FLAT)
-        GL.glEnable(GL.GL_DEPTH_TEST)
-        GL.glEnable(GL.GL_CULL_FACE)
-
-    def paintGL(self):
-        GL.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT)
-        #replace current matrix with identity matrix
-        GL.glLoadIdentity()
-
-        for algae in self.algaeList:
-            GL.glTranslated(algae.posX, algae.posY, -10.0)
-            #calls the list saved in object variable
-            GL.glCallList(algae.object)
-
-    def resizeGL(self, width, height):
-        side = min(width, height)
-        if side < 0:
-            return
         
-        GL.glViewport(0,0,width,height)
 
-        GL.glMatrixMode(GL.GL_PROJECTION)
-        GL.glLoadIdentity()
-        #clipping? 
-        GL.glOrtho(-1, +1, +0.5, -0.5, 4.0, 15.0)
-        GL.glMatrixMode(GL.GL_MODELVIEW)
 
-    def mousePressEvent(self, event):
-        self.lastPos = event.pos()
-
-    def mouseMoveEvent(self, event):
-        dx = event.x() - self.lastPos.x()
-        dy = event.y() - self.lastPos.y()
-        
-##        if event.buttons() & QtCore.Qt.LeftButton:
-##            self.setXRotation(self.xRot + 8 * dy)
-##            self.setYRotation(self.yRot + 8 * dx)
-##        elif event.buttons() & QtCore.Qt.RightButton:
-##            self.setXRotation(self.xRot + 8 * dy)
-##            self.setZRotation(self.zRot + 8 * dx)
-##
-##        self.lastPos = event.pos()
-    
-    
-    #makes vertices
-    def quad(self, x1, y1, x2, y2, x3, y3, x4, y4,color):
-        self.qglColor(color)
-
-        GL.glVertex2d(x1, y1)
-        GL.glVertex2d(x2, y2)
-        GL.glVertex2d(x3, y3)
-        GL.glVertex2d(x4, y4)
-
-    def Create_Square(self, x1, x2, y1, y2,color):
-        self.qglColor(color)
-
-        GL.glVertex2d(0.2, 0.2)
-        GL.glVertex2d(0.2, -0.2)
-        GL.glVertex2d(-0.2, -0.2)
-        GL.glVertex2d(-0.2, 0.2)
-
-#dont know what this does...........
-##        GL.glVertex2d(x4, y4)
-##        GL.glVertex2d(x3, y3)
-##        GL.glVertex2d(x2, y2)
-##        GL.glVertex2d(x1, y1)
-#####################################################################################
 
 		
 
@@ -586,6 +436,10 @@ if __name__ == '__main__':
     app = QtGui.QApplication(sys.argv)
     mwindow = Window()
 
+
+
+##    view.show()
+    
     mwindow.show()
     sys.exit(app.exec_())
 
