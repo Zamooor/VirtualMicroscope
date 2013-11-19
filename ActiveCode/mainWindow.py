@@ -113,7 +113,7 @@ class Ui_MainWindow(object):
             print str(algaeTable.Get_Name(x)) + ": " + str(algaeTable.Get_Count(x))
             for y in xrange(algaeTable.Total_Count_Array[x]):
                 #print "Drawing: " + algaeTable.Name_Array[x]
-                pic = Pixmap(QtGui.QPixmap(os.getcwd() + "/Assets/20um/"+algaeTable.Name_Array[x] + ".png"))
+                pic = Pixmap(QtGui.QPixmap(os.getcwd() + "/Assets/20um/"+algaeTable.Get_File_Name(x)))
                 pic.pos = QtCore.QPointF(random.randint(0, 900), random.randint(0, 320))
     ##                collidedTest = True
     ##                while(collidedTest):
@@ -225,6 +225,14 @@ class Ui_MainWindow(object):
         self.ans_table.verticalHeader().setVisible(False)
         self.ans_table.setHorizontalHeaderLabels(['Name', 'Count'])
         self.ans_table.keyPressEvent = lambda event: event.ignore()
+
+        for x in xrange(algaeTable.Total_Algae_Types):
+            self.ans_table.insertRow(0)
+            self.ans_table.setItem(0,0,QtGui.QTableWidgetItem(algaeTable.Get_Name(x)))
+            self.ans_table.setItem(0,1,QtGui.QTableWidgetItem("0"))
+            self.ans_table.item(0,0).setFlags(Qt.NoItemFlags)
+            self.ans_table.sortItems(0,Qt.AscendingOrder)
+        
         MainWindow.setCentralWidget(self.centralWidget)
         
         self.menuBar = QtGui.QMenuBar(MainWindow)
