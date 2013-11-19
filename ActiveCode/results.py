@@ -65,6 +65,7 @@ class Ui_results(object):
         self.formLayout.setObjectName(_fromUtf8("formLayout"))
 
 
+
         for x in xrange(AlgaeSample.Total_Algae_Types):
             Index = 7 + x
             CurrentGroupBox = QtGui.QGroupBox(self.scrollAreaWidgetContents)
@@ -123,7 +124,7 @@ class Ui_results(object):
             CurrentGraphicsView = QtGui.QLabel(self.scrollAreaWidgetContents)
             CurrentGraphicsView.setObjectName(_fromUtf8("CurrentGraphicsView"))
             self.formLayout.setWidget(Index, QtGui.QFormLayout.LabelRole, CurrentGraphicsView)
-            CurrentGraphicsView.setPixmap(QtGui.QPixmap(os.getcwd() + "/Assets/20um/"+AlgaeSample.Get_Name(x) + ".png"))
+            CurrentGraphicsView.setPixmap(QtGui.QPixmap(os.getcwd() + "/Assets/20um/"+AlgaeSample.Get_File_Name(x)))
             CurrentGraphicsView.setFixedWidth(75)
             CurrentGraphicsView.setFixedHeight(75)
             #CurrentGraphicsView.setGeometry(0,0,90,90)
