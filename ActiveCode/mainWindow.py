@@ -219,6 +219,7 @@ class Ui_MainWindow(object):
         self.ans_table.setGeometry(QtCore.QRect(550, 470, 411, 181))
         self.ans_table.setObjectName(_fromUtf8("ans_table"))
         self.ans_table.setColumnCount(2)
+        self.ans_table.setRowCount(algaeTable.Total_Algae_Types)
         self.ans_table.horizontalHeader().setResizeMode(QtGui.QHeaderView.Stretch)
         self.ans_table.verticalHeader().setVisible(False)
         self.ans_table.setHorizontalHeaderLabels(['Name', 'Count'])
@@ -330,12 +331,20 @@ class Ui_MainWindow(object):
         
     def setNames(self):
         for x in xrange(algaeTable.Total_Algae_Types):
-            self.ans_table.insertRow(0)
-            self.ans_table.setItem(0,0,QtGui.QTableWidgetItem(algaeTable.Get_Name(x)))
-            self.ans_table.setItem(0,1,QtGui.QTableWidgetItem("0"))
-            self.ans_table.item(0,0).setFlags(Qt.NoItemFlags)
+            #self.ans_table.insertRow(0)
+            self.ans_table.setItem(x,0,QtGui.QTableWidgetItem(algaeTable.Get_Name(x)))
+            self.ans_table.setItem(x,1,QtGui.QTableWidgetItem("0"))
+            self.ans_table.item(x,0).setFlags(Qt.NoItemFlags)
             self.ans_table.sortItems(0,Qt.AscendingOrder)
             
+    def resetForms(self):
+        self.input_species.clear()
+        self.input_count.clear()
+        self.scene.clear()
+        self.ans_table.setRowCount(algaeTable.Total_Algae_Types)
+        self.ans_table.clearContents()
+        self.setNames()
+
     def openResults(self,val):
         ui=QtGui.QDialog();
         self.resultsDialog.setupUi(ui, self.Beaker,self.ans_table)
@@ -343,11 +352,7 @@ class Ui_MainWindow(object):
         ui.exec_()
         
         #after Results page closes generate new sample and reset forms
-        self.input_species.clear()
-        self.input_count.clear()
-        self.scene.clear()
-        self.ans_table.clearContents()
-        self.setNames()
+        self.resetForms()
         algaeTable.Generate_Sample()
         self.setUpScene(self.scene, self.view)
         
