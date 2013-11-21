@@ -16,7 +16,6 @@ from PyQt4 import QtCore, QtGui,QtOpenGL
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from results import Ui_results
-from PIL import Image
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
 except AttributeError:
@@ -31,12 +30,7 @@ except AttributeError:
     def _translate(context, text, disambig):
         return QtGui.QApplication.translate(context, text, disambig)
 
-try:
-    from OpenGL import GL
-except ImportError:
-    app = QtGui.QApplication(sys.argv)
-    QtGui.QMessageBox.critical(None, "OpenGL")
-    sys.exit(1)
+
 #####################################################################################
 #####################################################################################
 
@@ -333,6 +327,10 @@ class Ui_MainWindow(object):
             self.ans_table.insertRow(0)
             self.ans_table.setItem(0,0,QtGui.QTableWidgetItem(algaeTable.Get_Name(x)))
             self.ans_table.setItem(0,1,QtGui.QTableWidgetItem("0"))
+            #change second cell to a comboBox
+            combo = QtGui.QComboBox()
+            combo.addItem("2" + u'\u2074')
+            self.ans_table.setCellWidget(0,1, combo)
             self.ans_table.item(0,0).setFlags(Qt.NoItemFlags)
             self.ans_table.sortItems(0,Qt.AscendingOrder)
             
