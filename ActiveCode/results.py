@@ -1,11 +1,6 @@
 # -*- coding: utf-8 -*-
 
 # Form implementation generated from reading ui file 'results.ui'
-#
-# Created: Sat Oct 19 18:44:45 2013
-#      by: PyQt4 UI code generator 4.10.3
-#
-# WARNING! All changes made in this file will be lost!
 
 
 import sys, os
@@ -163,13 +158,30 @@ class Ui_results(object):
 
         self.retranslateUi(results, AlgaeSample)
         QtCore.QMetaObject.connectSlotsByName(results)
-
+    
+    ## Converts unicode superscript digits to regular integer digits
+    
+        
     #Access the table widget and extract the users answers    
     def getUserCount(self, algaeIndex,algaeSample,ansTable):
+        ## A dynamic attempt to solve the superscript problem that ultimatly failed
+        ## -Jeff 11/21/2013
+##        def supToI(s):
+##            sups={u'\u2070' : 0,
+##                    u'\xb9' : 1,
+##                    u'\xb2' : 2,
+##                    u'\xb3' : 3,    
+##                    u'\u2074' : 4,           
+##                    u'\u2075' : 5,
+##                    u'\u2076' : 6,
+##                    u'\u2077' : 7,
+##                    u'\u2078' : 8,
+##                    u'\u2079' : 9}
+##            return ''.join([sups[i] for i in s])
         tableItem= ansTable.findItems(algaeSample.Get_Name(algaeIndex),QtCore.Qt.MatchFixedString)
         
         if(len(tableItem) > 0):
-            return ansTable.item(tableItem[0].row(),1).text()
+            return supToI(ansTable.cellWidget(tableItem[0].row(),1).currentText()[1])
         else:
             return "0"
         

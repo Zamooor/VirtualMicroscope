@@ -21,6 +21,7 @@ class AlgaeTable:
             "Attempt001",
             "eucapsis_jul6_11_400N_JUD",
             "aphaniz_akinetes_sep16_10_200N_TBIRD"]
+        
         self.Total_Algae_Types = len(self.Name_Array)
         self.Default_Min_Count = 20
         self.Default_Max_Count = 60
@@ -59,7 +60,7 @@ class AlgaeTable:
 
     def Generate_Sample(self):
         for x in xrange(self.Total_Algae_Types):
-            self.Total_Count_Array[x] = randint(self.Min_Count_Array[x], self.Max_Count_Array[x])
+            self.Total_Count_Array[x] = 2**randint(4, 8)
             
 
 # Default program

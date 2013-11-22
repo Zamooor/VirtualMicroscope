@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 
 # Form implementation generated from reading ui file 'mainwindow.ui'
-#
-# Created: Sat Oct 19 18:39:35 2013
-#      by: PyQt4 UI code generator 4.10.3
-#
-# WARNING! All changes made in this file will be lost!
+
+#####################
+    ##Things that could use improving!!!
+    ##  1. Scaling the window/UI evenly is a tedious task, a centralized scale var would be nice
+    ##  2. Some controls are still named things like label_2, consider adding descriptive names
+    
+
 import sys, os
 import math
 import algaeTable
@@ -35,25 +37,19 @@ except AttributeError:
 #####################################################################################
 
 
-# Please keep the values in the following two variables the same
-# This is terrible, please find a way to convert QColor to the csv in backGroundColorString
-# Or find a way to set the pic (a QLabel) background color without a style sheet
+
 
 algaeTable = AlgaeTable()
-
-
-backGroundColor = QColor(44,121,176,255)
-backGroundColorString = "44,121,176,255"
 
 algaeList = []
 random.seed()
 algaeTable.Generate_Sample()
 
 
-## 2um scale is 557/8px long
+## 20um scale is 557/8px long
 ## so initialy a 75mm*25mm slide is 167343px wide and 11718px high
 ##====================================================
-##  scaling and moving have been disabled ##
+##  scaling and moving have been disabled as of  11/18/2013 --Jeff##
 ##=============================================
 ##offsetX = 0.0
 ##offsetY = 0.0
@@ -217,7 +213,6 @@ class Ui_MainWindow(object):
         self.ans_table.verticalHeader().setVisible(False)
         self.ans_table.setHorizontalHeaderLabels(['Name', 'Count'])
         self.ans_table.keyPressEvent = lambda event: event.ignore()
-        #presets the algae names in the table
         self.setNames()
         
         
@@ -256,7 +251,7 @@ class Ui_MainWindow(object):
         
         self.actionControls = QtGui.QAction(MainWindow)
         self.actionControls.setObjectName(_fromUtf8("actionControls"))
-        .5
+
         self.actionImport_Sample = QtGui.QAction(MainWindow)
         self.actionImport_Sample.setObjectName(_fromUtf8("actionImport_Sample"))
         
@@ -279,26 +274,18 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
+    ## Draws the algae on the Top window, a QGraphicsScene
     def setUpScene(self,scene,view ):
         print "Printing algae..."
-        # this algae gen algorithm's run time is terrible
         for x in xrange(algaeTable.Total_Algae_Types):
             print str(algaeTable.Get_Name(x)) + ": " + str(algaeTable.Get_Count(x))
             for y in xrange(algaeTable.Total_Count_Array[x]):
-                #print "Drawing: " + algaeTable.Name_Array[x]
                 pic = Pixmap(QtGui.QPixmap(os.getcwd() + "/Assets/20um/"+algaeTable.Get_File_Name(x)))
                 pic.pos = QtCore.QPointF(random.randint(0, 900), random.randint(0, 320))
-    ##                collidedTest = True
-    ##                while(collidedTest):
-    ##                    pic.setGeometry(randint(-5000,5000),randint(-5000,5000),pic.pixmap().width()/8,pic.pixmap().height()/8)
-    ##                    collidedTest = False
-    ##                    for testpic in algaeList:
-    ##                        if(isColliding(pic, testpic)):
-    ##                            collidedTest = True
-
                 algaeList.append(pic)
                 self.scene.addItem(pic.pixmap_item)
-        
+
+    ## Sets the text for many ui features    
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow", None))
         self.findButton.setText(_translate("MainWindow", "Add", None))
@@ -321,7 +308,8 @@ class Ui_MainWindow(object):
         self.actionControls.setText(_translate("MainWindow", "Controls", None))
         self.actionImport_Sample.setText(_translate("MainWindow", "Import Existing Sample", None))
         self.actionCreate_New_Sample.setText(_translate("MainWindow", "Create New Sample", None))
-        
+
+    ## Adds algae to the answer table 
     def setNames(self):
         for x in xrange(algaeTable.Total_Algae_Types):
             self.ans_table.insertRow(0)
@@ -330,6 +318,10 @@ class Ui_MainWindow(object):
             #change second cell to a comboBox
             combo = QtGui.QComboBox()
             combo.addItem("2" + u'\u2074')
+            combo.addItem("2" + u'\u2075')
+            combo.addItem("2" + u'\u2076')
+            combo.addItem("2" + u'\u2077')
+            combo.addItem("2" + u'\u2078')
             self.ans_table.setCellWidget(0,1, combo)
             self.ans_table.item(0,0).setFlags(Qt.NoItemFlags)
             self.ans_table.sortItems(0,Qt.AscendingOrder)
