@@ -31,12 +31,7 @@ except AttributeError:
     def _translate(context, text, disambig):
         return QtGui.QApplication.translate(context, text, disambig)
 
-try:
-    from OpenGL import GL
-except ImportError:
-    app = QtGui.QApplication(sys.argv)
-    QtGui.QMessageBox.critical(None, "OpenGL")
-    sys.exit(1)
+
 #####################################################################################
 #####################################################################################
 
