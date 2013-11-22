@@ -7,6 +7,7 @@ import sys, os
 
 from PyQt4 import QtCore, QtGui
 from algaeTable import *
+import math
 
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
@@ -106,13 +107,40 @@ class Ui_results(object):
             CurrentGridLayout.addWidget( Label_Num_Difference, 1, 2, 1, 1)
             self.formLayout.setWidget(Index, QtGui.QFormLayout.FieldRole, CurrentGroupBox)
 
+            def iToSup(i):
+                if i == 4:
+                    return u'\u2074'
+                elif i == 5:
+                    return u'\u2075'
+                elif i == 6:
+                    return u'\u2076'
+                elif i == 7:
+                    return u'\u2077'
+                elif i == 8:
+                    return u'\u2078'
             CurrentLabel_Your_Answer.setText(_translate("results", "Your Answer", None))
             CurrentLabel_Correct_Answer.setText(_translate("results", "Correct Answer", None))
             CurrentLabel_Difference.setText(_translate("results", "Difference", None))
-            Label_Correct_Answer.setText(_translate("results",str(AlgaeSample.Get_Count(x)), None))
-             
-            Label_User_Answer.setText(_translate("results", self.getUserCount(x,AlgaeSample,ansTable), None))
-            Label_Num_Difference.setText(_translate("results", str(int(Label_User_Answer.text()) - int(Label_Correct_Answer.text())), None))
+            Label_Correct_Answer.setText(_translate("results",'2' + iToSup(math.log(AlgaeSample.Get_Count(x),2)), None))
+            Label_Correct_Answer.setStyleSheet("font-family: 'Arial Unicode MS', Arial, sans-serif; font-size: 15px;")
+
+            def supToI(u):
+                if u == u'\u2074':
+                    return 4
+                elif u == u'\u2075':
+                    return 5
+                elif u == u'\u2076':
+                    return 6
+                elif u == u'\u2077':
+                    return 7
+                elif u == u'\u2078':
+                    return 8
+            Label_User_Answer.setStyleSheet("font-family: 'Arial Unicode MS', Arial, sans-serif; font-size: 15px;")
+            #print '|', self.getUserCount(x,AlgaeSample,ansTable) , "|" , u'\u2078' , "|"
+            print supToI(self.getUserCount(x,AlgaeSample,ansTable)[1])
+            Label_User_Answer.setText( self.getUserCount(x,AlgaeSample,ansTable))
+            Label_User_Answer.setTextFormat(1)
+            Label_Num_Difference.setText(_translate("results", str(supToI(self.getUserCount(x,AlgaeSample,ansTable)[1]) - supToI(Label_Correct_Answer.text()[1])) + " Orders of Magnitude", None))
 
             # Add graphic
             #CurrentGraphicsView = QtGui.QGraphicsView(self.scrollAreaWidgetContents)
@@ -164,24 +192,11 @@ class Ui_results(object):
         
     #Access the table widget and extract the users answers    
     def getUserCount(self, algaeIndex,algaeSample,ansTable):
-        ## A dynamic attempt to solve the superscript problem that ultimatly failed
-        ## -Jeff 11/21/2013
-##        def supToI(s):
-##            sups={u'\u2070' : 0,
-##                    u'\xb9' : 1,
-##                    u'\xb2' : 2,
-##                    u'\xb3' : 3,    
-##                    u'\u2074' : 4,           
-##                    u'\u2075' : 5,
-##                    u'\u2076' : 6,
-##                    u'\u2077' : 7,
-##                    u'\u2078' : 8,
-##                    u'\u2079' : 9}
-##            return ''.join([sups[i] for i in s])
+        
         tableItem= ansTable.findItems(algaeSample.Get_Name(algaeIndex),QtCore.Qt.MatchFixedString)
         
         if(len(tableItem) > 0):
-            return supToI(ansTable.cellWidget(tableItem[0].row(),1).currentText()[1])
+            return ansTable.cellWidget(tableItem[0].row(),1).currentText()
         else:
             return "0"
         
