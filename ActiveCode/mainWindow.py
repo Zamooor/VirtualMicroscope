@@ -16,7 +16,6 @@ from PyQt4 import QtCore, QtGui,QtOpenGL
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from results import Ui_results
-from PIL import Image
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
 except AttributeError:
@@ -36,15 +35,8 @@ except AttributeError:
 #####################################################################################
 
 
-# Please keep the values in the following two variables the same
-# This is terrible, please find a way to convert QColor to the csv in backGroundColorString
-# Or find a way to set the pic (a QLabel) background color without a style sheet
-
 algaeTable = AlgaeTable()
 
-
-backGroundColor = QColor(44,121,176,255)
-backGroundColorString = "44,121,176,255"
 
 algaeList = []
 random.seed()
@@ -290,13 +282,6 @@ class Ui_MainWindow(object):
                 #print "Drawing: " + algaeTable.Name_Array[x]
                 pic = Pixmap(QtGui.QPixmap(os.getcwd() + "/Assets/20um/"+algaeTable.Get_File_Name(x)))
                 pic.pos = QtCore.QPointF(random.randint(0, 900), random.randint(0, 320))
-    ##                collidedTest = True
-    ##                while(collidedTest):
-    ##                    pic.setGeometry(randint(-5000,5000),randint(-5000,5000),pic.pixmap().width()/8,pic.pixmap().height()/8)
-    ##                    collidedTest = False
-    ##                    for testpic in algaeList:
-    ##                        if(isColliding(pic, testpic)):
-    ##                            collidedTest = True
 
                 algaeList.append(pic)
                 self.scene.addItem(pic.pixmap_item)
