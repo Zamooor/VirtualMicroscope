@@ -70,6 +70,14 @@ class Pixmap(QtCore.QObject):
         self.pixmap_item = QtGui.QGraphicsPixmapItem(pix)
         self.pixmap_item.setCacheMode(QtGui.QGraphicsItem.DeviceCoordinateCache)
         self.pixmap_item.setScale(.03)
+    def setRot(self, angle):
+        self.pixmap_item.setRotation(angle)
+
+    def setScaleVariance(self, var):
+        print var
+        self.pixmap_item.setScale(self.pixmap_item.scale() + var)
+        print self.pixmap_item.scale()
+
     def _set_pos(self, pos):
         self.pixmap_item.setPos(pos)
 
@@ -283,8 +291,11 @@ class Ui_MainWindow(object):
             for y in xrange(algaeTable.Get_Current_Count(x)):
                 #print "Drawing: " + algaeTable.Name_Array[x]
                 pic = Pixmap(QtGui.QPixmap(os.getcwd() + "/Assets/20um/"+algaeTable.Get_File_Name(x)))
-                pic.pos = QtCore.QPointF(random.randint(0, 900), random.randint(0, 320))
-
+                # sets random positions with padding at the edge of the view
+                # following 3 lines should probably be part of the constructor
+                pic.pos = QtCore.QPointF(random.randint(20, 979), random.randint(20, 370))
+                pic.setRot(random.randint(0, 359))
+                pic.setScaleVariance(random.randint(-5, 10)/1000.0)
                 algaeList.append(pic)
                 self.scene.addItem(pic.pixmap_item)
         
@@ -422,7 +433,7 @@ class Window(QtGui.QMainWindow):
         
         self.ui.setupUi(self)
 
-    
+    # Cleans up Temporary Sample Renders on close
     def closeEvent(self, event):
         folder = os.getcwd() + "/TempSampleRenders"
         for aFile in os.listdir(folder):
