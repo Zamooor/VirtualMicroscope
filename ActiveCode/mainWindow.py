@@ -16,7 +16,7 @@ from PyQt4 import QtCore, QtGui,QtOpenGL
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from results import Ui_results
-from preferences import Ui_Preferences
+from ProgressBar import ProgressBar
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
 except AttributeError:
@@ -37,9 +37,11 @@ except AttributeError:
 
 
 algaeTable = AlgaeTable()
+
+
 algaeList = []
 random.seed()
-#algaeTable.Generate_Sample()
+algaeTable.Generate_Sample()
 
 
 ## 2um scale is 557/8px long
@@ -68,28 +70,26 @@ class Pixmap(QtCore.QObject):
         self.pixmap_item = QtGui.QGraphicsPixmapItem(pix)
         self.pixmap_item.setCacheMode(QtGui.QGraphicsItem.DeviceCoordinateCache)
         self.pixmap_item.setScale(.03)
-    def _set_pos(self, pos):
-        self.pixmap_item.setPos(pos)
-
     def setRot(self, angle):
         self.pixmap_item.setRotation(angle)
 
     def setScaleVariance(self, var):
-        print var
         self.pixmap_item.setScale(self.pixmap_item.scale() + var)
-        print self.pixmap_item.scale()
+
+    def _set_pos(self, pos):
+        self.pixmap_item.setPos(pos)
 
 
     pos = QtCore.pyqtProperty(QtCore.QPointF, fset=_set_pos)
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
-        MainWindow.setObjectName(_fromUtf8("Digital Microscope"))
-        MainWindow.setFixedSize(999, 792)
-        self.startUpFlag=False
+        MainWindow.setObjectName(_fromUtf8("MainWindow"))
+        MainWindow.resize(999, 792)
         self.centralWidget = QtGui.QWidget(MainWindow)
         self.centralWidget.setObjectName(_fromUtf8("centralWidget"))
-        
+        self.Beaker = algaeTable
+
 ###################
 ##        DISABLED
 ########################
@@ -100,8 +100,10 @@ class Ui_MainWindow(object):
 ##        self.magLabel.setStyleSheet("font: 18pt;" )
         
         self.scene = QtGui.QGraphicsScene(0, 0, 999, 400)
-        self.view = QtGui.QGraphicsView(self.scene, self.centralWidget)
         self.scene.setBackgroundBrush(QtGui.QColor("white"))
+        self.view = QtGui.QGraphicsView(self.scene, self.centralWidget)
+
+        self.setUpScene(self.scene, self.view)
         self.centralWidget.centralWidget = self.view
 
         # Controls		
@@ -212,10 +214,13 @@ class Ui_MainWindow(object):
         self.ans_table.setGeometry(QtCore.QRect(550, 470, 411, 181))
         self.ans_table.setObjectName(_fromUtf8("ans_table"))
         self.ans_table.setColumnCount(2)
+        self.ans_table.setRowCount(algaeTable.Total_Algae_Types)
         self.ans_table.horizontalHeader().setResizeMode(QtGui.QHeaderView.Stretch)
         self.ans_table.verticalHeader().setVisible(False)
         self.ans_table.setHorizontalHeaderLabels(['Name', 'Count'])
         self.ans_table.keyPressEvent = lambda event: event.ignore()
+        #presets the algae names in the table
+        self.setNames()
         
         
         MainWindow.setCentralWidget(self.centralWidget)
@@ -259,29 +264,39 @@ class Ui_MainWindow(object):
         
         self.actionCreate_New_Sample = QtGui.QAction(MainWindow)
         self.actionCreate_New_Sample.setObjectName(_fromUtf8("actionCreate_New_Sample"))
-
-        self.actionPreferences = QtGui.QAction(MainWindow)
-        self.actionPreferences.setObjectName(_fromUtf8("actionPreferences"))
-        self.actionPreferences.triggered.connect(self.openPreferences)
-        
         
         self.menuFile.addAction(self.actionOpen)
         self.menuFile.addAction(self.actionSave)
         self.menuFile.addSeparator()
         self.menuFile.addAction(self.actionImport_Sample)
         self.menuFile.addAction(self.actionCreate_New_Sample)
-        self.menuFile.addSeparator()
-        self.menuFile.addAction(self.actionPreferences)
         
         self.menuTools.addAction(self.actionAbout)
         self.menuTools.addAction(self.actionControls)
         
         self.menuBar.addAction(self.menuFile.menuAction())
         self.menuBar.addAction(self.menuTools.menuAction())
+        self.resultsDialog=Ui_results()
         
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
+    def setUpScene(self,scene,view ):
+        print "Printing algae..."
+        # this algae gen algorithm's run time is terrible
+        for x in xrange(algaeTable.Total_Algae_Types):
+            print str(algaeTable.Get_Name(x)) + ": " + str(algaeTable.Get_Current_Count(x))
+            for y in xrange(algaeTable.Get_Current_Count(x)):
+                #print "Drawing: " + algaeTable.Name_Array[x]
+                pic = Pixmap(QtGui.QPixmap(os.getcwd() + "/Assets/20um/"+algaeTable.Get_File_Name(x)))
+                # sets random positions with padding at the edge of the view
+                # following 3 lines should probably be part of the constructor
+                pic.pos = QtCore.QPointF(random.randint(20, 979), random.randint(20, 370))
+                pic.setRot(random.randint(0, 359))
+                pic.setScaleVariance(random.randint(-5, 10)/1000.0)
+                algaeList.append(pic)
+                self.scene.addItem(pic.pixmap_item)
+        
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow", None))
         self.findButton.setText(_translate("MainWindow", "Add", None))
@@ -301,46 +316,10 @@ class Ui_MainWindow(object):
         self.actionOpen.setText(_translate("MainWindow", "Open", None))
         self.actionSave.setText(_translate("MainWindow", "Save", None))
         self.actionAbout.setText(_translate("MainWindow", "About...", None))
-        self.actionPreferences.setText(_translate("MainWindow", "Preferences", None))
         self.actionControls.setText(_translate("MainWindow", "Controls", None))
         self.actionImport_Sample.setText(_translate("MainWindow", "Import Existing Sample", None))
         self.actionCreate_New_Sample.setText(_translate("MainWindow", "Create New Sample", None))
-
-
-    def setUpScene(self,scene,view ):
-        print "Printing Algae:"
-        # this algae gen algorithm's run time is terrible
-        for x in xrange(algaeTable.Total_Algae_Types):
-            print str(algaeTable.Get_Name(x)) + ": " + str(algaeTable.Get_Count(x))
-            for y in xrange(algaeTable.Total_Count_Array[x]):
-                #print "Drawing: " + algaeTable.Name_Array[x]
-                pic = Pixmap(QtGui.QPixmap(os.getcwd() + "/Assets/20um/"+algaeTable.Get_File_Name(x)))
-                # sets random positions with padding at the edge of the view
-                # following 3 lines should probably be part of the constructor
-                pic.pos = QtCore.QPointF(random.randint(20, 979), random.randint(20, 370))
-                pic.setRot(random.randint(0, 359))
-                pic.setScaleVariance(random.randint(-5, 10)/1000.0)
-
-                algaeList.append(pic)
-                self.scene.addItem(pic.pixmap_item)
-        print "\n"
-                
-    def addToChart(self):
-        #checks if "count" value is a number and if the "name" field is not empty 
-        # adds them to the table. and sorts them alphabeticaly by name
-        try:
-            number=int(self.input_count.text())
-            if not (self.input_species.text().isEmpty()):
-                self.ans_table.insertRow(0)
-                self.ans_table.setItem(0,1,QtGui.QTableWidgetItem(self.input_count.text()))
-                self.ans_table.setItem(0,0,QtGui.QTableWidgetItem(self.input_species.text()))
-                self.ans_table.sortItems(0,Qt.AscendingOrder)
-
-                
-        except Exception:
-            #QtGui.QMessageBox.about(MainWindow,'Error','Input can only be a number')
-            pass     
-            
+        
     def setNames(self):
         for x in xrange(algaeTable.Total_Algae_Types):
             #self.ans_table.insertRow(0)
@@ -357,7 +336,7 @@ class Ui_MainWindow(object):
         self.ans_table.clearContents()
         self.setNames()
 
-    def openResults(self):
+    def openResults(self,val):
         # Save Algae View as image for review later
         outImage = QPixmap(999, 400)
         painter = QPainter(outImage)
@@ -369,39 +348,33 @@ class Ui_MainWindow(object):
 
         painter.end()
         
-
-
-        resultsDialog=Ui_results()
         ui=QtGui.QDialog();
-        resultsDialog.setupUi(ui, algaeTable,self.ans_table)
+        self.resultsDialog.setupUi(ui, self.Beaker,self.ans_table)
         ui.setModal(True) 
         ui.exec_()
         
         #after Results page closes generate new sample and reset forms
         self.resetForms()
-        algaeTable.Decrement_Trials()
+        #self.bar = ProgressBar(total=101)
+        #self.bar.show()
         algaeTable.Generate_Sample()
         self.setUpScene(self.scene, self.view)
         
-    def openPreferences(self):
-        preferencesDialog=Ui_Preferences()
-        gui=QtGui.QDialog();
-        preferencesDialog.setupUi(gui,self.startUpFlag)
-        gui.setModal(True) 
-        reset=gui.exec_()
-        #reset the session when the parameters have been changed
-        if reset==int(True):
-            self.setSession(preferencesDialog.retVal())
+    def addToChart(self):
+        #cheks if "count" value is a number and if the "name" field is not empty 
+        # adds them to the table. and sorts them alphabeticaly by name
+        try:
+            number=int(self.input_count.text())
+            if not (self.input_species.text().isEmpty()):
+                self.ans_table.insertRow(0)
+                self.ans_table.setItem(0,1,QtGui.QTableWidgetItem(self.input_count.text()))
+                self.ans_table.setItem(0,0,QtGui.QTableWidgetItem(self.input_species.text()))
+                self.ans_table.sortItems(0,Qt.AscendingOrder)
 
-    #reset all relevant variables and restart the session    
-    def setSession(self, session):
-        algaeTable.Set_Num_Trials(session.pop())
-        algaeList[:]=[]
-        algaeTable.setNames(session)
-        self.resetForms()
-        algaeTable.Generate_Sample()
-        self.setUpScene(self.scene, self.view) 
-           
+                
+        except Exception:
+            #QtGui.QMessageBox.about(MainWindow,'Error','Input can only be a number')
+            pass        
 ####################
 ##        DISABLED
 ########################
@@ -458,8 +431,7 @@ class Window(QtGui.QMainWindow):
         
         self.ui.setupUi(self)
 
-
-     # Cleans up Temporary Sample Renders on close
+    # Cleans up Temporary Sample Renders on close
     def closeEvent(self, event):
         folder = os.getcwd() + "/TempSampleRenders"
         for aFile in os.listdir(folder):
@@ -467,7 +439,10 @@ class Window(QtGui.QMainWindow):
             os.unlink(filePath)
 
         event.accept()
-   
+
+
+        
+        
 
 ###########################
 ##  DISABLED
@@ -501,16 +476,17 @@ if __name__ == '__main__':
 
     app = QtGui.QApplication(sys.argv)
     mwindow = Window()
-    mwindow.ui.startUpFlag=True
-    mwindow.ui.openPreferences()
-    mwindow.ui.startUpFlag=False
+
+
+
+##    view.show()
+    
     mwindow.show()
     sys.exit(app.exec_())
-    
-#what is this for? when commented out it doesnt change anything.
-    '''app = QtGui.QApplication(sys.argv)
+
+    app = QtGui.QApplication(sys.argv)
     app.setApplication('MyWindow')
 
     main = MyWindow(images)
-    main.show()'''
+    main.show()
 		
