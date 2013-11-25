@@ -16,6 +16,7 @@ from PyQt4 import QtCore, QtGui,QtOpenGL
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from results import Ui_results
+from ProgressBar import ProgressBar
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
 except AttributeError:
@@ -277,8 +278,8 @@ class Ui_MainWindow(object):
         print "Printing algae..."
         # this algae gen algorithm's run time is terrible
         for x in xrange(algaeTable.Total_Algae_Types):
-            print str(algaeTable.Get_Name(x)) + ": " + str(algaeTable.Get_Count(x))
-            for y in xrange(algaeTable.Total_Count_Array[x]):
+            print str(algaeTable.Get_Name(x)) + ": " + str(algaeTable.Get_Current_Count(x))
+            for y in xrange(algaeTable.Get_Current_Count(x)):
                 #print "Drawing: " + algaeTable.Name_Array[x]
                 pic = Pixmap(QtGui.QPixmap(os.getcwd() + "/Assets/20um/"+algaeTable.Get_File_Name(x)))
                 pic.pos = QtCore.QPointF(random.randint(0, 900), random.randint(0, 320))
@@ -333,6 +334,8 @@ class Ui_MainWindow(object):
         
         #after Results page closes generate new sample and reset forms
         self.resetForms()
+        #self.bar = ProgressBar(total=101)
+        #self.bar.show()
         algaeTable.Generate_Sample()
         self.setUpScene(self.scene, self.view)
         

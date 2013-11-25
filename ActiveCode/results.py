@@ -100,10 +100,33 @@ class Ui_results(object):
             Label_User_Answer.setAlignment(QtCore.Qt.AlignCenter)
             CurrentGridLayout.addWidget(Label_User_Answer, 1, 0, 1, 1)
 
+
             Label_Correct_Answer = QtGui.QLabel(CurrentLayoutWidget)
             Label_Correct_Answer.setObjectName(_fromUtf8("Label_Correct_Answer"))
             Label_Correct_Answer.setAlignment(QtCore.Qt.AlignCenter)
             CurrentGridLayout.addWidget(Label_Correct_Answer, 1, 1, 1, 1)
+            Label_Correct_Answer.setText(_translate("results",str(AlgaeSample.Get_Current_Count(x)), None))
+
+
+            #answer Table
+            Correct_Answer_Grid = QtGui.QTableWidget(CurrentGroupBox)
+            Correct_Answer_Grid.setGeometry(QtCore.QRect(550, 470, 411, 181))
+            Correct_Answer_Grid.setObjectName(_fromUtf8("ans_table"))
+            Correct_Answer_Grid.setColumnCount(3)
+            Correct_Answer_Grid.setRowCount(AlgaeSample.Current_Trial)
+            Correct_Answer_Grid.horizontalHeader().setResizeMode(QtGui.QHeaderView.Stretch)
+            Correct_Answer_Grid.verticalHeader().setVisible(False)
+            Correct_Answer_Grid.setHorizontalHeaderLabels(['Trial', 'Guess', 'Actual'])
+            Correct_Answer_Grid.keyPressEvent = lambda event: event.ignore()
+            CurrentGridLayout.addWidget(Correct_Answer_Grid, 3, 1, 1, 1)
+
+
+            # Fill table
+            for t in xrange(AlgaeSample.Current_Trial):
+                #self.ans_table.insertRow(0)
+                Correct_Answer_Grid.setItem(t,0,QtGui.QTableWidgetItem(AlgaeSample.Get_Count(x,t)))
+                #Correct_Answer_Grid.item(t,0).setFlags(QtCore.NoItemFlags)
+                #Correct_Answer_Grid.sortItems(0,QtCore.AscendingOrder)
 
             Label_Num_Difference = QtGui.QLabel(CurrentLayoutWidget)
             Label_Num_Difference.setObjectName(_fromUtf8("Label_Num_Difference"))
@@ -114,7 +137,7 @@ class Ui_results(object):
             CurrentLabel_Your_Answer.setText(_translate("results", "Your Answer", None))
             CurrentLabel_Correct_Answer.setText(_translate("results", "Correct Answer", None))
             CurrentLabel_Difference.setText(_translate("results", "Difference", None))
-            Label_Correct_Answer.setText(_translate("results",str(AlgaeSample.Get_Count(x)), None))
+            Label_Correct_Answer.setText(_translate("results",str(AlgaeSample.Get_Current_Count(x)), None))
              
             Label_User_Answer.setText(_translate("results", self.getUserCount(x,AlgaeSample,ansTable), None))
             Label_Num_Difference.setText(_translate("results", str(int(Label_User_Answer.text()) - int(Label_Correct_Answer.text())), None))
@@ -139,6 +162,7 @@ class Ui_results(object):
             pic.setScaledContents(True)
             pic.setStyleSheet("background-color: rgba("+backGroundColorString+")" )
             algaeList.append(pic)"""
+
 
 
         self.AlgaeLibrary.setWidget(self.scrollAreaWidgetContents)
