@@ -94,6 +94,7 @@ class Ui_MainWindow(object):
 ##        self.magLabel.setStyleSheet("font: 18pt;" )
         
         self.scene = QtGui.QGraphicsScene(0, 0, 999, 400)
+        self.scene.setBackgroundBrush(QtGui.QColor("white"))
         self.view = QtGui.QGraphicsView(self.scene, self.centralWidget)
 
         self.setUpScene(self.scene, self.view)
@@ -327,6 +328,17 @@ class Ui_MainWindow(object):
         self.setNames()
 
     def openResults(self,val):
+        # Save Algae View as image for review later
+        outImage = QPixmap(999, 400)
+        painter = QPainter(outImage)
+        
+        self.scene.render(painter)
+        
+        if(not outImage.save(os.getcwd() + "/TempSampleRenders/testRender.png")):
+            print "failed to save render"
+
+        painter.end()
+        
         ui=QtGui.QDialog();
         self.resultsDialog.setupUi(ui, self.Beaker,self.ans_table)
         ui.setModal(True) 
@@ -409,6 +421,15 @@ class Window(QtGui.QMainWindow):
         self.ui = Ui_MainWindow()
         
         self.ui.setupUi(self)
+
+    
+    def closeEvent(self, event):
+        folder = os.getcwd() + "/TempSampleRenders"
+        for aFile in os.listdir(folder):
+            filePath = os.path.join(folder, aFile)
+            os.unlink(filePath)
+
+        event.accept()
 
 
         
