@@ -70,10 +70,16 @@ class Ui_results(object):
             ## Header
             CurrentGridLayout = QtGui.QGridLayout(self.scrollAreaWidgetContents)
             CurrentGridLayout.setMargin(0)
+            # Name
             CurrentLabel_Your_Answer = QtGui.QLabel(self.scrollAreaWidgetContents)
             CurrentLabel_Your_Answer.setAlignment(QtCore.Qt.AlignCenter)
             CurrentLabel_Your_Answer.setText(_fromUtf8(AlgaeSample.Get_Name(x)))
             CurrentGridLayout.addWidget(CurrentLabel_Your_Answer, 0, 0, 1, 1)
+            # Standard Deviation
+            L_Std_Dv = QtGui.QLabel(self.scrollAreaWidgetContents)
+            L_Std_Dv.setAlignment(QtCore.Qt.AlignCenter)
+            L_Std_Dv.setText("Standard deviation: 0")
+            CurrentGridLayout.addWidget(L_Std_Dv, 0, 1, 1, 1)
             self.formLayout.addRow(CurrentGridLayout)
 
             ## Table
