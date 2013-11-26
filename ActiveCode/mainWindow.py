@@ -75,9 +75,7 @@ class Pixmap(QtCore.QObject):
         self.pixmap_item.setRotation(angle)
 
     def setScaleVariance(self, var):
-        print var
         self.pixmap_item.setScale(self.pixmap_item.scale() + var)
-        print self.pixmap_item.scale()
 
 
 
@@ -462,7 +460,8 @@ class Window(QtGui.QMainWindow):
         folder = os.getcwd() + "/TempSampleRenders"
         for aFile in os.listdir(folder):
             filePath = os.path.join(folder, aFile)
-            os.unlink(filePath)
+            if(aFile != ".gitignore"):
+                os.unlink(filePath)
 
         event.accept()
   
