@@ -20,6 +20,7 @@ class AlgaeTable:
             "Aphaniz Akinetes":"aphaniz_akinetes_sep16_10_200N_TBIRD"}
         
         self.Num_Trials=5
+        self.Total_Trials=self.Num_Trials
         self.Name_Array = []
 
         self.Total_Algae_Types = 0
@@ -62,7 +63,8 @@ class AlgaeTable:
         self.Max_Count_Array[ID] = Max
 
     def Set_Num_Trials(self, num):
-        self.Num_Trials = int(num)\
+        self.Num_Trials = int(num)
+        self.Total_trials = self.Num_Trials
                           
     def clearArrays(self):
         self.Name_Array[:]=[]
@@ -78,8 +80,8 @@ class AlgaeTable:
         #self.Name_Array=list(session)
         self.Total_Algae_Types = len(self.Name_Array)
         self.Total_Count_Array = [0 for x in xrange(self.Total_Algae_Types)]
-        self.Min_Count_Array = [self.Default_Min_Count for x in xrange(self.Total_Algae_Types)]
-        self.Max_Count_Array = [self.Default_Max_Count for x in xrange(self.Total_Algae_Types)]
+        #self.Min_Count_Array = [self.Default_Min_Count for x in xrange(self.Total_Algae_Types)]
+        #self.Max_Count_Array = [self.Default_Max_Count for x in xrange(self.Total_Algae_Types)]
         self.Total_Mass_Array = [0.00 for x in xrange(self.Total_Algae_Types)]
 
     def Generate_Sample(self):
