@@ -80,13 +80,14 @@ class Ui_results(object):
             L_Std_Dv.setAlignment(QtCore.Qt.AlignCenter)
             L_Std_Dv.setText("Standard deviation: 0")
             CurrentGridLayout.addWidget(L_Std_Dv, 0, 1, 1, 1)
-            self.formLayout.addRow(CurrentGridLayout)
             # Geometric Mean
             L_G_Mean = QtGui.QLabel(self.scrollAreaWidgetContents)
             L_G_Mean.setAlignment(QtCore.Qt.AlignCenter)
             L_G_Mean.setText("Geometric Mean: " + str(AlgaeSample.Get_G_Mean(x)))
             CurrentGridLayout.addWidget(L_G_Mean, 0, 2, 1, 1)
+            # Add Header
             self.formLayout.addRow(CurrentGridLayout)
+
 
             ## Table
             Current_Grid = QtGui.QTableWidget(self.scrollAreaWidgetContents)
