@@ -221,10 +221,11 @@ class Ui_Preferences(object):
         #set the number of trials requested by the user
         #if no value specified use default
         try:
-           val = int(self.Input_Num_Trials.text())
-           algaeTable.Set_Num_Trials(val)
+            val = int(self.Input_Num_Trials.text())
+            algaeTable.Set_Num_Trials(val)
+            algaeTable.Total_Trials = val
         except ValueError:
-           algaeTable.Set_Num_Trials(algaeTable.Default_Num_Trials)
+            algaeTable.Set_Num_Trials(algaeTable.Default_Num_Trials)
            
         self.pref.done(int(True))
 

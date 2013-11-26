@@ -387,7 +387,7 @@ class Ui_MainWindow(object):
         painter.end()
 
         ## Only show results page after all trials are finished
-        if (algaeTable.Get_Num_Trials() <= 0):
+        if (algaeTable.Get_Num_Trials() <= 1):
             resultsDialog=Ui_results()
             ui=QtGui.QDialog();
             resultsDialog.setupUi(ui, algaeTable,self.ans_table)
@@ -396,10 +396,11 @@ class Ui_MainWindow(object):
             ## Start new session
             algaeTable.Set_Num_Trials(algaeTable.Total_Trials)
             self.openPreferences()
+        else:
+            algaeTable.Decrement_Trials()
         
         #after Results page closes generate new sample and reset forms
         self.resetForms()
-        algaeTable.Decrement_Trials()
         algaeTable.Generate_Sample()
         self.setUpScene(self.scene, self.view)
         

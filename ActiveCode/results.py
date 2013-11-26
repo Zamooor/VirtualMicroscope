@@ -95,7 +95,7 @@ class Ui_results(object):
             # Fill table
             for t in xrange(AlgaeSample.Total_Trials):
                 #Current_Grid.insertRow(0)
-                Current_Grid.setItem(t,0,QtGui.QTableWidgetItem(str(t)))
+                Current_Grid.setItem(t,0,QtGui.QTableWidgetItem(str(t+1)))
                 Current_Grid.setItem(t,1,QtGui.QTableWidgetItem(_translate("results", self.getUserCount(x,AlgaeSample,ansTable), None)))
                 Current_Grid.setItem(t,2,QtGui.QTableWidgetItem(_translate("results",str(AlgaeSample.Get_Count(x)), None)))
                 Current_Grid.setItem(t,3,QtGui.QTableWidgetItem(_translate("results", self.getUserCount(x,AlgaeSample,ansTable), None)))

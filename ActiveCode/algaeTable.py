@@ -57,8 +57,8 @@ class AlgaeTable:
         return self.Num_Trials    
 
     def Set_Num_Trials(self, num):
-        self.Num_Trials = num
-        self.Total_trials = self.Num_Trials
+        self.Num_Trials = int(num)
+        self.Total_trials = int(num)
 
 
     def Set_Count_Range(self, ID, Min, Max):
@@ -71,8 +71,9 @@ class AlgaeTable:
     def Set_Max_Count(self, ID, Max):
         self.Max_Count_Array[ID] = Max
 
-    def Set_Num_Trials(self, num):
-        self.Num_Trials = int(num)\
+    #def Set_Num_Trials(self, num):
+    #    self.Total_trials = int(num)
+    #    self.Num_Trials = int(num)\
                           
     def clearArrays(self):
         self.Name_Array[:]=[]
