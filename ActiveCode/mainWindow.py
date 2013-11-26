@@ -359,7 +359,7 @@ class Ui_MainWindow(object):
             combo.addItem("2" + u'\u2077')
             combo.addItem("2" + u'\u2078')
 
-            self.ans_table.setCellWidget(0,1, combo)
+            self.ans_table.setCellWidget(x,1, combo)
             self.ans_table.item(x,0).setFlags(Qt.NoItemFlags)
             self.ans_table.sortItems(0,Qt.AscendingOrder)
             
