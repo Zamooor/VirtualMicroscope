@@ -7,13 +7,18 @@ program. Each type of algae will have a unique ID (numerical), Name (string).
 # Includes
 import sys
 import math
-from algaeLibrary import *
+
 from random import randint
 
 class AlgaeTable:
-
+    
     def __init__(self):
         # Data
+        self.AlgaeLib={
+            "Lepo Ovalis":"Attempt001",
+            "Eucapsis":"eucapsis_jul6_11_400N_JUD",
+            "Aphaniz Akinetes":"aphaniz_akinetes_sep16_10_200N_TBIRD"}
+        
         self.Num_Trials=5
         self.Name_Array = []
 
@@ -31,7 +36,7 @@ class AlgaeTable:
         return self.Name_Array[ID]
 
     def Get_File_Name(self,ID):
-        return AlgaeLib[self.Name_Array[ID]] + ".png"
+        return self.AlgaeLib[self.Name_Array[ID]] + ".png"
 
     def Get_Count(self,ID):
         return self.Total_Count_Array[ID]
@@ -59,14 +64,14 @@ class AlgaeTable:
     def Set_Num_Trials(self, num):
         self.Num_Trials = int(num)
 
-    def setNames(self,session):
-        #clearr all the arrays before every session
-        self.Name_Array[:]=[]
+    def setNames(self):
+        #clear all the arrays before every session
+        #self.Name_Array[:]=[]
         self.Total_Count_Array[:]=[]
         self.Min_Count_Array[:]=[]
         self.Max_Count_Array[:]=[]
         
-        self.Name_Array=list(session)
+        #self.Name_Array=list(session)
         self.Total_Algae_Types = len(self.Name_Array)
         self.Total_Count_Array = [0 for x in xrange(self.Total_Algae_Types)]
         self.Min_Count_Array = [self.Default_Min_Count for x in xrange(self.Total_Algae_Types)]

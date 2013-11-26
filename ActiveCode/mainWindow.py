@@ -11,7 +11,8 @@
 import sys, os
 import math
 import algaeTable
-from algaeTable import *
+from algaeLibrary import *
+
 import random
 from random import randint
 from PyQt4 import QtCore, QtGui,QtOpenGL
@@ -38,7 +39,7 @@ except AttributeError:
 #####################################################################################
 
 
-algaeTable = AlgaeTable()
+#algaeTable = AlgaeTable()
 algaeList = []
 random.seed()
 #algaeTable.Generate_Sample()
@@ -359,7 +360,7 @@ class Ui_MainWindow(object):
             combo.addItem("2" + u'\u2077')
             combo.addItem("2" + u'\u2078')
 
-            self.ans_table.setCellWidget(x,1, combo)
+            self.ans_table.setCellWidget(0,1, combo)
             self.ans_table.item(x,0).setFlags(Qt.NoItemFlags)
             self.ans_table.sortItems(0,Qt.AscendingOrder)
             
@@ -403,13 +404,13 @@ class Ui_MainWindow(object):
         reset=gui.exec_()
         #reset the session when the parameters have been changed
         if reset==int(True):
-            self.setSession(preferencesDialog.retVal())
+            self.setSession()#preferencesDialog.retVal())
 
     #reset all relevant variables and restart the session    
-    def setSession(self, session):
-        algaeTable.Set_Num_Trials(session.pop())
+    def setSession(self): #session):
+        #algaeTable.Set_Num_Trials(session.pop())
         algaeList[:]=[]
-        algaeTable.setNames(session)
+        algaeTable.setNames()
         self.resetForms()
         algaeTable.Generate_Sample()
         self.setUpScene(self.scene, self.view) 

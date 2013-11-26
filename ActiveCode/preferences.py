@@ -10,7 +10,6 @@ import sys, os
 from PyQt4 import QtCore, QtGui
 import algaeTable
 from algaeLibrary import *
-from algaeTable import *
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
 except AttributeError:
@@ -38,8 +37,7 @@ class Ui_Preferences(object):
         self.AlgaeIncludeSet=[]
         #list of all the checkboxes each selecting one type of algae
         self.CheckBoxList=[]
-        #This file Preferences actually represents the configuration screen that creates
-             # a new session for the user.
+        
         Preferences.setObjectName(_fromUtf8("Preferences"))
         Preferences.setFixedSize(700, 500)
         
@@ -99,7 +97,7 @@ class Ui_Preferences(object):
         
         Index=0
         #iterate through the whole algae dictionary and add a graphic/check box for each species
-        for key in AlgaeLib:
+        for key in algaeTable.AlgaeLib:
             Index += 7 
             self.CurrentGroupBox = QtGui.QGroupBox(self.List_Algae_Select)
             self.CurrentGroupBox.setTitle(_fromUtf8(key))
@@ -114,12 +112,23 @@ class Ui_Preferences(object):
             self.CurrentGridLayout.setObjectName(_fromUtf8("CurrentGridLayout"))        
 
             
-            self.Check_include = QtGui.QCheckBox("Include in Samples", self.CurrentLayoutWidget)
+            self.Check_include = QtGui.QCheckBox( self.CurrentLayoutWidget)
             self.Check_include.setObjectName(_fromUtf8("Check_include"))
             self.Check_include.setGeometry(QtCore.QRect(20, 0, 130, 47))
             #self.Check_include.stateChanged.connect(self.handleItemClicked)
             self.CheckBoxList.append(self.Check_include)
-    
+
+            self.Label_Range=QtGui.QLabel("Range",self.CurrentLayoutWidget)
+            self.Label_Range.setGeometry(QtCore.QRect(100, -10, 100, 30))
+            
+            self.Text_Range_Low=QtGui.QLineEdit(self.CurrentLayoutWidget)
+            self.Text_Range_Low.setPlaceholderText("From")
+            self.Text_Range_Low.setGeometry(QtCore.QRect(100, 15, 100, 20))
+
+            self.Text_Range_High=QtGui.QLineEdit(self.CurrentLayoutWidget)
+            self.Text_Range_High.setPlaceholderText("To")
+            self.Text_Range_High.setGeometry(QtCore.QRect(220, 15, 100, 20))
+
             self.formLayout.setWidget(Index, QtGui.QFormLayout.FieldRole, self.CurrentGroupBox)
 
 
@@ -128,7 +137,7 @@ class Ui_Preferences(object):
             self.CurrentGraphicsView = QtGui.QLabel(self.List_Algae_Select)
             self.CurrentGraphicsView.setObjectName(_fromUtf8("CurrentGraphicsView"))
             self.formLayout.setWidget(Index, QtGui.QFormLayout.LabelRole, self.CurrentGraphicsView)
-            self.CurrentGraphicsView.setPixmap(QtGui.QPixmap(os.getcwd() + "/Assets/20um/"+AlgaeLib[key]+".png"))
+            self.CurrentGraphicsView.setPixmap(QtGui.QPixmap(os.getcwd() + "/Assets/20um/"+algaeTable.AlgaeLib[key]+".png"))
             self.CurrentGraphicsView.setFixedWidth(75)
             self.CurrentGraphicsView.setFixedHeight(75)
             #CurrentGraphicsView.setGeometry(0,0,90,90)
@@ -155,7 +164,7 @@ class Ui_Preferences(object):
         QtCore.QMetaObject.connectSlotsByName(Preferences)
 
     def retranslateUi(self, Preferences):
-        Preferences.setWindowTitle(_translate("Preferences", "Create A New Session", None))
+        Preferences.setWindowTitle(_translate("Preferences", "Preferences", None))
         self.Group_Program_Options.setTitle(_translate("Preferences", "Algae Species Selection", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.Algae), _translate("Preferences", "Algae", None))
         self.Group_Algae_Species.setTitle(_translate("Preferences", "Number Of Trials", None))
@@ -167,25 +176,35 @@ class Ui_Preferences(object):
     #algae to the samples
     def clickedOK(self):
         x=1
-        for key in AlgaeLib:
+        for key in algaeTable.AlgaeLib:
             if self.CheckBoxList[0].isChecked():
-                self.AlgaeIncludeSet.append(key)
+                algaeTable.Name_Array.append(key)
+                #algaeTable.Max_Count_Array.append(int(self.Text_Range_High.text()))
+                #algaeTable.Min_Count_Array.append(int(self.Text_Range_Low.text()))
+                
             elif self.CheckBoxList[x].isChecked():
-                self.AlgaeIncludeSet.append(key)
+                algaeTable.Name_Array.append(key)
+                #print self.Text_Range_High.text()
+                #algaeTable.Max_Count_Array.append(int(self.Text_Range_High.text()))
+                #algaeTable.Min_Count_Array.append(int(self.Text_Range_Low.text()))
             x+=1
             
-        #if no boxes were checked add all species    
-        if not self.AlgaeIncludeSet:
+        #if no boxes were checked add all species
+        x=0    
+        if not algaeTable.Name_Array:
             for key in AlgaeLib:
-                self.AlgaeIncludeSet.append(key)
+                x+=1    
+                algaeTable.Name_Array.append(key)
+                #algaeTable.Max_Count_Array.append(int(self.Text_Range_High.text()))
+                #algaeTable.Min_Count_Array.append(int(self.Text_Range_Low.text()))
                 
         #append the number of trials requested by the user
         #if no value specified use default
         try:
            val = int(self.Input_Num_Trials.text())
-           self.AlgaeIncludeSet.append(self.Input_Num_Trials.text())
+           algaeTable.Num_Trials=val
         except ValueError:
-           self.AlgaeIncludeSet.append(defaultNumTrials)
+           algaeTable.Num_Trials=defaultNumTrials
            
         self.pref.done(int(True))
 
@@ -195,22 +214,22 @@ class Ui_Preferences(object):
         if self.startUpFlag==False:
             self.pref.done(int(False))
         else:
-            for key in AlgaeLib:
-                self.AlgaeIncludeSet.append(key)
+            for key in algaeTable.AlgaeLib:
+                algaeTable.Name_Array.append(key)
                 
-            self.AlgaeIncludeSet.append(defaultNumTrials)
+            algaeTable.Name_Array.append(defaultNumTrials)
             self.pref.done(int(True))
     #when called returns the session parameters including algae
     #species and number of trials
-    def retVal(self):
-        return self.AlgaeIncludeSet
+    #def retVal(self):
+        #return self.AlgaeIncludeSet
 
 
-'''if __name__ == "__main__":
+if __name__ == "__main__":
     import sys
     app = QtGui.QApplication(sys.argv)
     MainWindow = QtGui.QMainWindow()
     ui = Ui_Preferences()
-    ui.setupUi(MainWindow)
+    ui.setupUi(MainWindow,0)
     MainWindow.show()
-    sys.exit(app.exec_())'''
+    sys.exit(app.exec_())
