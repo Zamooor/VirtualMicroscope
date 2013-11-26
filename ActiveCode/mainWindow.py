@@ -392,6 +392,8 @@ class Ui_MainWindow(object):
             resultsDialog.setupUi(ui, algaeTable,self.ans_table)
             ui.setModal(True) 
             ui.exec_()
+            ## Start new session
+            self.openPreferences()
         
         #after Results page closes generate new sample and reset forms
         self.resetForms()
