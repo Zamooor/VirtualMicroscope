@@ -11,12 +11,12 @@ algaeTable=AlgaeTable()
 #algaeTable=None 
 
 class Pixmap(QtCore.QObject):
-    def __init__(self, pix):
+    def __init__(self, pix, scale):
         super(Pixmap, self).__init__()
 
         self.pixmap_item = QtGui.QGraphicsPixmapItem(pix)
         self.pixmap_item.setCacheMode(QtGui.QGraphicsItem.DeviceCoordinateCache)
-        self.pixmap_item.setScale(.03)
+        self.pixmap_item.setScale(scale)
     def _set_pos(self, pos):
         self.pixmap_item.setPos(pos)
 

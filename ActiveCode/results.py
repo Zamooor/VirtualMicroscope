@@ -56,9 +56,8 @@ class Ui_results(object):
             View.setObjectName(_fromUtf8("results"))
             View.setFixedSize(755, 569)
             self.scene = QtGui.QGraphicsScene(0, 0, 755, 569)
-            self.view = QtGui.QGraphicsView(self.scene)
-            self.scene.setBackgroundBrush(QtGui.QColor("white"))
-            self.pic = Pixmap(QtGui.QPixmap(os.getcwd() + "/TempSampleRenders/"+FileName))
+            self.centralWidget = QtGui.QGraphicsView(self.scene, View)
+            self.pic = Pixmap(QtGui.QPixmap(os.getcwd() + "/TempSampleRenders/"+FileName), 1)
             print os.getcwd() + "/TempSampleRenders/"+FileName
             self.pic.pos = QtCore.QPointF(0,0)
             self.scene.addItem(self.pic.pixmap_item)
