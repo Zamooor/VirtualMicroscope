@@ -75,7 +75,9 @@ class Pixmap(QtCore.QObject):
         self.pixmap_item.setRotation(angle)
 
     def setScaleVariance(self, var):
+        print var
         self.pixmap_item.setScale(self.pixmap_item.scale() + var)
+        print self.pixmap_item.scale()
 
 
 
@@ -250,6 +252,8 @@ class Ui_MainWindow(object):
         
         self.actionAbout = QtGui.QAction(MainWindow)
         self.actionAbout.setObjectName(_fromUtf8("actionAbout"))
+        #self.actionPreferences.triggered.connect(self.openPreferences)
+
         
         self.actionControls = QtGui.QAction(MainWindow)
         self.actionControls.setObjectName(_fromUtf8("actionControls"))
@@ -301,7 +305,7 @@ class Ui_MainWindow(object):
         self.actionOpen.setText(_translate("MainWindow", "Open", None))
         self.actionSave.setText(_translate("MainWindow", "Save", None))
         self.actionAbout.setText(_translate("MainWindow", "About...", None))
-        self.actionPreferences.setText(_translate("MainWindow", "Preferences", None))
+        self.actionPreferences.setText(_translate("MainWindow", "Create New Session", None))
         self.actionControls.setText(_translate("MainWindow", "Controls", None))
         self.actionImport_Sample.setText(_translate("MainWindow", "Import Existing Sample", None))
         self.actionCreate_New_Sample.setText(_translate("MainWindow", "Create New Sample", None))
@@ -460,8 +464,7 @@ class Window(QtGui.QMainWindow):
         folder = os.getcwd() + "/TempSampleRenders"
         for aFile in os.listdir(folder):
             filePath = os.path.join(folder, aFile)
-            if(aFile != ".gitignore"):
-                os.unlink(filePath)
+            os.unlink(filePath)
 
         event.accept()
   
