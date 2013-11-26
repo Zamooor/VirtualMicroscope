@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 
 # Form implementation generated from reading ui file 'mainwindow.ui'
-#
-# Created: Sat Oct 19 18:39:35 2013
-#      by: PyQt4 UI code generator 4.10.3
-#
-# WARNING! All changes made in this file will be lost!
+
+#####################
+## Things that could use improving!!!
+##  1. Scaling the window/UI evenly is a tedious task, a centralized scale var would be nice
+##  2. Some controls are still named things like label_2, consider adding descriptive names
+
+
 import sys, os
 import math
 import algaeTable
@@ -257,7 +259,6 @@ class Ui_MainWindow(object):
         
         self.actionControls = QtGui.QAction(MainWindow)
         self.actionControls.setObjectName(_fromUtf8("actionControls"))
-        .5
         self.actionImport_Sample = QtGui.QAction(MainWindow)
         self.actionImport_Sample.setObjectName(_fromUtf8("actionImport_Sample"))
         
@@ -335,8 +336,18 @@ class Ui_MainWindow(object):
             number=int(self.input_count.text())
             if not (self.input_species.text().isEmpty()):
                 self.ans_table.insertRow(0)
-                self.ans_table.setItem(0,1,QtGui.QTableWidgetItem(self.input_count.text()))
+                self.ans_table.setItem(0,1,QtGui.QTableWidgetItem("0"))
                 self.ans_table.setItem(0,0,QtGui.QTableWidgetItem(self.input_species.text()))
+                #change second cell to a comboBox
+                combo = QtGui.QComboBox()
+                combo.addItem("2" + u'\u2074')
+                combo.addItem("2" + u'\u2075')
+                combo.addItem("2" + u'\u2076')
+                combo.addItem("2" + u'\u2077')
+                combo.addItem("2" + u'\u2078')
+
+                self.ans_table.setCellWidget(0,1, combo)
+
                 self.ans_table.sortItems(0,Qt.AscendingOrder)
 
                 
