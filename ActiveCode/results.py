@@ -9,9 +9,11 @@
 
 
 import sys, os
-
-from PyQt4 import QtCore, QtGui
+from PyQt4 import QtCore, QtGui,QtOpenGL
+from PyQt4.QtCore import *
+from PyQt4.QtGui import *
 from algaeTable import *
+from Globals import *
 
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
@@ -28,6 +30,46 @@ except AttributeError:
         return QtGui.QApplication.translate(context, text, disambig)
 
 class Ui_results(object):
+
+    
+
+    class Ui_View(object):
+        '''class Pixmap(QtCore.QObject):
+            def __init__(self, pix):
+                super(Pixmap, self).__init__()
+
+                self.pixmap_item = QtGui.QGraphicsPixmapItem(pix)
+                self.pixmap_item.setCacheMode(QtGui.QGraphicsItem.DeviceCoordinateCache)
+                self.pixmap_item.setScale(.03)
+            def _set_pos(self, pos):
+                self.pixmap_item.setPos(pos)
+
+            def setRot(self, angle):
+                self.pixmap_item.setRotation(angle)
+
+            def setScaleVariance(self, var):
+                self.pixmap_item.setScale(self.pixmap_item.scale() + var)
+
+            pos = QtCore.pyqtProperty(QtCore.QPointF, fset=_set_pos)'''
+        def setupUi(self, View, FileName):
+            
+            View.setObjectName(_fromUtf8("results"))
+            View.setFixedSize(755, 569)
+            self.scene = QtGui.QGraphicsScene(0, 0, 755, 569)
+            self.view = QtGui.QGraphicsView(self.scene)
+            self.scene.setBackgroundBrush(QtGui.QColor("white"))
+            self.pic = Pixmap(QtGui.QPixmap(os.getcwd() + "/TempSampleRenders/"+FileName))
+            print os.getcwd() + "/TempSampleRenders/"+FileName
+            self.pic.pos = QtCore.QPointF(0,0)
+            self.scene.addItem(self.pic.pixmap_item)
+
+    def Open_View(self):
+        Open_View_Dialog=self.Ui_View()
+        View_Ui=QtGui.QDialog();
+        Open_View_Dialog.setupUi(View_Ui, self.FileName)
+        View_Ui.setModal(True) 
+        View_Ui.exec_()
+    
     def setupUi(self, results, AlgaeSample,ansTable):
         results.setObjectName(_fromUtf8("results"))
         results.setFixedSize(755, 569)
@@ -93,25 +135,31 @@ class Ui_results(object):
             Current_Grid = QtGui.QTableWidget(self.scrollAreaWidgetContents)
             Current_Grid.setGeometry(QtCore.QRect(550, 470, 411, 181))
             Current_Grid.setObjectName(_fromUtf8("AlgaeGrid"))
-            Current_Grid.setColumnCount(4)
+            Current_Grid.setColumnCount(5)
             Current_Grid.setRowCount(AlgaeSample.Total_Trials)
             Current_Grid.horizontalHeader().setResizeMode(QtGui.QHeaderView.Stretch)
             Current_Grid.verticalHeader().setVisible(False)
-            Current_Grid.setHorizontalHeaderLabels(['Trial', 'Guess', 'Actual', 'Difference'])
+            Current_Grid.setHorizontalHeaderLabels(['Trial', 'Guess', 'Actual', 'Difference', 'Image'])
             self.formLayout.addRow(Current_Grid)
+
+            
+
+            
             
             # Fill table
             for t in xrange(AlgaeSample.Total_Trials):
                 #Current_Grid.insertRow(0)
+                self.FileName = "Trial" + str(t) + ".png"
                 Current_Grid.setItem(t,0,QtGui.QTableWidgetItem(str(t+1)))
                 Current_Grid.setItem(t,1,QtGui.QTableWidgetItem(str(AlgaeSample.Get_Guess_At_Trial(x,t))))
                 Current_Grid.setItem(t,2,QtGui.QTableWidgetItem(_translate("results",str(AlgaeSample.Get_Count_At_Trial(x,t)), None)))
                 Current_Grid.setItem(t,3,QtGui.QTableWidgetItem(str(AlgaeSample.Get_Difference_At_Trial(x,t))))
-                #Current_Grid.setItem(t,3,QtGui.QTableWidgetItem(str(AlgaeSample.Get_Guess_At_Trial(x,t) - AlgaeSample.Get_Count_At_Trial(x,t))))
-                #Current_Grid.setItem(t,3,QtGui.QTableWidgetItem(str(AlgaeSample.Get_Count_At_Trial(x,t) - 2**supToI(AlgaeSample.Get_Guess_At_Trial(x,t)[1]))))
-                #Current_Grid.setItem(t,0,QtGui.QTableWidgetItem("dfG"))
-                #Current_Grid.item(t,0).setFlags(QtCore.NoItemFlags)
-                #Current_Grid.sortItems(0,QtCore.AscendingOrder)
+                Current_Grid.setItem(t,4,QtGui.QTableWidgetItem("Coming soon"))
+                View_Button = QtGui.QPushButton()
+                View_Button.clicked.connect(self.Open_View)
+                View_Button.setText(_translate("MainWindow", "View", None))
+                Current_Grid.setCellWidget(t,4, View_Button)
+
 
 ##        # Old Layout
 ##        for x in xrange(AlgaeSample.Total_Algae_Types):

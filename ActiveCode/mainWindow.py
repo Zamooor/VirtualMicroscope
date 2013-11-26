@@ -64,7 +64,7 @@ random.seed()
 ### Class borrowed from animatedtiles demo:
 # PyQt doesn't support deriving from more than one wrapped class so we use
 # composition and delegate the property.
-class Pixmap(QtCore.QObject):
+'''class Pixmap(QtCore.QObject):
     def __init__(self, pix):
         super(Pixmap, self).__init__()
 
@@ -80,10 +80,7 @@ class Pixmap(QtCore.QObject):
     def setScaleVariance(self, var):
         self.pixmap_item.setScale(self.pixmap_item.scale() + var)
 
-
-
-
-    pos = QtCore.pyqtProperty(QtCore.QPointF, fset=_set_pos)
+    pos = QtCore.pyqtProperty(QtCore.QPointF, fset=_set_pos)'''
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -382,7 +379,7 @@ class Ui_MainWindow(object):
         
         self.scene.render(painter)
         
-        if(not outImage.save(os.getcwd() + "/TempSampleRenders/testRender.png")):
+        if(not outImage.save(os.getcwd() + "/TempSampleRenders/Trial" + str(algaeTable.Get_Num_Trials()) + ".png")):
             print "failed to save render"
 
         painter.end()
