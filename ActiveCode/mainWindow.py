@@ -77,9 +77,7 @@ class Pixmap(QtCore.QObject):
         self.pixmap_item.setRotation(angle)
 
     def setScaleVariance(self, var):
-        print var
         self.pixmap_item.setScale(self.pixmap_item.scale() + var)
-        print self.pixmap_item.scale()
 
 
 
@@ -338,15 +336,7 @@ class Ui_MainWindow(object):
                 self.ans_table.insertRow(0)
                 self.ans_table.setItem(0,1,QtGui.QTableWidgetItem("0"))
                 self.ans_table.setItem(0,0,QtGui.QTableWidgetItem(self.input_species.text()))
-                #change second cell to a comboBox
-                combo = QtGui.QComboBox()
-                combo.addItem("2" + u'\u2074')
-                combo.addItem("2" + u'\u2075')
-                combo.addItem("2" + u'\u2076')
-                combo.addItem("2" + u'\u2077')
-                combo.addItem("2" + u'\u2078')
-
-                self.ans_table.setCellWidget(0,1, combo)
+               
 
                 self.ans_table.sortItems(0,Qt.AscendingOrder)
 
@@ -360,6 +350,16 @@ class Ui_MainWindow(object):
             #self.ans_table.insertRow(0)
             self.ans_table.setItem(x,0,QtGui.QTableWidgetItem(algaeTable.Get_Name(x)))
             self.ans_table.setItem(x,1,QtGui.QTableWidgetItem("0"))
+
+            #change second cell to a comboBox
+            combo = QtGui.QComboBox()
+            combo.addItem("2" + u'\u2074')
+            combo.addItem("2" + u'\u2075')
+            combo.addItem("2" + u'\u2076')
+            combo.addItem("2" + u'\u2077')
+            combo.addItem("2" + u'\u2078')
+
+            self.ans_table.setCellWidget(0,1, combo)
             self.ans_table.item(x,0).setFlags(Qt.NoItemFlags)
             self.ans_table.sortItems(0,Qt.AscendingOrder)
             
@@ -475,7 +475,8 @@ class Window(QtGui.QMainWindow):
         folder = os.getcwd() + "/TempSampleRenders"
         for aFile in os.listdir(folder):
             filePath = os.path.join(folder, aFile)
-            os.unlink(filePath)
+            if(aFile != ".gitignore"):
+                os.unlink(filePath)
 
         event.accept()
   
