@@ -38,7 +38,8 @@ class Ui_Preferences(object):
         self.AlgaeIncludeSet=[]
         #list of all the checkboxes each selecting one type of algae
         self.CheckBoxList=[]
-        
+        #This file Preferences actually represents the configuration screen that creates
+             # a new session for the user.
         Preferences.setObjectName(_fromUtf8("Preferences"))
         Preferences.setFixedSize(700, 500)
         
@@ -154,7 +155,7 @@ class Ui_Preferences(object):
         QtCore.QMetaObject.connectSlotsByName(Preferences)
 
     def retranslateUi(self, Preferences):
-        Preferences.setWindowTitle(_translate("Preferences", "Preferences", None))
+        Preferences.setWindowTitle(_translate("Preferences", "Create A New Session", None))
         self.Group_Program_Options.setTitle(_translate("Preferences", "Algae Species Selection", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.Algae), _translate("Preferences", "Algae", None))
         self.Group_Algae_Species.setTitle(_translate("Preferences", "Number Of Trials", None))
