@@ -92,7 +92,7 @@ class Ui_Preferences(object):
         self.Check_All = QtGui.QCheckBox( "Include All" ,self.Group_Program_Options)
         self.Check_All.setObjectName(_fromUtf8("Check_include"))
         self.Check_All.setGeometry(QtCore.QRect(35,15, 100, 50))
-        #always add the "check al button"
+        #always add the "check all button"
         self.CheckBoxList.append(self.Check_All)
         
         Index=0
@@ -176,6 +176,7 @@ class Ui_Preferences(object):
     #algae to the samples
     def clickedOK(self):
         x=1
+        algaeTable.clearArrays()
         for key in algaeTable.AlgaeLib:
             if self.CheckBoxList[0].isChecked():
                 algaeTable.Name_Array.append(key)

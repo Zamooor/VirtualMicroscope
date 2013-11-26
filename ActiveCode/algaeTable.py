@@ -62,14 +62,18 @@ class AlgaeTable:
         self.Max_Count_Array[ID] = Max
 
     def Set_Num_Trials(self, num):
-        self.Num_Trials = int(num)
-
-    def setNames(self):
-        #clear all the arrays before every session
-        #self.Name_Array[:]=[]
+        self.Num_Trials = int(num)\
+                          
+    def clearArrays(self):
+        self.Name_Array[:]=[]
         self.Total_Count_Array[:]=[]
         self.Min_Count_Array[:]=[]
         self.Max_Count_Array[:]=[]
+        
+    def setNames(self):
+        #clear all the arrays before every session
+        #self.Name_Array[:]=[]
+        
         
         #self.Name_Array=list(session)
         self.Total_Algae_Types = len(self.Name_Array)
