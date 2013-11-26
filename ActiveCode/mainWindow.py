@@ -375,6 +375,7 @@ class Ui_MainWindow(object):
         self.setNames()
 
     def openResults(self):
+        print "Attempting to open results"
         # Save Algae View as image for review later
         outImage = QPixmap(999, 400)
         painter = QPainter(outImage)
@@ -386,23 +387,30 @@ class Ui_MainWindow(object):
 
         painter.end()
 
+        ## Record user answers
+        for z in xrange(algaeTable.Total_Algae_Types):
+            algaeTable.User_Guess_Record[z][algaeTable.Get_Num_Trials()] = 2**supToI(self.ans_table.cellWidget(z,1).currentText()[1])
+            #Current_Grid.setItem(t,3,QtGui.QTableWidgetItem(str(AlgaeSample.Get_Count_At_Trial(x,t) - 2**supToI(AlgaeSample.Get_Guess_At_Trial(x,t)[1]))))
+
         ## Only show results page after all trials are finished
         if (algaeTable.Get_Num_Trials() <= 1):
+            print "All trials finished"
             resultsDialog=Ui_results()
             ui=QtGui.QDialog();
             resultsDialog.setupUi(ui, algaeTable,self.ans_table)
             ui.setModal(True) 
             ui.exec_()
             ## Start new session
-            algaeTable.Set_Num_Trials(algaeTable.Total_Trials)
+            ##algaeTable.Set_Num_Trials(algaeTable.Total_Trials)
             self.openPreferences()
         else:
+            print "More trials to go"
             algaeTable.Decrement_Trials()
-        
-        #after Results page closes generate new sample and reset forms
-        self.resetForms()
-        algaeTable.Generate_Sample()
-        self.setUpScene(self.scene, self.view)
+            #after Results page closes generate new sample and reset forms
+            self.resetForms()
+            algaeTable.Generate_Sample()
+            self.setUpScene(self.scene, self.view)
+        print "Finished trying to open results."
         
     def openPreferences(self):
         preferencesDialog=Ui_Preferences()
@@ -417,6 +425,7 @@ class Ui_MainWindow(object):
     #reset all relevant variables and restart the session    
     def setSession(self): #session):
         #algaeTable.Set_Num_Trials(session.pop())
+        print " New Set Session "
         algaeList[:]=[]
         algaeTable.PrepareArrays()
         self.resetForms()

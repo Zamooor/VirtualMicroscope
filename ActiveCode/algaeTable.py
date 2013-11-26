@@ -10,6 +10,18 @@ import math
 
 from random import randint
 
+def supToI(u):
+    if u == u'\u2074':
+        return 4
+    elif u == u'\u2075':
+        return 5
+    elif u == u'\u2076':
+        return 6
+    elif u == u'\u2077':
+        return 7
+    elif u == u'\u2078':
+        return 8
+
 class AlgaeTable:
     
     def __init__(self):
@@ -22,6 +34,8 @@ class AlgaeTable:
             "Eucapsis":{"File":"eucapsis_jul6_11_400N_JUD"},
             "Aphaniz Akinetes":{"File":"aphaniz_akinetes_sep16_10_200N_TBIRD"}
             }
+        self.Max_Trials = 30
+        self.Max_Types = 30
         self.Default_Num_Trials=5
         self.Num_Trials=5
         self.Total_Trials=self.Num_Trials
@@ -36,6 +50,9 @@ class AlgaeTable:
         self.Max_Count_Array = []
         self.Total_Mass_Array = []
 
+        self.User_Guess_Record = [[0 for x in xrange(self.Max_Types)] for x in xrange(self.Max_Trials)]
+        self.Algae_Count_Record = [[0 for x in xrange(self.Max_Types)] for x in xrange(self.Max_Trials)]
+
     # Exported Functions
     def Get_Name(self,ID):
         return self.Name_Array[ID]
@@ -45,6 +62,22 @@ class AlgaeTable:
 
     def Get_Count(self,ID):
         return self.Total_Count_Array[ID]
+
+    def Get_Count_At_Trial(self,ID, Trial):
+        return self.Algae_Count_Record[ID][Trial]
+
+    def Get_Guess_At_Trial(self,ID, Trial):
+        return self.User_Guess_Record[ID][self.Total_Trials - Trial]
+
+    def Get_Difference_At_Trial(self,ID, Trial):
+        return self.Get_Guess_At_Trial(ID,Trial) - self.Get_Count_At_Trial(ID,Trial)
+
+    # Geometric mean
+    def Get_G_Mean(self,ID):
+        Product = 1.00
+        for x in xrange(self.Total_Trials):
+            Product *= abs(self.Get_Difference_At_Trial(ID, x))
+        return Product**(1.00/self.Total_Trials)
 
     def Get_Biomass(self, ID):
         return self.Total_Mass_Array[ID]
@@ -80,16 +113,21 @@ class AlgaeTable:
         self.Total_Count_Array[:]=[]
         self.Min_Count_Array[:]=[]
         self.Max_Count_Array[:]=[]
+        self.Algae_Count_Record = [[0 for x in xrange(self.Max_Types)] for x in xrange(self.Max_Trials)] 
+        self.User_Guess_Record = [[0 for x in xrange(self.Max_Types)] for x in xrange(self.Max_Trials)]
         
     def PrepareArrays(self):
         #clear all the arrays before every session
         self.Total_Algae_Types = len(self.Name_Array)
         self.Total_Count_Array = [0 for x in xrange(self.Total_Algae_Types)]
         self.Total_Mass_Array = [0.00 for x in xrange(self.Total_Algae_Types)]
+        self.Algae_Count_Record = [[0 for x in xrange(self.Max_Types)] for x in xrange(self.Max_Trials)]
+        self.User_Guess_Record = [[0 for x in xrange(self.Max_Types)] for x in xrange(self.Max_Trials)]
 
     def Generate_Sample(self):
         for x in xrange(self.Total_Algae_Types):
             self.Total_Count_Array[x] = randint(self.Min_Count_Array[x], self.Max_Count_Array[x])
+            self.Algae_Count_Record[x][self.Total_Trials - self.Num_Trials] = self.Total_Count_Array[x]
         
     def Decrement_Trials(self):
         self.Num_Trials-=1

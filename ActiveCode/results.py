@@ -81,6 +81,12 @@ class Ui_results(object):
             L_Std_Dv.setText("Standard deviation: 0")
             CurrentGridLayout.addWidget(L_Std_Dv, 0, 1, 1, 1)
             self.formLayout.addRow(CurrentGridLayout)
+            # Geometric Mean
+            L_G_Mean = QtGui.QLabel(self.scrollAreaWidgetContents)
+            L_G_Mean.setAlignment(QtCore.Qt.AlignCenter)
+            L_G_Mean.setText("Geometric Mean: " + str(AlgaeSample.Get_G_Mean(x)))
+            CurrentGridLayout.addWidget(L_G_Mean, 0, 2, 1, 1)
+            self.formLayout.addRow(CurrentGridLayout)
 
             ## Table
             Current_Grid = QtGui.QTableWidget(self.scrollAreaWidgetContents)
@@ -92,13 +98,16 @@ class Ui_results(object):
             Current_Grid.verticalHeader().setVisible(False)
             Current_Grid.setHorizontalHeaderLabels(['Trial', 'Guess', 'Actual', 'Difference'])
             self.formLayout.addRow(Current_Grid)
+            
             # Fill table
             for t in xrange(AlgaeSample.Total_Trials):
                 #Current_Grid.insertRow(0)
                 Current_Grid.setItem(t,0,QtGui.QTableWidgetItem(str(t+1)))
-                Current_Grid.setItem(t,1,QtGui.QTableWidgetItem(_translate("results", self.getUserCount(x,AlgaeSample,ansTable), None)))
-                Current_Grid.setItem(t,2,QtGui.QTableWidgetItem(_translate("results",str(AlgaeSample.Get_Count(x)), None)))
-                Current_Grid.setItem(t,3,QtGui.QTableWidgetItem(_translate("results", self.getUserCount(x,AlgaeSample,ansTable), None)))
+                Current_Grid.setItem(t,1,QtGui.QTableWidgetItem(str(AlgaeSample.Get_Guess_At_Trial(x,t))))
+                Current_Grid.setItem(t,2,QtGui.QTableWidgetItem(_translate("results",str(AlgaeSample.Get_Count_At_Trial(x,t)), None)))
+                Current_Grid.setItem(t,3,QtGui.QTableWidgetItem(str(AlgaeSample.Get_Difference_At_Trial(x,t))))
+                #Current_Grid.setItem(t,3,QtGui.QTableWidgetItem(str(AlgaeSample.Get_Guess_At_Trial(x,t) - AlgaeSample.Get_Count_At_Trial(x,t))))
+                #Current_Grid.setItem(t,3,QtGui.QTableWidgetItem(str(AlgaeSample.Get_Count_At_Trial(x,t) - 2**supToI(AlgaeSample.Get_Guess_At_Trial(x,t)[1]))))
                 #Current_Grid.setItem(t,0,QtGui.QTableWidgetItem("dfG"))
                 #Current_Grid.item(t,0).setFlags(QtCore.NoItemFlags)
                 #Current_Grid.sortItems(0,QtCore.AscendingOrder)

@@ -29,6 +29,8 @@ except AttributeError:
 class Ui_Preferences(object):
     
     def setupUi(self, Preferences,startFlag):
+        #New_Session()
+        
         #a copy of the dialog window in onred to access function to close the window
         self.pref=Preferences
         
