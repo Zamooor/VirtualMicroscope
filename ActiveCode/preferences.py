@@ -123,10 +123,12 @@ class Ui_Preferences(object):
             
             self.Text_Range_Low=QtGui.QLineEdit(self.CurrentLayoutWidget)
             self.Text_Range_Low.setPlaceholderText("From")
+            self.Text_Range_Low.setText(str(algaeTable.Default_Min_Count))
             self.Text_Range_Low.setGeometry(QtCore.QRect(100, 15, 100, 20))
 
             self.Text_Range_High=QtGui.QLineEdit(self.CurrentLayoutWidget)
             self.Text_Range_High.setPlaceholderText("To")
+            self.Text_Range_High.setText(str(algaeTable.Default_Max_Count))
             self.Text_Range_High.setGeometry(QtCore.QRect(220, 15, 100, 20))
 
             self.formLayout.setWidget(Index, QtGui.QFormLayout.FieldRole, self.CurrentGroupBox)
@@ -180,14 +182,14 @@ class Ui_Preferences(object):
         for key in algaeTable.AlgaeLib:
             if self.CheckBoxList[0].isChecked():
                 algaeTable.Name_Array.append(key)
-                #algaeTable.Max_Count_Array.append(int(self.Text_Range_High.text()))
-                #algaeTable.Min_Count_Array.append(int(self.Text_Range_Low.text()))
+                algaeTable.Max_Count_Array.append(int(self.Text_Range_High.text()))
+                algaeTable.Min_Count_Array.append(int(self.Text_Range_Low.text()))
                 
             elif self.CheckBoxList[x].isChecked():
                 algaeTable.Name_Array.append(key)
                 #print self.Text_Range_High.text()
-                #algaeTable.Max_Count_Array.append(int(self.Text_Range_High.text()))
-                #algaeTable.Min_Count_Array.append(int(self.Text_Range_Low.text()))
+                algaeTable.Max_Count_Array.append(int(self.Text_Range_High.text()))
+                algaeTable.Min_Count_Array.append(int(self.Text_Range_Low.text()))
             x+=1
             
         #if no boxes were checked add all species
