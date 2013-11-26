@@ -65,82 +65,104 @@ class Ui_results(object):
         self.formLayout.setFieldGrowthPolicy(QtGui.QFormLayout.AllNonFixedFieldsGrow)
         self.formLayout.setObjectName(_fromUtf8("formLayout"))
 
-
-
+        ## New Layout
         for x in xrange(AlgaeSample.Total_Algae_Types):
-            Index = 7 + x
-            CurrentGroupBox = QtGui.QGroupBox(self.scrollAreaWidgetContents)
-            CurrentGroupBox.setTitle(_fromUtf8(AlgaeSample.Get_Name(x)))
-            CurrentGroupBox.setObjectName(_fromUtf8("CurrentGroupBox"))
-
-            CurrentLayoutWidget = QtGui.QWidget(CurrentGroupBox)
-            CurrentLayoutWidget.setGeometry(QtCore.QRect(10, 20, 600, 47))
-            CurrentLayoutWidget.setObjectName(_fromUtf8("CurrentLayoutWidget"))
-
-            CurrentGridLayout = QtGui.QGridLayout(CurrentLayoutWidget)
+            ## Header
+            CurrentGridLayout = QtGui.QGridLayout(self.scrollAreaWidgetContents)
             CurrentGridLayout.setMargin(0)
-            CurrentGridLayout.setObjectName(_fromUtf8("CurrentGridLayout"))
-
-            CurrentLabel_Your_Answer = QtGui.QLabel(CurrentLayoutWidget)
+            CurrentLabel_Your_Answer = QtGui.QLabel(self.scrollAreaWidgetContents)
             CurrentLabel_Your_Answer.setAlignment(QtCore.Qt.AlignCenter)
-            CurrentLabel_Your_Answer.setObjectName(_fromUtf8("CurrentLabel_Your_Answer"))
+            CurrentLabel_Your_Answer.setText(_fromUtf8(AlgaeSample.Get_Name(x)))
             CurrentGridLayout.addWidget(CurrentLabel_Your_Answer, 0, 0, 1, 1)
+            self.formLayout.addRow(CurrentGridLayout)
 
-            CurrentLabel_Correct_Answer = QtGui.QLabel(CurrentLayoutWidget)
-            CurrentLabel_Correct_Answer.setAlignment(QtCore.Qt.AlignCenter)
-            CurrentLabel_Correct_Answer.setObjectName(_fromUtf8("CurrentLabel_Correct_Answer"))
-            CurrentGridLayout.addWidget(CurrentLabel_Correct_Answer, 0, 1, 1, 1)
+            ## Table
+            Current_Grid = QtGui.QTableWidget(self.scrollAreaWidgetContents)
+            Current_Grid.setGeometry(QtCore.QRect(550, 470, 411, 181))
+            Current_Grid.setObjectName(_fromUtf8("AlgaeGrid"))
+            Current_Grid.setColumnCount(4)
+            Current_Grid.setRowCount(AlgaeSample.Total_Trials)
+            Current_Grid.horizontalHeader().setResizeMode(QtGui.QHeaderView.Stretch)
+            Current_Grid.verticalHeader().setVisible(False)
+            Current_Grid.setHorizontalHeaderLabels(['Trial', 'Guess', 'Actual', 'Difference'])
+            self.formLayout.addRow(Current_Grid)
+            # Fill table
+            for t in xrange(AlgaeSample.Total_Trials):
+                #Current_Grid.insertRow(0)
+                Current_Grid.setItem(t,0,QtGui.QTableWidgetItem(str(t)))
+                Current_Grid.setItem(t,1,QtGui.QTableWidgetItem(_translate("results", self.getUserCount(x,AlgaeSample,ansTable), None)))
+                Current_Grid.setItem(t,2,QtGui.QTableWidgetItem(_translate("results",str(AlgaeSample.Get_Count(x)), None)))
+                Current_Grid.setItem(t,3,QtGui.QTableWidgetItem(_translate("results", self.getUserCount(x,AlgaeSample,ansTable), None)))
+                #Current_Grid.setItem(t,0,QtGui.QTableWidgetItem("dfG"))
+                #Current_Grid.item(t,0).setFlags(QtCore.NoItemFlags)
+                #Current_Grid.sortItems(0,QtCore.AscendingOrder)
 
-            CurrentLabel_Difference = QtGui.QLabel(CurrentLayoutWidget)
-            CurrentLabel_Difference.setAlignment(QtCore.Qt.AlignCenter)
-            CurrentLabel_Difference.setObjectName(_fromUtf8("label_36"))
-            CurrentGridLayout.addWidget(CurrentLabel_Difference, 0, 2, 1, 1)
-            
-            Label_User_Answer = QtGui.QLabel(CurrentLayoutWidget)
-            Label_User_Answer.setObjectName(_fromUtf8("Label_User_Answer"))
-            Label_User_Answer.setAlignment(QtCore.Qt.AlignCenter)
-            CurrentGridLayout.addWidget(Label_User_Answer, 1, 0, 1, 1)
-
-            Label_Correct_Answer = QtGui.QLabel(CurrentLayoutWidget)
-            Label_Correct_Answer.setObjectName(_fromUtf8("Label_Correct_Answer"))
-            Label_Correct_Answer.setAlignment(QtCore.Qt.AlignCenter)
-            CurrentGridLayout.addWidget(Label_Correct_Answer, 1, 1, 1, 1)
-
-            Label_Num_Difference = QtGui.QLabel(CurrentLayoutWidget)
-            Label_Num_Difference.setObjectName(_fromUtf8("Label_Num_Difference"))
-            Label_Num_Difference.setAlignment(QtCore.Qt.AlignCenter)
-            CurrentGridLayout.addWidget( Label_Num_Difference, 1, 2, 1, 1)
-            self.formLayout.setWidget(Index, QtGui.QFormLayout.FieldRole, CurrentGroupBox)
-
-            CurrentLabel_Your_Answer.setText(_translate("results", "Your Answer", None))
-            CurrentLabel_Correct_Answer.setText(_translate("results", "Correct Answer", None))
-            CurrentLabel_Difference.setText(_translate("results", "Difference", None))
-            Label_Correct_Answer.setText(_translate("results",str(AlgaeSample.Get_Count(x)), None))
-             
-            Label_User_Answer.setText(_translate("results", self.getUserCount(x,AlgaeSample,ansTable), None))
-            Label_Num_Difference.setText(_translate("results", str(int(Label_User_Answer.text()) - int(Label_Correct_Answer.text())), None))
-
-            # Add graphic
-            #CurrentGraphicsView = QtGui.QGraphicsView(self.scrollAreaWidgetContents)
-            CurrentGraphicsView = QtGui.QLabel(self.scrollAreaWidgetContents)
-            CurrentGraphicsView.setObjectName(_fromUtf8("CurrentGraphicsView"))
-            self.formLayout.setWidget(Index, QtGui.QFormLayout.LabelRole, CurrentGraphicsView)
-            CurrentGraphicsView.setPixmap(QtGui.QPixmap(os.getcwd() + "/Assets/20um/"+AlgaeSample.Get_File_Name(x)))
-            CurrentGraphicsView.setFixedWidth(75)
-            CurrentGraphicsView.setFixedHeight(75)
-            #CurrentGraphicsView.setGeometry(0,0,90,90)
-            CurrentGraphicsView.setScaledContents(True)
-            backGroundColorString = "44,121,176,255"
-            CurrentGraphicsView.setStyleSheet("background-color: rgba("+backGroundColorString+")" )
-            
-            """#print "Drawing: " + algaeTable.Name_Array[x]
-            pic = QtGui.QLabel(self.glWidget)
-            pic.setPixmap(QtGui.QPixmap(os.getcwd() + "/Assets/20um/"+algaeTable.Name_Array[x] + ".png"))
-            pic.setGeometry(randint(-1000,1000),randint(-1000,1000),pic.pixmap().width()/8,pic.pixmap().height()/8)
-            pic.setScaledContents(True)
-            pic.setStyleSheet("background-color: rgba("+backGroundColorString+")" )
-            algaeList.append(pic)"""
-
+##        # Old Layout
+##        for x in xrange(AlgaeSample.Total_Algae_Types):
+##            Index = 7 + x
+##            CurrentGroupBox = QtGui.QGroupBox(self.scrollAreaWidgetContents)
+##            CurrentGroupBox.setTitle(_fromUtf8(AlgaeSample.Get_Name(x)))
+##            CurrentGroupBox.setObjectName(_fromUtf8("CurrentGroupBox"))
+##
+##            CurrentLayoutWidget = QtGui.QWidget(CurrentGroupBox)
+##            CurrentLayoutWidget.setGeometry(QtCore.QRect(10, 20, 600, 47))
+##            CurrentLayoutWidget.setObjectName(_fromUtf8("CurrentLayoutWidget"))
+##
+##            CurrentGridLayout = QtGui.QGridLayout(CurrentLayoutWidget)
+##            CurrentGridLayout.setMargin(0)
+##            CurrentGridLayout.setObjectName(_fromUtf8("CurrentGridLayout"))
+##
+##            CurrentLabel_Your_Answer = QtGui.QLabel(CurrentLayoutWidget)
+##            CurrentLabel_Your_Answer.setAlignment(QtCore.Qt.AlignCenter)
+##            CurrentLabel_Your_Answer.setObjectName(_fromUtf8("CurrentLabel_Your_Answer"))
+##            CurrentGridLayout.addWidget(CurrentLabel_Your_Answer, 0, 0, 1, 1)
+##
+##            CurrentLabel_Correct_Answer = QtGui.QLabel(CurrentLayoutWidget)
+##            CurrentLabel_Correct_Answer.setAlignment(QtCore.Qt.AlignCenter)
+##            CurrentLabel_Correct_Answer.setObjectName(_fromUtf8("CurrentLabel_Correct_Answer"))
+##            CurrentGridLayout.addWidget(CurrentLabel_Correct_Answer, 0, 1, 1, 1)
+##
+##            CurrentLabel_Difference = QtGui.QLabel(CurrentLayoutWidget)
+##            CurrentLabel_Difference.setAlignment(QtCore.Qt.AlignCenter)
+##            CurrentLabel_Difference.setObjectName(_fromUtf8("label_36"))
+##            CurrentGridLayout.addWidget(CurrentLabel_Difference, 0, 2, 1, 1)
+##            
+##            Label_User_Answer = QtGui.QLabel(CurrentLayoutWidget)
+##            Label_User_Answer.setObjectName(_fromUtf8("Label_User_Answer"))
+##            Label_User_Answer.setAlignment(QtCore.Qt.AlignCenter)
+##            CurrentGridLayout.addWidget(Label_User_Answer, 1, 0, 1, 1)
+##
+##            Label_Correct_Answer = QtGui.QLabel(CurrentLayoutWidget)
+##            Label_Correct_Answer.setObjectName(_fromUtf8("Label_Correct_Answer"))
+##            Label_Correct_Answer.setAlignment(QtCore.Qt.AlignCenter)
+##            CurrentGridLayout.addWidget(Label_Correct_Answer, 1, 1, 1, 1)
+##
+##            Label_Num_Difference = QtGui.QLabel(CurrentLayoutWidget)
+##            Label_Num_Difference.setObjectName(_fromUtf8("Label_Num_Difference"))
+##            Label_Num_Difference.setAlignment(QtCore.Qt.AlignCenter)
+##            CurrentGridLayout.addWidget( Label_Num_Difference, 1, 2, 1, 1)
+##            self.formLayout.setWidget(Index, QtGui.QFormLayout.FieldRole, CurrentGroupBox)
+##
+##            CurrentLabel_Your_Answer.setText(_translate("results", "Your Answer", None))
+##            CurrentLabel_Correct_Answer.setText(_translate("results", "Correct Answer", None))
+##            CurrentLabel_Difference.setText(_translate("results", "Difference", None))
+##            Label_Correct_Answer.setText(_translate("results",str(AlgaeSample.Get_Count(x)), None))
+##             
+##            Label_User_Answer.setText(_translate("results", self.getUserCount(x,AlgaeSample,ansTable), None))
+##            Label_Num_Difference.setText(_translate("results", str(int(Label_User_Answer.text()) - int(Label_Correct_Answer.text())), None))
+##
+##            # Add graphic
+##            #CurrentGraphicsView = QtGui.QGraphicsView(self.scrollAreaWidgetContents)
+##            CurrentGraphicsView = QtGui.QLabel(self.scrollAreaWidgetContents)
+##            CurrentGraphicsView.setObjectName(_fromUtf8("CurrentGraphicsView"))
+##            self.formLayout.setWidget(Index, QtGui.QFormLayout.LabelRole, CurrentGraphicsView)
+##            CurrentGraphicsView.setPixmap(QtGui.QPixmap(os.getcwd() + "/Assets/20um/"+AlgaeSample.Get_File_Name(x)))
+##            CurrentGraphicsView.setFixedWidth(75)
+##            CurrentGraphicsView.setFixedHeight(75)
+##            #CurrentGraphicsView.setGeometry(0,0,90,90)
+##            CurrentGraphicsView.setScaledContents(True)
+##            backGroundColorString = "44,121,176,255"
+##            CurrentGraphicsView.setStyleSheet("background-color: rgba("+backGroundColorString+")" )
 
         self.AlgaeLibrary.setWidget(self.scrollAreaWidgetContents)
         self.groupBox = QtGui.QGroupBox(results)
