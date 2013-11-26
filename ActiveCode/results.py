@@ -33,41 +33,7 @@ class Ui_results(object):
 
     
 
-    class Ui_View(object):
-        '''class Pixmap(QtCore.QObject):
-            def __init__(self, pix):
-                super(Pixmap, self).__init__()
-
-                self.pixmap_item = QtGui.QGraphicsPixmapItem(pix)
-                self.pixmap_item.setCacheMode(QtGui.QGraphicsItem.DeviceCoordinateCache)
-                self.pixmap_item.setScale(.03)
-            def _set_pos(self, pos):
-                self.pixmap_item.setPos(pos)
-
-            def setRot(self, angle):
-                self.pixmap_item.setRotation(angle)
-
-            def setScaleVariance(self, var):
-                self.pixmap_item.setScale(self.pixmap_item.scale() + var)
-
-            pos = QtCore.pyqtProperty(QtCore.QPointF, fset=_set_pos)'''
-        def setupUi(self, View, FileName):
-            
-            View.setObjectName(_fromUtf8("results"))
-            View.setFixedSize(755, 569)
-            self.scene = QtGui.QGraphicsScene(0, 0, 755, 569)
-            self.centralWidget = QtGui.QGraphicsView(self.scene, View)
-            self.pic = Pixmap(QtGui.QPixmap(os.getcwd() + "/TempSampleRenders/"+FileName), 1)
-            print os.getcwd() + "/TempSampleRenders/"+FileName
-            self.pic.pos = QtCore.QPointF(0,0)
-            self.scene.addItem(self.pic.pixmap_item)
-
-    def Open_View(self):
-        Open_View_Dialog=self.Ui_View()
-        View_Ui=QtGui.QDialog();
-        Open_View_Dialog.setupUi(View_Ui, self.FileName)
-        View_Ui.setModal(True) 
-        View_Ui.exec_()
+    
     
     def setupUi(self, results, AlgaeSample,ansTable):
         results.setObjectName(_fromUtf8("results"))
@@ -141,22 +107,61 @@ class Ui_results(object):
             Current_Grid.setHorizontalHeaderLabels(['Trial', 'Guess', 'Actual', 'Difference', 'Image'])
             self.formLayout.addRow(Current_Grid)
 
-            
+            class QButton(QtGui.QWidget):
+                def __init__(self, fileName, parent = None):
+                    QtGui.QWidget.__init__(self, parent)
+                    self.button = QtGui.QPushButton('View', self)
+                    self.fileName = fileName
+                    self.button.clicked.connect(self.Open_View)
+
+                class Ui_View(object):
+                    '''class Pixmap(QtCore.QObject):
+                        def __init__(self, pix):
+                            super(Pixmap, self).__init__()
+
+                            self.pixmap_item = QtGui.QGraphicsPixmapItem(pix)
+                            self.pixmap_item.setCacheMode(QtGui.QGraphicsItem.DeviceCoordinateCache)
+                            self.pixmap_item.setScale(.03)
+                        def _set_pos(self, pos):
+                            self.pixmap_item.setPos(pos)
+
+                        def setRot(self, angle):
+                            self.pixmap_item.setRotation(angle)
+
+                        def setScaleVariance(self, var):
+                            self.pixmap_item.setScale(self.pixmap_item.scale() + var)
+
+                        pos = QtCore.pyqtProperty(QtCore.QPointF, fset=_set_pos)'''
+                    def setupUi(self, View, FileName):
+                        
+                        View.setObjectName(_fromUtf8(FileName))
+                        View.setFixedSize(999, 400)
+                        View.setWindowTitle(_translate(FileName, FileName, None))
+                        self.scene = QtGui.QGraphicsScene(0, 0, 999, 400)
+                        self.centralWidget = QtGui.QGraphicsView(self.scene, View)
+                        self.pic = Pixmap(QtGui.QPixmap(os.getcwd() + "/TempSampleRenders/"+FileName), 1)
+                        print os.getcwd() + "/TempSampleRenders/"+FileName
+                        self.pic.pos = QtCore.QPointF(0,0)
+                        self.scene.addItem(self.pic.pixmap_item)
+
+                def Open_View(self):
+                    Open_View_Dialog=self.Ui_View()
+                    View_Ui=QtGui.QDialog();
+                    Open_View_Dialog.setupUi(View_Ui, self.fileName)
+                    View_Ui.setModal(True) 
+                    View_Ui.exec_()
 
             
             
             # Fill table
             for t in xrange(AlgaeSample.Total_Trials):
                 #Current_Grid.insertRow(0)
-                self.FileName = "Trial" + str(t) + ".png"
                 Current_Grid.setItem(t,0,QtGui.QTableWidgetItem(str(t+1)))
                 Current_Grid.setItem(t,1,QtGui.QTableWidgetItem(str(AlgaeSample.Get_Guess_At_Trial(x,t))))
                 Current_Grid.setItem(t,2,QtGui.QTableWidgetItem(_translate("results",str(AlgaeSample.Get_Count_At_Trial(x,t)), None)))
                 Current_Grid.setItem(t,3,QtGui.QTableWidgetItem(str(AlgaeSample.Get_Difference_At_Trial(x,t))))
                 Current_Grid.setItem(t,4,QtGui.QTableWidgetItem("Coming soon"))
-                View_Button = QtGui.QPushButton()
-                View_Button.clicked.connect(self.Open_View)
-                View_Button.setText(_translate("MainWindow", "View", None))
+                View_Button = QButton("Trial" + str(t+1) + ".png")
                 Current_Grid.setCellWidget(t,4, View_Button)
 
 
