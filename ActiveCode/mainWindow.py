@@ -315,7 +315,7 @@ class Ui_MainWindow(object):
         print "Printing Algae:"
         # this algae gen algorithm's run time is terrible
         for x in xrange(algaeTable.Total_Algae_Types):
-            print str(algaeTable.Get_Name(x)) + ": " + str(algaeTable.Get_Count(x))
+            print str(algaeTable.Get_Name(x)) + ": " + str(algaeTable.Get_Count(x)) + " (" + str(algaeTable.Min_Count_Array[x]) + " - " + str(algaeTable.Max_Count_Array[x]) + ")"
             for y in xrange(algaeTable.Total_Count_Array[x]):
                 #print "Drawing: " + algaeTable.Name_Array[x]
                 pic = Pixmap(QtGui.QPixmap(os.getcwd() + "/Assets/20um/"+algaeTable.Get_File_Name(x)))
