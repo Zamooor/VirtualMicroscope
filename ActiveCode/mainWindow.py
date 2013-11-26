@@ -327,6 +327,7 @@ class Ui_MainWindow(object):
                 algaeList.append(pic)
                 self.scene.addItem(pic.pixmap_item)
         print "\n"
+        print "Remaining Trials:" + str(algaeTable.Get_Num_Trials())
                 
     def addToChart(self):
         #checks if "count" value is a number and if the "name" field is not empty 
@@ -384,11 +385,13 @@ class Ui_MainWindow(object):
 
         painter.end()
 
-        resultsDialog=Ui_results()
-        ui=QtGui.QDialog();
-        resultsDialog.setupUi(ui, algaeTable,self.ans_table)
-        ui.setModal(True) 
-        ui.exec_()
+        ## Only show results page after all trials are finished
+        if (algaeTable.Get_Num_Trials() <= 0):
+            resultsDialog=Ui_results()
+            ui=QtGui.QDialog();
+            resultsDialog.setupUi(ui, algaeTable,self.ans_table)
+            ui.setModal(True) 
+            ui.exec_()
         
         #after Results page closes generate new sample and reset forms
         self.resetForms()
