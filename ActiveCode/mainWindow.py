@@ -11,7 +11,7 @@
 import sys, os
 import math
 import algaeTable
-from algaeLibrary import *
+from Globals import *
 
 import random
 from random import randint
@@ -348,10 +348,11 @@ class Ui_MainWindow(object):
             pass     
             
     def setNames(self):
+        
         for x in xrange(algaeTable.Total_Algae_Types):
             #self.ans_table.insertRow(0)
             self.ans_table.setItem(x,0,QtGui.QTableWidgetItem(algaeTable.Get_Name(x)))
-            self.ans_table.setItem(x,1,QtGui.QTableWidgetItem("0"))
+            #self.ans_table.setItem(x,1,QtGui.QTableWidgetItem("0"))
 
             #change second cell to a comboBox
             combo = QtGui.QComboBox()
@@ -361,7 +362,7 @@ class Ui_MainWindow(object):
             combo.addItem("2" + u'\u2077')
             combo.addItem("2" + u'\u2078')
 
-            self.ans_table.setCellWidget(0,1, combo)
+            self.ans_table.setCellWidget(x,1, combo)
             self.ans_table.item(x,0).setFlags(Qt.NoItemFlags)
             self.ans_table.sortItems(0,Qt.AscendingOrder)
             
@@ -393,6 +394,7 @@ class Ui_MainWindow(object):
             ui.setModal(True) 
             ui.exec_()
             ## Start new session
+            algaeTable.Set_Num_Trials(algaeTable.Total_Trials)
             self.openPreferences()
         
         #after Results page closes generate new sample and reset forms
@@ -415,7 +417,7 @@ class Ui_MainWindow(object):
     def setSession(self): #session):
         #algaeTable.Set_Num_Trials(session.pop())
         algaeList[:]=[]
-        algaeTable.setNames()
+        algaeTable.PrepareArrays()
         self.resetForms()
         algaeTable.Generate_Sample()
         self.setUpScene(self.scene, self.view) 

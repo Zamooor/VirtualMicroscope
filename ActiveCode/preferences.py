@@ -9,7 +9,7 @@
 import sys, os
 from PyQt4 import QtCore, QtGui
 import algaeTable
-from algaeLibrary import *
+from Globals import *
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
 except AttributeError:
@@ -24,7 +24,7 @@ except AttributeError:
     def _translate(context, text, disambig):
         return QtGui.QApplication.translate(context, text, disambig)
 #if no value is specified each session will have this number of trials
-defaultNumTrials=5
+
 
 class Ui_Preferences(object):
     
@@ -92,8 +92,10 @@ class Ui_Preferences(object):
         self.Check_All = QtGui.QCheckBox( "Include All" ,self.Group_Program_Options)
         self.Check_All.setObjectName(_fromUtf8("Check_include"))
         self.Check_All.setGeometry(QtCore.QRect(35,15, 100, 50))
+        self.Check_All.stateChanged.connect(self.allChecked)
+        self.Count_Check=0
         #always add the "check all button"
-        self.CheckBoxList.append(self.Check_All)
+        #self.CheckBoxList.append(self.Check_All)
         
         Index=0
         #iterate through the whole algae dictionary and add a graphic/check box for each species
@@ -115,20 +117,19 @@ class Ui_Preferences(object):
             self.Check_include = QtGui.QCheckBox( self.CurrentLayoutWidget)
             self.Check_include.setObjectName(_fromUtf8("Check_include"))
             self.Check_include.setGeometry(QtCore.QRect(20, 0, 130, 47))
-            #self.Check_include.stateChanged.connect(self.handleItemClicked)
-            self.CheckBoxList.append(self.Check_include)
+            self.Check_include.stateChanged.connect(self.CheckStateChanged)
+            
+            self.CheckBoxList.append(self.CurrentLayoutWidget)#self.Check_include)
 
             self.Label_Range=QtGui.QLabel("Range",self.CurrentLayoutWidget)
             self.Label_Range.setGeometry(QtCore.QRect(100, -10, 100, 30))
             
             self.Text_Range_Low=QtGui.QLineEdit(self.CurrentLayoutWidget)
             self.Text_Range_Low.setPlaceholderText("From")
-            self.Text_Range_Low.setText(str(algaeTable.Default_Min_Count))
             self.Text_Range_Low.setGeometry(QtCore.QRect(100, 15, 100, 20))
 
             self.Text_Range_High=QtGui.QLineEdit(self.CurrentLayoutWidget)
             self.Text_Range_High.setPlaceholderText("To")
-            self.Text_Range_High.setText(str(algaeTable.Default_Max_Count))
             self.Text_Range_High.setGeometry(QtCore.QRect(220, 15, 100, 20))
 
             self.formLayout.setWidget(Index, QtGui.QFormLayout.FieldRole, self.CurrentGroupBox)
@@ -139,7 +140,7 @@ class Ui_Preferences(object):
             self.CurrentGraphicsView = QtGui.QLabel(self.List_Algae_Select)
             self.CurrentGraphicsView.setObjectName(_fromUtf8("CurrentGraphicsView"))
             self.formLayout.setWidget(Index, QtGui.QFormLayout.LabelRole, self.CurrentGraphicsView)
-            self.CurrentGraphicsView.setPixmap(QtGui.QPixmap(os.getcwd() + "/Assets/20um/"+algaeTable.AlgaeLib[key]+".png"))
+            self.CurrentGraphicsView.setPixmap(QtGui.QPixmap(os.getcwd() + "/Assets/20um/"+algaeTable.AlgaeLib[key]["File"]+".png"))
             self.CurrentGraphicsView.setFixedWidth(75)
             self.CurrentGraphicsView.setFixedHeight(75)
             #CurrentGraphicsView.setGeometry(0,0,90,90)
@@ -173,41 +174,57 @@ class Ui_Preferences(object):
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.Session), _translate("Preferences", "Session", None))
         self.Button_Ok.setText(_translate("Preferences", "OK", None))
         self.Button_Cancel.setText(_translate("Preferences", "Cancel", None))
-
+        
+    #if Check_All box is checked then check all the other boxes    
+    def allChecked(self,state):
+        if state== QtCore.Qt.Checked:
+            for x in xrange(len (self.CheckBoxList)):
+                self.CheckBoxList[x].childAt(20,0).setCheckState(QtCore.Qt.Checked)
+                self.Count_Check+=1
+    #keep track of how many boxes are checked         
+    def CheckStateChanged(self,state):
+        if state== QtCore.Qt.Checked:
+            self.Count_Check+=1
+        else:
+            self.Count_Check-=1
+            self.Check_All.setCheckState(QtCore.Qt.Unchecked)
+            
     #when ok is clicked iterate through all check boxes and only add the checked
     #algae to the samples
     def clickedOK(self):
-        x=1
+        x=0
         algaeTable.clearArrays()
         for key in algaeTable.AlgaeLib:
-            if self.CheckBoxList[0].isChecked():
+            if  self.Count_Check==0:
                 algaeTable.Name_Array.append(key)
-                algaeTable.Max_Count_Array.append(int(self.Text_Range_High.text()))
-                algaeTable.Min_Count_Array.append(int(self.Text_Range_Low.text()))
-                
-            elif self.CheckBoxList[x].isChecked():
+                try:
+                    val=int(self.CheckBoxList[x].childAt(100,15).text()),int(self.CheckBoxList[x].childAt(220,15).text())
+                    algaeTable.Min_Count_Array.append(val[0])
+                    algaeTable.Max_Count_Array.append(val[1])
+                except ValueError:
+                    algaeTable.Max_Count_Array.append(algaeTable.Default_Max_Count)
+                    algaeTable.Min_Count_Array.append(algaeTable.Default_Min_Count)
+                    
+            elif self.CheckBoxList[x].childAt(20,0).isChecked():
                 algaeTable.Name_Array.append(key)
-                #print self.Text_Range_High.text()
-                algaeTable.Max_Count_Array.append(int(self.Text_Range_High.text()))
-                algaeTable.Min_Count_Array.append(int(self.Text_Range_Low.text()))
+                print "printing x in loop"
+                print x
+                try:
+                    val=int(self.CheckBoxList[x].childAt(100,15).text()),int(self.CheckBoxList[x].childAt(220,15).text())
+                    algaeTable.Min_Count_Array.append(val[0])
+                    algaeTable.Max_Count_Array.append(val[1])
+                except ValueError:
+                    algaeTable.Max_Count_Array.append(algaeTable.Default_Max_Count)
+                    algaeTable.Min_Count_Array.append(algaeTable.Default_Min_Count)
             x+=1
             
-        #if no boxes were checked add all species
-        x=0    
-        if not algaeTable.Name_Array:
-            for key in AlgaeLib:
-                x+=1    
-                algaeTable.Name_Array.append(key)
-                #algaeTable.Max_Count_Array.append(int(self.Text_Range_High.text()))
-                #algaeTable.Min_Count_Array.append(int(self.Text_Range_Low.text()))
-                
-        #append the number of trials requested by the user
+        #set the number of trials requested by the user
         #if no value specified use default
         try:
            val = int(self.Input_Num_Trials.text())
-           algaeTable.Num_Trials=val
+           algaeTable.Set_Num_Trials(val)
         except ValueError:
-           algaeTable.Num_Trials=defaultNumTrials
+           algaeTable.Set_Num_Trials(algaeTable.Default_Num_Trials)
            
         self.pref.done(int(True))
 
@@ -222,10 +239,7 @@ class Ui_Preferences(object):
                 
             algaeTable.Name_Array.append(defaultNumTrials)
             self.pref.done(int(True))
-    #when called returns the session parameters including algae
-    #species and number of trials
-    #def retVal(self):
-        #return self.AlgaeIncludeSet
+
 
 
 if __name__ == "__main__":

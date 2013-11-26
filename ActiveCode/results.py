@@ -198,7 +198,9 @@ class Ui_results(object):
         tableItem= ansTable.findItems(algaeSample.Get_Name(algaeIndex),QtCore.Qt.MatchFixedString)
         
         if(len(tableItem) > 0):
-            return ansTable.item(tableItem[0].row(),1).text()
+            #return ansTable.item(tableItem[0].row(),1).text()
+            #figure out how to get a value from a combobox?
+            return "coming soon."
         else:
             return "0"
         
