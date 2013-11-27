@@ -137,12 +137,15 @@ class Ui_MainWindow(object):
         self.label_7 = QtGui.QLabel(self.groupBox_mag)
         self.label_7.setGeometry(QtCore.QRect(90, 170, 41, 17))
         self.label_7.setObjectName(_fromUtf8("label_7"))
-        
-        self.input_species = QtGui.QLineEdit(self.centralWidget)
-        self.input_species.setGeometry(QtCore.QRect(550, 430, 181, 31))
-        self.input_species.setText(_fromUtf8(""))
-        self.input_species.setPlaceholderText ("Enter Name of Algae")
-        self.input_species.setObjectName(_fromUtf8("input_species"))
+
+###################
+##        DISABLED : The input section for the algae Samples
+########################
+       # self.input_species = QtGui.QLineEdit(self.centralWidget)
+       # self.input_species.setGeometry(QtCore.QRect(550, 430, 181, 31))
+       # self.input_species.setText(_fromUtf8(""))
+       # self.input_species.setPlaceholderText ("Enter Name of Algae")
+       # self.input_species.setObjectName(_fromUtf8("input_species"))
 
 		
         self.groupBox_move = QtGui.QGroupBox(self.centralWidget)
@@ -185,6 +188,9 @@ class Ui_MainWindow(object):
         self.label_2 = QtGui.QLabel(self.groupBox_move)
         self.label_2.setGeometry(QtCore.QRect(120, 240, 71, 20))
         self.label_2.setObjectName(_fromUtf8("label_2"))
+###################
+##        DISABLED
+########################
         
         self.input_count = QtGui.QLineEdit(self.centralWidget)
         self.input_count.setGeometry(QtCore.QRect(750, 430, 111, 31))
@@ -194,7 +200,7 @@ class Ui_MainWindow(object):
 
         # button actions
         self.submit_button.clicked.connect(self.openResults)
-        self.findButton.clicked.connect(self.addToChart)
+      #  self.findButton.clicked.connect(self.addToChart)
 #########################
 ##        DISABLED
 #########################
@@ -325,24 +331,26 @@ class Ui_MainWindow(object):
                 self.scene.addItem(pic.pixmap_item)
         print "\n"
         print "Remaining Trials:" + str(algaeTable.Get_Num_Trials())
-                
-    def addToChart(self):
+###################
+##        DISABLED
+########################              
+#    def addToChart(self):
         #checks if "count" value is a number and if the "name" field is not empty 
         # adds them to the table. and sorts them alphabeticaly by name
-        try:
-            number=int(self.input_count.text())
-            if not (self.input_species.text().isEmpty()):
-                self.ans_table.insertRow(0)
-                self.ans_table.setItem(0,1,QtGui.QTableWidgetItem("0"))
-                self.ans_table.setItem(0,0,QtGui.QTableWidgetItem(self.input_species.text()))
+ #       try:
+ #           number=int(self.input_count.text())
+ #           if not (self.input_species.text().isEmpty()):
+ #               self.ans_table.insertRow(0)
+ #               self.ans_table.setItem(0,1,QtGui.QTableWidgetItem("0"))
+ #               self.ans_table.setItem(0,0,QtGui.QTableWidgetItem(self.input_species.text()))
                
 
-                self.ans_table.sortItems(0,Qt.AscendingOrder)
+ #               self.ans_table.sortItems(0,Qt.AscendingOrder)
 
                 
-        except Exception:
+  #      except Exception:
             #QtGui.QMessageBox.about(MainWindow,'Error','Input can only be a number')
-            pass     
+  #          pass     
             
     def setNames(self):
         
@@ -353,19 +361,19 @@ class Ui_MainWindow(object):
 
             #change second cell to a comboBox
             combo = QtGui.QComboBox()
-            combo.addItem("2" + u'\u2074')
-            combo.addItem("2" + u'\u2075')
-            combo.addItem("2" + u'\u2076')
-            combo.addItem("2" + u'\u2077')
-            combo.addItem("2" + u'\u2078')
+            combo.addItem("0-32" )
+            combo.addItem("32-64")
+            combo.addItem("64-128")
+            combo.addItem("128-256")
+            combo.addItem("256-300")
 
             self.ans_table.setCellWidget(x,1, combo)
             self.ans_table.item(x,0).setFlags(Qt.NoItemFlags)
             self.ans_table.sortItems(0,Qt.AscendingOrder)
             
     def resetForms(self):
-        self.input_species.clear()
-        self.input_count.clear()
+      #  self.input_species.clear()
+      #  self.input_count.clear()
         self.scene.clear()
         self.ans_table.setRowCount(algaeTable.Total_Algae_Types)
         self.ans_table.clearContents()
@@ -386,7 +394,7 @@ class Ui_MainWindow(object):
 
         ## Record user answers
         for z in xrange(algaeTable.Total_Algae_Types):
-            algaeTable.User_Guess_Record[z][algaeTable.Get_Num_Trials()] = 2**supToI(self.ans_table.cellWidget(z,1).currentText()[1])
+            algaeTable.User_Guess_Record[z][algaeTable.Get_Num_Trials()] = 2
             #Current_Grid.setItem(t,3,QtGui.QTableWidgetItem(str(AlgaeSample.Get_Count_At_Trial(x,t) - 2**supToI(AlgaeSample.Get_Guess_At_Trial(x,t)[1]))))
 
         ## Only show results page after all trials are finished
@@ -471,10 +479,6 @@ class Ui_MainWindow(object):
 ##            offsetMinY = offsetMinY/scale
 ##            for pic in algaeList:
 ##                pic.setGeometry(pic.x() / scale, pic.y() / scale, pic.width() / scale, pic.height() / scale)
-
-
-    
-    
 #####################################################################################
 #####################################################################################         
             

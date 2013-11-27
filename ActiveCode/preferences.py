@@ -123,7 +123,7 @@ class Ui_Preferences(object):
             
             self.CheckBoxList.append(self.CurrentLayoutWidget)#self.Check_include)
 
-            self.Label_Range=QtGui.QLabel("Range",self.CurrentLayoutWidget)
+            self.Label_Range=QtGui.QLabel("Count Range",self.CurrentLayoutWidget)
             self.Label_Range.setGeometry(QtCore.QRect(100, -10, 100, 30))
             
             self.Text_Range_Low=QtGui.QLineEdit(self.CurrentLayoutWidget)
