@@ -13,6 +13,7 @@ import math
 import algaeTable
 from Globals import *
 
+from PyQt4.QtCore import pyqtSlot,SIGNAL,SLOT
 import random
 from random import randint
 from PyQt4 import QtCore, QtGui,QtOpenGL
@@ -88,6 +89,7 @@ class Ui_MainWindow(object):
         self.ans_table.verticalHeader().setVisible(False)
         self.ans_table.setHorizontalHeaderLabels(['Name', 'Count'])
         self.ans_table.keyPressEvent = lambda event: event.ignore()
+        
         
         
         MainWindow.setCentralWidget(self.centralWidget)
@@ -175,6 +177,8 @@ class Ui_MainWindow(object):
         self.actionCreate_New_Sample.setText(_translate("MainWindow", "Create New Sample", None))
 
 
+    
+
     def setUpScene(self,scene,view ):
         print "Printing Algae:"
         
@@ -202,6 +206,56 @@ class Ui_MainWindow(object):
         print "\n"
         print "Remaining Trials:" + str(algaeTable.Get_Num_Trials())
 
+
+    
+    ## Dialog for accurate guesses, appears when "<32" comboBoxItem is selected.
+    ## Only accepts values >0 and <= 32, other values are truncated.
+    ## Creating an event that sets the text and closes the dialog rather than using View.done
+    ## and a trigger on the lineEdit would fix the trucation.
+    class myCombo(QtGui.QComboBox):
+        textAt4 = "32"
+        skipOpen = True
+        def __init__(self, parent = None):
+            QtGui.QComboBox.__init__(self, parent)
+            self.currentIndexChanged['QString'].connect(self.handleIndexChanged)
+
+        class Ui_View(object):
+            def setupUi(self, View, combo):
+                View.setFixedSize(300, 150)
+                self.combo = combo
+                self.promptLabel = QtGui.QLabel("Please enter number less than or equal to 32", View)
+                self.promptLabel.setGeometry(0,0, 231, 41)
+                self.promptLabel.setObjectName(_fromUtf8("<32 Label"))
+                self.inputBox = QtGui.QLineEdit(View)
+                self.inputBox.setGeometry(0,45, 231, 30)
+                self.inputBox.setObjectName(_fromUtf8("<32 Label"))
+                self.inputBox.textChanged['QString'].connect(self.handleTextChanged)
+                self.okButton = QtGui.QPushButton(View)
+                self.okButton.setGeometry(QtCore.QRect(0,80, 231, 41))
+                self.okButton.setObjectName(_fromUtf8("submit_button"))
+                self.okButton.setText("OK")
+                self.okButton.clicked.connect(View.done)
+
+            def handleTextChanged(self, value):
+                if(str(value).isdigit()):
+                    if(int(value) <= 32 and int(value) >= 0):
+                        print value
+                        self.combo.setItemText(4, value)
+                        self.combo.textAt4 = value
+
+
+            
+        def handleIndexChanged(self, value):
+            if(not self.skipOpen):
+                if value == self.textAt4:
+                    Open_View_Dialog=self.Ui_View()
+                    View_Ui=QtGui.QDialog();
+                    Open_View_Dialog.setupUi(View_Ui, self)
+                    View_Ui.setModal(True) 
+                    View_Ui.exec_()
+                    
+            self.skipOpen = False
+
             
     def setNames(self):
         
@@ -211,13 +265,13 @@ class Ui_MainWindow(object):
             #self.ans_table.setItem(x,1,QtGui.QTableWidgetItem("0"))
 
             #change second cell to a comboBox
-            combo = QtGui.QComboBox()
-            combo.addItem("0-32" )
-            combo.addItem("32-64")
-            combo.addItem("64-128")
+            combo = self.myCombo()
+            combo.setEditable(False)
+            combo.addItem("256-512") 
             combo.addItem("128-256")
-            combo.addItem("256-300")
-
+            combo.addItem("64-128")
+            combo.addItem("32-64")                       
+            combo.addItem("32")
             self.ans_table.setCellWidget(x,1, combo)
             self.ans_table.item(x,0).setFlags(Qt.NoItemFlags)
             self.ans_table.sortItems(0,Qt.AscendingOrder)
@@ -231,21 +285,26 @@ class Ui_MainWindow(object):
         self.setNames()
 
     def openResults(self):
+        def getGuess(qTableWidget, row):
+            candidate = qTableWidget.cellWidget(row, 1).currentText()
+            print candidate
+            if(str(candidate).isdigit()):
+                return int(candidate)
+            else:                
+                return int((int(candidate.split("-")[0]) * int(candidate.split("-")[1])) ** (1.0/2.0))
+        
         print "Attempting to open results"
         # Save Algae View as image for review later
         outImage = QPixmap(999, 400)
-        painter = QPainter(outImage)
-        
-        self.scene.render(painter)
-        
+        painter = QPainter(outImage)        
+        self.scene.render(painter)        
         if(not outImage.save(os.getcwd() + "/TempSampleRenders/Trial" + str(algaeTable.Get_Num_Trials()) + ".png")):
             print "failed to save render"
-
         painter.end()
 
         ## Record user answers
         for z in xrange(algaeTable.Total_Algae_Types):
-            algaeTable.User_Guess_Record[z][algaeTable.Get_Num_Trials()] = 2
+            algaeTable.User_Guess_Record[z][algaeTable.Get_Num_Trials()] = getGuess(self.ans_table, z)
             #Current_Grid.setItem(t,3,QtGui.QTableWidgetItem(str(AlgaeSample.Get_Count_At_Trial(x,t) - 2**supToI(AlgaeSample.Get_Guess_At_Trial(x,t)[1]))))
 
         ## Only show results page after all trials are finished
