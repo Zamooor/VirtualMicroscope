@@ -42,180 +42,46 @@ except AttributeError:
 #algaeTable = AlgaeTable()
 algaeList = []
 random.seed()
-#algaeTable.Generate_Sample()
-
-
-## 2um scale is 557/8px long
-## so initialy a 75mm*25mm slide is 167343px wide and 11718px high
-##====================================================
-##  scaling and moving have been disabled ##
-##=============================================
-##offsetX = 0.0
-##offsetY = 0.0
-##offsetMaxX = 167343.75/2
-##offsetMaxY = 11718.75/2
-##offsetMinX = -offsetMaxX
-##offsetMinY = -offsetMaxY
-##magLevel = 400
-##magLevelMin = 60
+windowScale = 1.0
+initWidth = 1000
+initHeight = 792
 
 
 
-### Class borrowed from animatedtiles demo:
-# PyQt doesn't support deriving from more than one wrapped class so we use
-# composition and delegate the property.
-'''class Pixmap(QtCore.QObject):
-    def __init__(self, pix):
-        super(Pixmap, self).__init__()
 
-        self.pixmap_item = QtGui.QGraphicsPixmapItem(pix)
-        self.pixmap_item.setCacheMode(QtGui.QGraphicsItem.DeviceCoordinateCache)
-        self.pixmap_item.setScale(.03)
-    def _set_pos(self, pos):
-        self.pixmap_item.setPos(pos)
 
-    def setRot(self, angle):
-        self.pixmap_item.setRotation(angle)
 
-    def setScaleVariance(self, var):
-        self.pixmap_item.setScale(self.pixmap_item.scale() + var)
-
-    pos = QtCore.pyqtProperty(QtCore.QPointF, fset=_set_pos)'''
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName(_fromUtf8("Digital Microscope"))
-        MainWindow.setFixedSize(999, 792)
+        MainWindow.resize(1000 * windowScale, 792 * windowScale)
         self.startUpFlag=False
         self.centralWidget = QtGui.QWidget(MainWindow)
         self.centralWidget.setObjectName(_fromUtf8("centralWidget"))
+
         
-###################
-##        DISABLED
-########################
-##        self.magLabel = QtGui.QLabel(self.centralWidget)
-##        self.magLabel.setGeometry(900, 405, 90, 30)
-##        global magLevel
-##        self.magLabel.setText("%dX" % magLevel)
-##        self.magLabel.setStyleSheet("font: 18pt;" )
-        
-        self.scene = QtGui.QGraphicsScene(0, 0, 999, 400)
+        self.scene = QtGui.QGraphicsScene(0, 0, 1000 * windowScale, 490 * windowScale)
         self.view = QtGui.QGraphicsView(self.scene, self.centralWidget)
         self.scene.setBackgroundBrush(QtGui.QColor("white"))
         self.centralWidget.centralWidget = self.view
 
-        # Controls		
-        self.groupBox_mag = QtGui.QGroupBox(self.centralWidget)
-        self.groupBox_mag.setGeometry(QtCore.QRect(340, 430, 201, 271))
-        self.groupBox_mag.setTitle(_fromUtf8(""))
-        self.groupBox_mag.setObjectName(_fromUtf8("groupBox_mag"))
-        
-        self.label = QtGui.QLabel(self.groupBox_mag)
-        self.label.setGeometry(QtCore.QRect(60, 240, 101, 20))
-        self.label.setObjectName(_fromUtf8("label"))        
-        
-        self.mag_dial = QtGui.QDial(self.groupBox_mag)
-        self.mag_dial.setGeometry(QtCore.QRect(60, 70, 91, 101))
-        self.mag_dial.setMinimum(0)
-        self.mag_dial.setMaximum(100)
-        self.mag_dial.setInvertedAppearance(False)
-        self.mag_dial.setInvertedControls(False)
-        self.mag_dial.setWrapping(True)
-        self.mag_dial.setNotchesVisible(False)
-        self.mag_dial.setObjectName(_fromUtf8("mag_dial"))
-        self.mag_dial.keyPressEvent = lambda event: event.ignore()
-        
-        self.label_4 = QtGui.QLabel(self.groupBox_mag)
-        self.label_4.setGeometry(QtCore.QRect(90, 50, 66, 17))
-        self.label_4.setObjectName(_fromUtf8("label_4"))
-        self.label_5 = QtGui.QLabel(self.groupBox_mag)
-        self.label_5.setGeometry(QtCore.QRect(30, 110, 41, 17))
-        self.label_5.setObjectName(_fromUtf8("label_5"))
-        self.label_6 = QtGui.QLabel(self.groupBox_mag)
-        self.label_6.setGeometry(QtCore.QRect(150, 110, 71, 17))
-        self.label_6.setObjectName(_fromUtf8("label_6"))
-        self.label_7 = QtGui.QLabel(self.groupBox_mag)
-        self.label_7.setGeometry(QtCore.QRect(90, 170, 41, 17))
-        self.label_7.setObjectName(_fromUtf8("label_7"))
+      
 
-###################
-##        DISABLED : The input section for the algae Samples
-########################
-       # self.input_species = QtGui.QLineEdit(self.centralWidget)
-       # self.input_species.setGeometry(QtCore.QRect(550, 430, 181, 31))
-       # self.input_species.setText(_fromUtf8(""))
-       # self.input_species.setPlaceholderText ("Enter Name of Algae")
-       # self.input_species.setObjectName(_fromUtf8("input_species"))
-
-		
-        self.groupBox_move = QtGui.QGroupBox(self.centralWidget)
-        self.groupBox_move.setGeometry(QtCore.QRect(30, 430, 291, 271))
-        self.groupBox_move.setTitle(_fromUtf8(""))
-        self.groupBox_move.setObjectName(_fromUtf8("groupBox_move"))
-        self.groupBox_move.keyPressEvent = lambda event: event.ignore()
-
-        self.cameraLabel = QtGui.QLabel(self.groupBox_move)
-        self.cameraLabel.setGeometry(QtCore.QRect(110, 95, 50, 50))
-        self.cameraLabel.setPixmap(QtGui.QPixmap(os.getcwd() + "/Assets/camera.png"))
-        self.cameraLabel.setScaledContents(True)
-
-        #buttons
-        
-        self.findButton = QtGui.QPushButton(self.centralWidget)
-        self.findButton.setGeometry(QtCore.QRect(870, 430, 91, 31))
-        self.findButton.setObjectName(_fromUtf8("findButton"))
      
         self.submit_button = QtGui.QPushButton(self.centralWidget)
-        self.submit_button.setGeometry(QtCore.QRect(640, 660, 231, 41))
+        self.submit_button.setGeometry(QtCore.QRect(500 * windowScale - 231/2, 690 * windowScale, 231, 41))
         self.submit_button.setObjectName(_fromUtf8("submit_button"))
-        
-        self.up_button = QtGui.QPushButton(self.groupBox_move)
-        self.up_button.setGeometry(QtCore.QRect(100, 40, 71, 28))
-        self.up_button.setObjectName(_fromUtf8("up_button"))
-        
-        self.left_button = QtGui.QPushButton(self.groupBox_move)
-        self.left_button.setGeometry(QtCore.QRect(20, 100, 61, 28))
-        self.left_button.setObjectName(_fromUtf8("pushButton_2"))
-        
-        self.right_button = QtGui.QPushButton(self.groupBox_move)
-        self.right_button.setGeometry(QtCore.QRect(192, 100, 71, 28))
-        self.right_button.setObjectName(_fromUtf8("right_button"))
-        
-        self.down_button = QtGui.QPushButton(self.groupBox_move)
-        self.down_button.setGeometry(QtCore.QRect(100, 160, 71, 28))
-        self.down_button.setObjectName(_fromUtf8("down_button"))
-        
-        self.label_2 = QtGui.QLabel(self.groupBox_move)
-        self.label_2.setGeometry(QtCore.QRect(120, 240, 71, 20))
-        self.label_2.setObjectName(_fromUtf8("label_2"))
-###################
-##        DISABLED
-########################
-        
-        self.input_count = QtGui.QLineEdit(self.centralWidget)
-        self.input_count.setGeometry(QtCore.QRect(750, 430, 111, 31))
-        self.input_count.setText(_fromUtf8(""))
-        self.input_count.setObjectName(_fromUtf8("input_count"))
-        self.input_count.setPlaceholderText ("Enter Count")
+
 
         # button actions
         self.submit_button.clicked.connect(self.openResults)
       #  self.findButton.clicked.connect(self.addToChart)
-#########################
-##        DISABLED
-#########################
-##        self.right_button.pressed.connect(self.RTrans)
-##        self.right_button.setAutoRepeat(True)
-##        self.left_button.pressed.connect(self.LTrans)
-##        self.left_button.setAutoRepeat(True)
-##        self.up_button.pressed.connect(self.UTrans)
-##        self.up_button.setAutoRepeat(True)
-##        self.down_button.pressed.connect(self.DTrans)
-##        self.down_button.setAutoRepeat(True)
+
         
         #answer Table
         self.ans_table = QtGui.QTableWidget(self.centralWidget)
-        self.ans_table.setGeometry(QtCore.QRect(550, 470, 411, 181))
+        self.ans_table.setGeometry(QtCore.QRect(500  * windowScale - 411/2, 500 * windowScale, 411, 181))
         self.ans_table.setObjectName(_fromUtf8("ans_table"))
         self.ans_table.setColumnCount(2)
         self.ans_table.horizontalHeader().setResizeMode(QtGui.QHeaderView.Stretch)
@@ -289,20 +155,15 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
+    def redrawUi(self):
+        print windowScale
+        self.scene.setSceneRect(0, 0, 1000 * windowScale, 400 * windowScale)
+        self.submit_button.setGeometry(QtCore.QRect(500 * windowScale - 231/2, 690 * windowScale, 231, 41))
+        self.ans_table.setGeometry(QtCore.QRect(500  * windowScale - 411/2, 500 * windowScale, 411, 181))
+        
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow", None))
-        self.findButton.setText(_translate("MainWindow", "Add", None))
-        self.label.setText(_translate("MainWindow", "Magnification", None))
-        self.label_4.setText(_translate("MainWindow", "200X", None))
-        self.label_5.setText(_translate("MainWindow", "100X", None))
-        self.label_6.setText(_translate("MainWindow", "400X", None))
-        self.label_7.setText(_translate("MainWindow", "600X", None))
         self.submit_button.setText(_translate("MainWindow", "Submit", None))
-        self.up_button.setText(_translate("MainWindow", "UP", None)) 
-        self.left_button.setText(_translate("MainWindow", "Left", None))
-        self.right_button.setText(_translate("MainWindow", "Right", None))
-        self.down_button.setText(_translate("MainWindow", "Down", None))
-        self.label_2.setText(_translate("MainWindow", "Movement", None))
         self.menuFile.setTitle(_translate("MainWindow", "File", None))
         self.menuTools.setTitle(_translate("MainWindow", "Help", None))
         self.actionOpen.setText(_translate("MainWindow", "Open", None))
@@ -316,7 +177,7 @@ class Ui_MainWindow(object):
 
     def setUpScene(self,scene,view ):
         print "Printing Algae:"
-        # this algae gen algorithm's run time is terrible
+        
         for x in xrange(algaeTable.Total_Algae_Types):
             image = QtGui.QPixmap(os.getcwd() + "/Assets/20um/"+algaeTable.Get_File_Name(x))
             print str(algaeTable.Get_Name(x)) + ": " + str(algaeTable.Get_Count(x)) + " (" + str(algaeTable.Min_Count_Array[x]) + " - " + str(algaeTable.Max_Count_Array[x]) + ")"
@@ -325,34 +186,22 @@ class Ui_MainWindow(object):
                 pic = Pixmap(image, .03)
                 # sets random positions with padding at the edge of the view
                 # following 3 lines should probably be part of the constructor
-                radius = 200
-                pic.pos = QtCore.QPointF(random.randint(20, 979), random.randint(20, 370))
+                radius = 195.0
+                testPos = QtCore.QPointF(radius,radius)
+                while((testPos.x()**2 + testPos.y()**2)**(1.0/2.0) > radius):
+                    testPos = QtCore.QPointF(random.randint(-195, 195), random.randint(-195, 195))
+                testPos = QtCore.QPointF((int)((testPos.x() + 499) * windowScale),(int)( (testPos.y() + 245) * windowScale))
+                pic.pos = testPos
                 pic.setRot(random.randint(0, 359))
                 pic.setScaleVariance(random.randint(-5, 10)/1000.0)
                 algaeList.append(pic)
                 self.scene.addItem(pic.pixmap_item)
+        pic = Pixmap(QtGui.QPixmap(os.getcwd() + "/Assets/CircleView.png"), windowScale)
+        pic.pos = QtCore.QPointF(0,0)
+        self.scene.addItem(pic.pixmap_item) 
         print "\n"
         print "Remaining Trials:" + str(algaeTable.Get_Num_Trials())
-###################
-##        DISABLED
-########################              
-#    def addToChart(self):
-        #checks if "count" value is a number and if the "name" field is not empty 
-        # adds them to the table. and sorts them alphabeticaly by name
- #       try:
- #           number=int(self.input_count.text())
- #           if not (self.input_species.text().isEmpty()):
- #               self.ans_table.insertRow(0)
- #               self.ans_table.setItem(0,1,QtGui.QTableWidgetItem("0"))
- #               self.ans_table.setItem(0,0,QtGui.QTableWidgetItem(self.input_species.text()))
-               
 
- #               self.ans_table.sortItems(0,Qt.AscendingOrder)
-
-                
-  #      except Exception:
-            #QtGui.QMessageBox.about(MainWindow,'Error','Input can only be a number')
-  #          pass     
             
     def setNames(self):
         
@@ -439,50 +288,7 @@ class Ui_MainWindow(object):
         algaeTable.Generate_Sample()
         self.setUpScene(self.scene, self.view) 
            
-####################
-##        DISABLED
-########################
-##    def RTrans(self):
-##        self.glWidget.setXTrans(-10)
-##
-##    def LTrans(self):
-##        self.glWidget.setXTrans(10)
-##
-##    def DTrans(self):
-##        self.glWidget.setYTrans(-10)
-##
-##    def UTrans(self):
-##        self.glWidget.setYTrans(10)
-##
-##    
-##
-##    def Bigger(self):
-##        scale = 1.5
-##        global magLevel
-##        
-##        magLevel = magLevel * scale
-##        self.magLabel.setText("%.2fX" %magLevel)
-##        global offsetMaxX
-##        offsetMaxX = offsetMaxX * scale
-##        global offsetMaxY
-##        offsetMaxY = offsetMaxY * scale
-##        for pic in algaeList:
-##            pic.setGeometry(pic.x() * scale, pic.y() * scale,pic.width() * scale,pic.height() * scale)
-##    def Smaller(self):
-##        scale = 1.5
-##        global magLevel
-##        # an expiremental temp fix
-##        if(magLevel/scale > magLevelMin):
-##            magLevel = magLevel/scale
-##            self.magLabel.setText("%.2fX" %magLevel)
-##            global offsetMinX
-##            offsetMinX = offsetMinX/scale
-##            global offsetMinY
-##            offsetMinY = offsetMinY/scale
-##            for pic in algaeList:
-##                pic.setGeometry(pic.x() / scale, pic.y() / scale, pic.width() / scale, pic.height() / scale)
-#####################################################################################
-#####################################################################################         
+    
             
 class Window(QtGui.QMainWindow):
     def __init__(self):
@@ -500,36 +306,16 @@ class Window(QtGui.QMainWindow):
                 os.unlink(filePath)
 
         event.accept()
-  
-        
 
-###########################
-##  DISABLED
-#########################
-##    #detect arrow keys and translates the sample accordingly
-##    def keyPressEvent(self, ev):
-##        if ev.key() == QtCore.Qt.Key_D:
-##            self.ui.RTrans()
-##        elif ev.key() == QtCore.Qt.Key_A:
-##            self.ui.LTrans()
-##        elif ev.key() == QtCore.Qt.Key_S:
-##            self.ui.DTrans()
-##        elif ev.key() == QtCore.Qt.Key_W:
-##            self.ui.UTrans()
-
-##    # test for scaling!
-##    def wheelEvent(self, ev):
-##        if ev.delta() > 0:
-##            self.ui.Bigger()
-##        else:
-##            self.ui.Smaller()
-
-        
-
-
-
-		
-
+    ## First attempt at resizable windows
+    ## Not quite right, uncomment and see for yourself
+    ## -Jeff Rowland 12/2/2013
+##    def resizeEvent(self, resizeEvent):
+##        print "resizing"
+##        global windowScale
+##        windowScale = ((self.width() ** 2 + self.height() ** 2) **(1.0/2.0))/((initWidth**2 + initHeight**2)**(1.0/2.0))
+##        print windowScale
+##        self.ui.redrawUi()
 		
 if __name__ == '__main__':
 
@@ -541,10 +327,5 @@ if __name__ == '__main__':
     mwindow.show()
     sys.exit(app.exec_())
     
-#what is this for? when commented out it doesnt change anything.
-    '''app = QtGui.QApplication(sys.argv)
-    app.setApplication('MyWindow')
 
-    main = MyWindow(images)
-    main.show()'''
 		
