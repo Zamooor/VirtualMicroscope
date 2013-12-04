@@ -124,7 +124,7 @@ class Ui_MainWindow(object):
         
         self.actionAbout = QtGui.QAction(MainWindow)
         self.actionAbout.setObjectName(_fromUtf8("actionAbout"))
-        #self.actionPreferences.triggered.connect(self.openPreferences)
+        self.actionAbout.triggered.connect(self.openAbout)
 
         
         self.actionControls = QtGui.QAction(MainWindow)
@@ -336,6 +336,23 @@ class Ui_MainWindow(object):
         #reset the session when the parameters have been changed
         if reset==int(True):
             self.setSession()#preferencesDialog.retVal())
+            
+    def openAbout(self) :
+        print "About has been reached"
+        def __init__(self, parent = None):
+            QtGui.QComboBox.__init__(self, parent)
+            self.currentIndexChanged['QString'].connect(self.handleIndexChanged)
+        class Ui_View(object):
+            def setupUi(self, View, combo):
+                View.setFixedSize(400, 150)
+                self.combo = combo
+                self.promptLabel = QtGui.QLabel("This describes stuff about the program", View)
+                self.promptLabel.setGeometry(0,0, 231, 41)
+                self.okButton = QtGui.QPushButton(View)
+                self.okButton.setGeometry(QtCore.QRect(0,80, 231, 41))
+                self.okButton.setObjectName(_fromUtf8("submit_button"))
+                self.okButton.setText("OK")
+                self.okButton.clicked.connect(View.done)
 
     #reset all relevant variables and restart the session    
     def setSession(self): #session):
