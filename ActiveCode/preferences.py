@@ -172,7 +172,7 @@ class Ui_Preferences(object):
         QtCore.QMetaObject.connectSlotsByName(Preferences)
 
     def retranslateUi(self, Preferences):
-        Preferences.setWindowTitle(_translate("Preferences", "Preferences", None))
+        Preferences.setWindowTitle(_translate("Preferences", "New Session", None))
         self.Group_Program_Options.setTitle(_translate("Preferences", "Algae Species Selection", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.Algae), _translate("Preferences", "Algae", None))
         self.Group_Algae_Species.setTitle(_translate("Preferences", "Number Of Trials", None))
