@@ -73,164 +73,76 @@ class Ui_results(object):
         self.formLayout.setObjectName(_fromUtf8("formLayout"))
 
         ## New Layout
-        for x in xrange(AlgaeSample.Total_Algae_Types):
-            ## Header
-            CurrentGridLayout = QtGui.QGridLayout(self.scrollAreaWidgetContents)
-            CurrentGridLayout.setMargin(0)
-            # Name
-            CurrentLabel_Your_Answer = QtGui.QLabel(self.scrollAreaWidgetContents)
-            CurrentLabel_Your_Answer.setAlignment(QtCore.Qt.AlignCenter)
-            CurrentLabel_Your_Answer.setText(_fromUtf8(AlgaeSample.Get_Name(x)))
-            CurrentGridLayout.addWidget(CurrentLabel_Your_Answer, 0, 0, 1, 1)
-            # Standard Deviation
-            L_Std_Dv = QtGui.QLabel(self.scrollAreaWidgetContents)
-            L_Std_Dv.setAlignment(QtCore.Qt.AlignCenter)
-            L_Std_Dv.setText("Standard deviation: 0")
-            CurrentGridLayout.addWidget(L_Std_Dv, 0, 1, 1, 1)
-            # Geometric Mean
-            L_G_Mean = QtGui.QLabel(self.scrollAreaWidgetContents)
-            L_G_Mean.setAlignment(QtCore.Qt.AlignCenter)
-            L_G_Mean.setText("Geometric Mean: " + str(AlgaeSample.Get_G_Mean(x)))
-            CurrentGridLayout.addWidget(L_G_Mean, 0, 2, 1, 1)
-            # Add Header
-            self.formLayout.addRow(CurrentGridLayout)
+        for key in AlgaeSample.AlgaeLib:
+            if (AlgaeSample.Is_Active(key)):
+                ## Header
+                CurrentGridLayout = QtGui.QGridLayout(self.scrollAreaWidgetContents)
+                CurrentGridLayout.setMargin(0)
+                # Name
+                CurrentLabel_Your_Answer = QtGui.QLabel(self.scrollAreaWidgetContents)
+                CurrentLabel_Your_Answer.setAlignment(QtCore.Qt.AlignCenter)
+                CurrentLabel_Your_Answer.setText(_fromUtf8(key))
+                CurrentGridLayout.addWidget(CurrentLabel_Your_Answer, 0, 0, 1, 1)
+              # Standard Deviation
+                L_Std_Dv = QtGui.QLabel(self.scrollAreaWidgetContents)
+                L_Std_Dv.setAlignment(QtCore.Qt.AlignCenter)
+                L_Std_Dv.setText("Standard deviation: 0")
+                CurrentGridLayout.addWidget(L_Std_Dv, 0, 1, 1, 1)
+                # Geometric Mean
+                L_G_Mean = QtGui.QLabel(self.scrollAreaWidgetContents)
+                L_G_Mean.setAlignment(QtCore.Qt.AlignCenter)
+                L_G_Mean.setText("Geometric Mean: " + str.format('{0:.2f}', AlgaeSample.Get_Geometric_Mean(key)))
+                CurrentGridLayout.addWidget(L_G_Mean, 0, 2, 1, 1)
+                # Add Header
+                self.formLayout.addRow(CurrentGridLayout)
+                # Table
+                Current_Grid = QtGui.QTableWidget(self.scrollAreaWidgetContents)
+                Current_Grid.setGeometry(QtCore.QRect(550, 470, 411, 181))
+                Current_Grid.setObjectName(_fromUtf8("AlgaeGrid"))
+                Current_Grid.setColumnCount(5)
+                Current_Grid.setRowCount(AlgaeSample.Total_Trials)
+                Current_Grid.horizontalHeader().setResizeMode(QtGui.QHeaderView.Stretch)
+                Current_Grid.verticalHeader().setVisible(False)
+                Current_Grid.setHorizontalHeaderLabels(['Trial', 'Guess', 'Actual', 'Difference', 'Image'])
+                self.formLayout.addRow(Current_Grid)
 
+                class QButton(QtGui.QWidget):
+                    def __init__(self, fileName, parent = None):
+                        QtGui.QWidget.__init__(self, parent)
+                        self.button = QtGui.QPushButton('View', self)
+                        self.fileName = fileName
+                        self.button.clicked.connect(self.Open_View)
 
-            ## Table
-            Current_Grid = QtGui.QTableWidget(self.scrollAreaWidgetContents)
-            Current_Grid.setGeometry(QtCore.QRect(550, 470, 411, 181))
-            Current_Grid.setObjectName(_fromUtf8("AlgaeGrid"))
-            Current_Grid.setColumnCount(5)
-            Current_Grid.setRowCount(AlgaeSample.Total_Trials)
-            Current_Grid.horizontalHeader().setResizeMode(QtGui.QHeaderView.Stretch)
-            Current_Grid.verticalHeader().setVisible(False)
-            Current_Grid.setHorizontalHeaderLabels(['Trial', 'Guess', 'Actual', 'Difference', 'Image'])
-            self.formLayout.addRow(Current_Grid)
+                    class Ui_View(object):
+                        def setupUi(self, View, FileName):
+                            View.setObjectName(_fromUtf8(FileName))
+                            View.setFixedSize(999, 400)
+                            View.setWindowTitle(_translate(FileName, FileName, None))
+                            self.scene = QtGui.QGraphicsScene(0, 0, 999, 400)
+                            self.centralWidget = QtGui.QGraphicsView(self.scene, View)
+                            self.pic = Pixmap(QtGui.QPixmap(os.getcwd() + "/TempSampleRenders/"+FileName), 1)
+                            print os.getcwd() + "/TempSampleRenders/"+FileName
+                            self.pic.pos = QtCore.QPointF(0,0)
+                            self.scene.addItem(self.pic.pixmap_item)
+                    def Open_View(self):
+                        Open_View_Dialog=self.Ui_View()
+                        View_Ui=QtGui.QDialog();
+                        Open_View_Dialog.setupUi(View_Ui, self.fileName)
+                        View_Ui.setModal(True) 
+                        View_Ui.exec_()
 
-            class QButton(QtGui.QWidget):
-                def __init__(self, fileName, parent = None):
-                    QtGui.QWidget.__init__(self, parent)
-                    self.button = QtGui.QPushButton('View', self)
-                    self.fileName = fileName
-                    self.button.clicked.connect(self.Open_View)
-
-                class Ui_View(object):
-                    '''class Pixmap(QtCore.QObject):
-                        def __init__(self, pix):
-                            super(Pixmap, self).__init__()
-
-                            self.pixmap_item = QtGui.QGraphicsPixmapItem(pix)
-                            self.pixmap_item.setCacheMode(QtGui.QGraphicsItem.DeviceCoordinateCache)
-                            self.pixmap_item.setScale(.03)
-                        def _set_pos(self, pos):
-                            self.pixmap_item.setPos(pos)
-
-                        def setRot(self, angle):
-                            self.pixmap_item.setRotation(angle)
-
-                        def setScaleVariance(self, var):
-                            self.pixmap_item.setScale(self.pixmap_item.scale() + var)
-
-                        pos = QtCore.pyqtProperty(QtCore.QPointF, fset=_set_pos)'''
-                    def setupUi(self, View, FileName):
-                        
-                        View.setObjectName(_fromUtf8(FileName))
-                        View.setFixedSize(999, 400)
-                        View.setWindowTitle(_translate(FileName, FileName, None))
-                        self.scene = QtGui.QGraphicsScene(0, 0, 999, 400)
-                        self.centralWidget = QtGui.QGraphicsView(self.scene, View)
-                        self.pic = Pixmap(QtGui.QPixmap(os.getcwd() + "/TempSampleRenders/"+FileName), 1)
-                        print os.getcwd() + "/TempSampleRenders/"+FileName
-                        self.pic.pos = QtCore.QPointF(0,0)
-                        self.scene.addItem(self.pic.pixmap_item)
-
-                def Open_View(self):
-                    Open_View_Dialog=self.Ui_View()
-                    View_Ui=QtGui.QDialog();
-                    Open_View_Dialog.setupUi(View_Ui, self.fileName)
-                    View_Ui.setModal(True) 
-                    View_Ui.exec_()
-
-            
-            
-            # Fill table
-            for t in xrange(AlgaeSample.Total_Trials):
-                #Current_Grid.insertRow(0)
-                Current_Grid.setItem(t,0,QtGui.QTableWidgetItem(str(t+1)))
-                Current_Grid.setItem(t,1,QtGui.QTableWidgetItem(str(AlgaeSample.Get_Guess_At_Trial(x,t))))
-                Current_Grid.setItem(t,2,QtGui.QTableWidgetItem(_translate("results",str(AlgaeSample.Get_Count_At_Trial(x,t)), None)))
-                Current_Grid.setItem(t,3,QtGui.QTableWidgetItem(str(AlgaeSample.Get_Difference_At_Trial(x,t))))
-                Current_Grid.setItem(t,4,QtGui.QTableWidgetItem("Coming soon"))
-                View_Button = QButton("Trial" + str(t+1) + ".png")
-                Current_Grid.setCellWidget(t,4, View_Button)
-
-
-##        # Old Layout
-##        for x in xrange(AlgaeSample.Total_Algae_Types):
-##            Index = 7 + x
-##            CurrentGroupBox = QtGui.QGroupBox(self.scrollAreaWidgetContents)
-##            CurrentGroupBox.setTitle(_fromUtf8(AlgaeSample.Get_Name(x)))
-##            CurrentGroupBox.setObjectName(_fromUtf8("CurrentGroupBox"))
-##
-##            CurrentLayoutWidget = QtGui.QWidget(CurrentGroupBox)
-##            CurrentLayoutWidget.setGeometry(QtCore.QRect(10, 20, 600, 47))
-##            CurrentLayoutWidget.setObjectName(_fromUtf8("CurrentLayoutWidget"))
-##
-##            CurrentGridLayout = QtGui.QGridLayout(CurrentLayoutWidget)
-##            CurrentGridLayout.setMargin(0)
-##            CurrentGridLayout.setObjectName(_fromUtf8("CurrentGridLayout"))
-##
-##            CurrentLabel_Your_Answer = QtGui.QLabel(CurrentLayoutWidget)
-##            CurrentLabel_Your_Answer.setAlignment(QtCore.Qt.AlignCenter)
-##            CurrentLabel_Your_Answer.setObjectName(_fromUtf8("CurrentLabel_Your_Answer"))
-##            CurrentGridLayout.addWidget(CurrentLabel_Your_Answer, 0, 0, 1, 1)
-##
-##            CurrentLabel_Correct_Answer = QtGui.QLabel(CurrentLayoutWidget)
-##            CurrentLabel_Correct_Answer.setAlignment(QtCore.Qt.AlignCenter)
-##            CurrentLabel_Correct_Answer.setObjectName(_fromUtf8("CurrentLabel_Correct_Answer"))
-##            CurrentGridLayout.addWidget(CurrentLabel_Correct_Answer, 0, 1, 1, 1)
-##
-##            CurrentLabel_Difference = QtGui.QLabel(CurrentLayoutWidget)
-##            CurrentLabel_Difference.setAlignment(QtCore.Qt.AlignCenter)
-##            CurrentLabel_Difference.setObjectName(_fromUtf8("label_36"))
-##            CurrentGridLayout.addWidget(CurrentLabel_Difference, 0, 2, 1, 1)
-##            
-##            Label_User_Answer = QtGui.QLabel(CurrentLayoutWidget)
-##            Label_User_Answer.setObjectName(_fromUtf8("Label_User_Answer"))
-##            Label_User_Answer.setAlignment(QtCore.Qt.AlignCenter)
-##            CurrentGridLayout.addWidget(Label_User_Answer, 1, 0, 1, 1)
-##
-##            Label_Correct_Answer = QtGui.QLabel(CurrentLayoutWidget)
-##            Label_Correct_Answer.setObjectName(_fromUtf8("Label_Correct_Answer"))
-##            Label_Correct_Answer.setAlignment(QtCore.Qt.AlignCenter)
-##            CurrentGridLayout.addWidget(Label_Correct_Answer, 1, 1, 1, 1)
-##
-##            Label_Num_Difference = QtGui.QLabel(CurrentLayoutWidget)
-##            Label_Num_Difference.setObjectName(_fromUtf8("Label_Num_Difference"))
-##            Label_Num_Difference.setAlignment(QtCore.Qt.AlignCenter)
-##            CurrentGridLayout.addWidget( Label_Num_Difference, 1, 2, 1, 1)
-##            self.formLayout.setWidget(Index, QtGui.QFormLayout.FieldRole, CurrentGroupBox)
-##
-##            CurrentLabel_Your_Answer.setText(_translate("results", "Your Answer", None))
-##            CurrentLabel_Correct_Answer.setText(_translate("results", "Correct Answer", None))
-##            CurrentLabel_Difference.setText(_translate("results", "Difference", None))
-##            Label_Correct_Answer.setText(_translate("results",str(AlgaeSample.Get_Count(x)), None))
-##             
-##            Label_User_Answer.setText(_translate("results", self.getUserCount(x,AlgaeSample,ansTable), None))
-##            Label_Num_Difference.setText(_translate("results", str(int(Label_User_Answer.text()) - int(Label_Correct_Answer.text())), None))
-##
-##            # Add graphic
-##            #CurrentGraphicsView = QtGui.QGraphicsView(self.scrollAreaWidgetContents)
-##            CurrentGraphicsView = QtGui.QLabel(self.scrollAreaWidgetContents)
-##            CurrentGraphicsView.setObjectName(_fromUtf8("CurrentGraphicsView"))
-##            self.formLayout.setWidget(Index, QtGui.QFormLayout.LabelRole, CurrentGraphicsView)
-##            CurrentGraphicsView.setPixmap(QtGui.QPixmap(os.getcwd() + "/Assets/20um/"+AlgaeSample.Get_File_Name(x)))
-##            CurrentGraphicsView.setFixedWidth(75)
-##            CurrentGraphicsView.setFixedHeight(75)
-##            #CurrentGraphicsView.setGeometry(0,0,90,90)
-##            CurrentGraphicsView.setScaledContents(True)
-##            backGroundColorString = "44,121,176,255"
-##            CurrentGraphicsView.setStyleSheet("background-color: rgba("+backGroundColorString+")" )
+                
+                
+                # Fill table
+                for t in xrange(AlgaeSample.Total_Trials):
+                    #Current_Grid.insertRow(0)
+                    Current_Grid.setItem(t,0,QtGui.QTableWidgetItem(str(t+1)))
+                    Current_Grid.setItem(t,1,QtGui.QTableWidgetItem(str(AlgaeSample.Get_User_Count(key,t))))
+                    Current_Grid.setItem(t,2,QtGui.QTableWidgetItem(str(AlgaeSample.Get_Actual_Count(key,t))))
+                    Current_Grid.setItem(t,3,QtGui.QTableWidgetItem(str(AlgaeSample.Get_Difference(key,t))))
+                    Current_Grid.setItem(t,4,QtGui.QTableWidgetItem("Coming soon"))
+                    View_Button = QButton("Trial" + str(t+1) + ".png")
+                    Current_Grid.setCellWidget(t,4, View_Button)
 
         self.AlgaeLibrary.setWidget(self.scrollAreaWidgetContents)
         self.groupBox = QtGui.QGroupBox(results)

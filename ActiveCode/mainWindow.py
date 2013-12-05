@@ -47,12 +47,6 @@ windowScale = 1.0
 initWidth = 1000
 initHeight = 792
 
-
-
-
-
-
-
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName(_fromUtf8("Digital Microscope"))
@@ -67,9 +61,6 @@ class Ui_MainWindow(object):
         self.scene.setBackgroundBrush(QtGui.QColor("white"))
         self.centralWidget.centralWidget = self.view
 
-      
-
-     
         self.submit_button = QtGui.QPushButton(self.centralWidget)
         self.submit_button.setGeometry(QtCore.QRect(500 * windowScale - 231/2, 690 * windowScale, 231, 41))
         self.submit_button.setObjectName(_fromUtf8("submit_button"))
@@ -176,38 +167,35 @@ class Ui_MainWindow(object):
         self.actionImport_Sample.setText(_translate("MainWindow", "Import Existing Sample", None))
         self.actionCreate_New_Sample.setText(_translate("MainWindow", "Create New Sample", None))
 
-
-    
-
     def setUpScene(self,scene,view ):
         print "Printing Algae:"
-        
-        for x in xrange(algaeTable.Total_Algae_Types):
-            image = QtGui.QPixmap(os.getcwd() + "/Assets/20um/"+algaeTable.Get_File_Name(x))
-            print str(algaeTable.Get_Name(x)) + ": " + str(algaeTable.Get_Count(x)) + " (" + str(algaeTable.Min_Count_Array[x]) + " - " + str(algaeTable.Max_Count_Array[x]) + ")"
-            for y in xrange(algaeTable.Total_Count_Array[x]):
-                #print "Drawing: " + algaeTable.Name_Array[x]
-                pic = Pixmap(image, .03)
-                # sets random positions with padding at the edge of the view
-                # following 3 lines should probably be part of the constructor
-                radius = 195.0
-                testPos = QtCore.QPointF(radius,radius)
-                while((testPos.x()**2 + testPos.y()**2)**(1.0/2.0) > radius):
-                    testPos = QtCore.QPointF(random.randint(-195, 195), random.randint(-195, 195))
-                testPos = QtCore.QPointF((int)((testPos.x() + 499) * windowScale),(int)( (testPos.y() + 245) * windowScale))
-                pic.pos = testPos
-                pic.setRot(random.randint(0, 359))
-                pic.setScaleVariance(random.randint(-5, 10)/1000.0)
-                algaeList.append(pic)
-                self.scene.addItem(pic.pixmap_item)
+
+        for key in algaeTable.AlgaeLib:
+            if algaeTable.Is_Active(key):
+                image = QtGui.QPixmap(os.getcwd() + "/Assets/20um/"+algaeTable.Get_File_Name(key))
+                Trial = algaeTable.Get_Current_Round()
+                print key + ": " + str(algaeTable.Get_Actual_Count(key, Trial)) + " (" + str(algaeTable.Get_Min(key)) + " - " + str(algaeTable.Get_Max(key)) + ")"
+                for y in xrange(algaeTable.Get_Actual_Count(key, Trial)):
+                    #print "Drawing: " + algaeTable.Name_Array[x]
+                    pic = Pixmap(image, .03)
+                    # sets random positions with padding at the edge of the view
+                    # following 3 lines should probably be part of the constructor
+                    radius = 195.0
+                    testPos = QtCore.QPointF(radius,radius)
+                    while((testPos.x()**2 + testPos.y()**2)**(1.0/2.0) > radius):
+                        testPos = QtCore.QPointF(random.randint(-195, 195), random.randint(-195, 195))
+                    testPos = QtCore.QPointF((int)((testPos.x() + 499) * windowScale),(int)( (testPos.y() + 245) * windowScale))
+                    pic.pos = testPos
+                    pic.setRot(random.randint(0, 359))
+                    pic.setScaleVariance(random.randint(-5, 10)/1000.0)
+                    algaeList.append(pic)
+                    self.scene.addItem(pic.pixmap_item)
         pic = Pixmap(QtGui.QPixmap(os.getcwd() + "/Assets/CircleView.png"), windowScale)
         pic.pos = QtCore.QPointF(0,0)
         self.scene.addItem(pic.pixmap_item) 
         print "\n"
         print "Remaining Trials:" + str(algaeTable.Get_Num_Trials())
-
-
-    
+            
     ## Dialog for accurate guesses, appears when "<32" comboBoxItem is selected.
     ## Only accepts values >0 and <= 32, other values are truncated.
     ## Creating an event that sets the text and closes the dialog rather than using View.done
@@ -258,29 +246,30 @@ class Ui_MainWindow(object):
 
             
     def setNames(self):
-        
-        for x in xrange(algaeTable.Total_Algae_Types):
-            #self.ans_table.insertRow(0)
-            self.ans_table.setItem(x,0,QtGui.QTableWidgetItem(algaeTable.Get_Name(x)))
-            #self.ans_table.setItem(x,1,QtGui.QTableWidgetItem("0"))
 
-            #change second cell to a comboBox
-            combo = self.myCombo()
-            combo.setEditable(False)
-            combo.addItem("256-512") 
-            combo.addItem("128-256")
-            combo.addItem("64-128")
-            combo.addItem("32-64")                       
-            combo.addItem("32")
-            self.ans_table.setCellWidget(x,1, combo)
-            self.ans_table.item(x,0).setFlags(Qt.NoItemFlags)
-            self.ans_table.sortItems(0,Qt.AscendingOrder)
+        for key in algaeTable.AlgaeLib:
+            if algaeTable.Is_Active(key):
+                self.ans_table.insertRow(0)
+                self.ans_table.setItem(0,0,QtGui.QTableWidgetItem(key))
+                #change second cell to a comboBox
+                combo = self.myCombo()
+                combo.setEditable(False)
+                combo.addItem("256-512") 
+                combo.addItem("128-256")
+                combo.addItem("64-128")
+                combo.addItem("32-64")                       
+                combo.addItem("32")
+                self.ans_table.setCellWidget(0,1, combo)
+                self.ans_table.item(0,0).setFlags(Qt.NoItemFlags)
+                self.ans_table.sortItems(0,Qt.AscendingOrder)
+        
             
     def resetForms(self):
       #  self.input_species.clear()
       #  self.input_count.clear()
         self.scene.clear()
-        self.ans_table.setRowCount(algaeTable.Total_Algae_Types)
+        #self.ans_table.clear()
+        self.ans_table.setRowCount(0)
         self.ans_table.clearContents()
         self.setNames()
 
@@ -292,21 +281,24 @@ class Ui_MainWindow(object):
                 return int(candidate)
             else:                
                 return int((int(candidate.split("-")[0]) * int(candidate.split("-")[1])) ** (1.0/2.0))
+        def getName(qTableWidget, row):
+            return str(qTableWidget.item(row, 0).text())
         
         print "Attempting to open results"
         # Save Algae View as image for review later
         outImage = QPixmap(999, 400)
         painter = QPainter(outImage)        
         self.scene.render(painter)        
-        if(not outImage.save(os.getcwd() + "/TempSampleRenders/Trial" + str(algaeTable.Get_Num_Trials()) + ".png")):
+        if(not outImage.save(os.getcwd() + "/TempSampleRenders/Trial" + str(algaeTable.Get_Current_Round()+1) + ".png")):
             print "failed to save render"
         painter.end()
 
         ## Record user answers
-        for z in xrange(algaeTable.Total_Algae_Types):
-            algaeTable.User_Guess_Record[z][algaeTable.Get_Num_Trials()] = getGuess(self.ans_table, z)
-            #Current_Grid.setItem(t,3,QtGui.QTableWidgetItem(str(AlgaeSample.Get_Count_At_Trial(x,t) - 2**supToI(AlgaeSample.Get_Guess_At_Trial(x,t)[1]))))
-
+        for z in xrange(self.ans_table.rowCount()):
+            key = getName(self.ans_table, z)
+            count = getGuess(self.ans_table, z)
+            algaeTable.Set_User_Count(key,algaeTable.Get_Current_Round(),count)
+            
         ## Only show results page after all trials are finished
         if (algaeTable.Get_Num_Trials() <= 1):
             print "All trials finished"
@@ -358,8 +350,8 @@ class Ui_MainWindow(object):
     def setSession(self): #session):
         #algaeTable.Set_Num_Trials(session.pop())
         print " New Set Session "
-        algaeList[:]=[]
-        algaeTable.PrepareArrays()
+        #algaeList[:]=[]
+        #algaeTable.PrepareArrays()
         self.resetForms()
         algaeTable.Generate_Sample()
         self.setUpScene(self.scene, self.view) 

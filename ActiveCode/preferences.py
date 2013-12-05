@@ -203,28 +203,25 @@ class Ui_Preferences(object):
     #algae to the samples
     def clickedOK(self):
         x=0
-        algaeTable.clearArrays()
         for key in algaeTable.AlgaeLib:
+            algaeTable.Set_Active(key, False)
             if  self.Count_Check==0:
-                algaeTable.Name_Array.append(key)
+                algaeTable.Set_Active(key, True)
+                algaeTable.Set_Range(key, algaeTable.Default_Min_Count, algaeTable.Default_Max_Count)
                 try:
                     val=int(self.GroupBoxList[x].childAt(100,15).text()),int(self.GroupBoxList[x].childAt(220,15).text())
-                    algaeTable.Min_Count_Array.append(val[0])
-                    algaeTable.Max_Count_Array.append(val[1])
+                    algaeTable.Set_Range(key, val[0], val[1])
                 except ValueError:
-                    algaeTable.Max_Count_Array.append(algaeTable.Default_Max_Count)
-                    algaeTable.Min_Count_Array.append(algaeTable.Default_Min_Count)
+                    algaeTable.Set_Range(key, algaeTable.Default_Min_Count, algaeTable.Default_Max_Count)
                     
             elif self.GroupBoxList[x].childAt(20,0).isChecked():
-                algaeTable.Name_Array.append(key)
-
+                algaeTable.Set_Active(key, True)
+                #algaeTable.Name_Array.append(key)
                 try:
                     val=int(self.GroupBoxList[x].childAt(100,15).text()),int(self.GroupBoxList[x].childAt(220,15).text())
-                    algaeTable.Min_Count_Array.append(val[0])
-                    algaeTable.Max_Count_Array.append(val[1])
+                    algaeTable.Set_Range(key, val[0], val[1])
                 except ValueError:
-                    algaeTable.Max_Count_Array.append(algaeTable.Default_Max_Count)
-                    algaeTable.Min_Count_Array.append(algaeTable.Default_Min_Count)
+                    algaeTable.Set_Range(key, algaeTable.Default_Min_Count, algaeTable.Default_Max_Count)
             x+=1
             
         #set the number of trials requested by the user
@@ -246,17 +243,13 @@ class Ui_Preferences(object):
         else:
             x=0
             for key in algaeTable.AlgaeLib:
-                algaeTable.Name_Array.append(key)
+                algaeTable.Set_Active(key, False)
                 try:
                     val=int(self.GroupBoxList[x].childAt(100,15).text()),int(self.GroupBoxList[x].childAt(220,15).text())
-                    algaeTable.Min_Count_Array.append(val[0])
-                    algaeTable.Max_Count_Array.append(val[1])
+                    algaeTable.Set_Range(key, val[0], val[1])
                 except ValueError:
-                    algaeTable.Max_Count_Array.append(algaeTable.Default_Max_Count)
-                    algaeTable.Min_Count_Array.append(algaeTable.Default_Min_Count)
+                    algaeTable.Set_Range(key, algaeTable.Default_Min_Count, algaeTable.Default_Max_Count)
                 x+=1
-
-                
             algaeTable.Set_Num_Trials(algaeTable.Default_Num_Trials)
             self.pref.done(int(True))
 

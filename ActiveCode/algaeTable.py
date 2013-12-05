@@ -39,52 +39,9 @@ class AlgaeTable:
         self.Default_Num_Trials=5
         self.Num_Trials=5
         self.Total_Trials=self.Num_Trials
-        self.Name_Array = []
 
-        self.Total_Algae_Types = 0
         self.Default_Min_Count = 20
         self.Default_Max_Count = 60
-
-        self.Total_Count_Array = []
-        self.Min_Count_Array = []
-        self.Max_Count_Array = []
-        self.Total_Mass_Array = []
-
-        self.User_Guess_Record = [[0 for x in xrange(self.Max_Types)] for x in xrange(self.Max_Trials)]
-        self.Algae_Count_Record = [[0 for x in xrange(self.Max_Types)] for x in xrange(self.Max_Trials)]
-
-    # Exported Functions
-    def Get_Name(self,ID):
-        return self.Name_Array[ID]
-
-    def Get_File_Name(self,ID):
-        return self.AlgaeLib[self.Name_Array[ID]]["File"] + ".png"
-
-    def Get_Count(self,ID):
-        return self.Total_Count_Array[ID]
-
-    def Get_Count_At_Trial(self,ID, Trial):
-        return self.Algae_Count_Record[ID][Trial]
-
-    def Get_Guess_At_Trial(self,ID, Trial):
-        return self.User_Guess_Record[ID][self.Total_Trials - Trial]
-
-    def Get_Difference_At_Trial(self,ID, Trial):
-        return self.Get_Guess_At_Trial(ID,Trial) - self.Get_Count_At_Trial(ID,Trial)
-
-    # Geometric mean
-    def Get_G_Mean(self,ID):
-        Product = 1.00
-        for x in xrange(self.Total_Trials):
-            Product *= abs(self.Get_Difference_At_Trial(ID, x))
-        return Product**(1.00/self.Total_Trials)
-
-    def Get_Biomass(self, ID):
-        return self.Total_Mass_Array[ID]
-
-    def Get_ID(self, Name):
-        for x in xrange(self.Total_Algae_Types):
-            if Name == self.Name_Array[x]: return x
             
     def Get_Num_Trials(self):
         return self.Num_Trials    
@@ -93,46 +50,58 @@ class AlgaeTable:
         self.Num_Trials = int(num)
         self.Total_trials = int(num)
 
-
-    def Set_Count_Range(self, ID, Min, Max):
-        self.Min_Count_Array[ID] = Min
-        self.Max_Count_Array[ID] = Max
-
-    def Set_Min_Count(self, ID, Min):
-        self.Min_Count_Array[ID] = Min
-
-    def Set_Max_Count(self, ID, Max):
-        self.Max_Count_Array[ID] = Max
-
-    #def Set_Num_Trials(self, num):
-    #    self.Total_trials = int(num)
-    #    self.Num_Trials = int(num)\
-                          
-    def clearArrays(self):
-        self.Name_Array[:]=[]
-        self.Total_Count_Array[:]=[]
-        self.Min_Count_Array[:]=[]
-        self.Max_Count_Array[:]=[]
-        self.Algae_Count_Record = [[0 for x in xrange(self.Max_Types)] for x in xrange(self.Max_Trials)] 
-        self.User_Guess_Record = [[0 for x in xrange(self.Max_Types)] for x in xrange(self.Max_Trials)]
-        
-    def PrepareArrays(self):
-        #clear all the arrays before every session
-        self.Total_Algae_Types = len(self.Name_Array)
-        self.Total_Count_Array = [0 for x in xrange(self.Total_Algae_Types)]
-        self.Total_Mass_Array = [0.00 for x in xrange(self.Total_Algae_Types)]
-        self.Algae_Count_Record = [[0 for x in xrange(self.Max_Types)] for x in xrange(self.Max_Trials)]
-        self.User_Guess_Record = [[0 for x in xrange(self.Max_Types)] for x in xrange(self.Max_Trials)]
-
     def Generate_Sample(self):
-        for x in xrange(self.Total_Algae_Types):
-            self.Total_Count_Array[x] = randint(self.Min_Count_Array[x], self.Max_Count_Array[x])
-            self.Algae_Count_Record[x][self.Total_Trials - self.Num_Trials] = self.Total_Count_Array[x]
-        
+        for key in self.AlgaeLib:
+            if (self.Is_Active(key)):
+                self.Set_Actual_Count(key, self.Get_Current_Round(), randint(self.Get_Min(key), self.Get_Max(key)))
+
     def Decrement_Trials(self):
         self.Num_Trials-=1
-          
 
+    # Dictionary / record functions
+    def Set_Actual_Count(self, Algae_Name, Trial, Count):
+        self.AlgaeLib[Algae_Name]["Actual"+str(Trial)] = Count
+
+    def Get_Actual_Count(self, Algae_Name, Trial):
+        return self.AlgaeLib[Algae_Name]["Actual"+str(Trial)]
+
+    def Set_User_Count(self, Algae_Name, Trial, Count):
+        self.AlgaeLib[Algae_Name]["User"+str(Trial)] = Count
+
+    def Get_User_Count(self, Algae_Name, Trial):
+        return self.AlgaeLib[Algae_Name]["User"+str(Trial)]
+
+    def Set_Active(self, Algae_Name, Active):
+        self.AlgaeLib[Algae_Name]["Active"] = Active
+
+    def Is_Active(self, Algae_Name):
+        return self.AlgaeLib[Algae_Name]["Active"]
+
+    def Get_Current_Round(self):
+        return self.Total_Trials - self.Num_Trials
+
+    def Set_Range(self, Algae_Name, Min, Max):
+        self.AlgaeLib[Algae_Name]["Min"] = Min
+        self.AlgaeLib[Algae_Name]["Max"] = Max
+
+    def Get_Min(self, Algae_Name):
+        return self.AlgaeLib[Algae_Name]["Min"]
+
+    def Get_Max(self, Algae_Name):
+        return self.AlgaeLib[Algae_Name]["Max"]
+
+    def Get_Difference(self, Algae_Name, Trial):
+        return self.Get_User_Count(Algae_Name, Trial) - self.Get_Actual_Count(Algae_Name, Trial)
+
+    def Get_Geometric_Mean(self,Algae_Name):
+        Product = 1.00
+        for x in xrange(self.Total_Trials):
+            Product *= abs(self.Get_Difference(Algae_Name, x))
+        return Product**(1.00/self.Total_Trials)
+
+    def Get_File_Name(self,Algae_Name):
+        return self.AlgaeLib[Algae_Name]["File"] + ".png"
+    
 # Default program
 """if __name__ == '__main__':
     print "Printing tables:"
