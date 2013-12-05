@@ -66,10 +66,11 @@ class Ui_results(object):
         self.AlgaeLibrary.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignVCenter)
         self.AlgaeLibrary.setObjectName(_fromUtf8("AlgaeLibrary"))
         self.scrollAreaWidgetContents = QtGui.QWidget()
-        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, -170, 708, 579))
+        #self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, -170, 708, 579))
         self.scrollAreaWidgetContents.setObjectName(_fromUtf8("scrollAreaWidgetContents"))
         self.formLayout = QtGui.QFormLayout(self.scrollAreaWidgetContents)
         self.formLayout.setFieldGrowthPolicy(QtGui.QFormLayout.AllNonFixedFieldsGrow)
+        #self.formLayout.setSizePolicy ( QSizePolicy.Expanding, QSizePolicy.Expanding)
         self.formLayout.setObjectName(_fromUtf8("formLayout"))
 
         ## New Layout
@@ -86,7 +87,7 @@ class Ui_results(object):
               # Standard Deviation
                 L_Std_Dv = QtGui.QLabel(self.scrollAreaWidgetContents)
                 L_Std_Dv.setAlignment(QtCore.Qt.AlignCenter)
-                L_Std_Dv.setText("Standard deviation: 0")
+                L_Std_Dv.setText("Standard deviation: " + str.format('{0:.2f}', AlgaeSample.Get_Standard_Deviation(key)))
                 CurrentGridLayout.addWidget(L_Std_Dv, 0, 1, 1, 1)
                 # Geometric Mean
                 L_G_Mean = QtGui.QLabel(self.scrollAreaWidgetContents)
@@ -104,6 +105,7 @@ class Ui_results(object):
                 Current_Grid.horizontalHeader().setResizeMode(QtGui.QHeaderView.Stretch)
                 Current_Grid.verticalHeader().setVisible(False)
                 Current_Grid.setHorizontalHeaderLabels(['Trial', 'Guess', 'Actual', 'Difference', 'Image'])
+                Current_Grid.setSizePolicy ( QSizePolicy.Expanding, QSizePolicy.MinimumExpanding)
                 self.formLayout.addRow(Current_Grid)
 
                 class QButton(QtGui.QWidget):

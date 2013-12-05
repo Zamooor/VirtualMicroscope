@@ -99,6 +99,13 @@ class AlgaeTable:
             Product *= abs(self.Get_Difference(Algae_Name, x))
         return Product**(1.00/self.Total_Trials)
 
+    def Get_Standard_Deviation(self,Algae_Name):
+        Product = 0.00
+        for x in xrange(self.Total_Trials):
+            Product += abs(self.Get_Difference(Algae_Name, x)) * abs(self.Get_Difference(Algae_Name, x))
+        Product /= self.Total_Trials
+        return Product**(0.5)
+
     def Get_File_Name(self,Algae_Name):
         return self.AlgaeLib[Algae_Name]["File"] + ".png"
     
