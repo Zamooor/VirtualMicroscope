@@ -118,9 +118,9 @@ class Ui_results(object):
                     class Ui_View(object):
                         def setupUi(self, View, FileName):
                             View.setObjectName(_fromUtf8(FileName))
-                            View.setFixedSize(999, 400)
+                            View.setFixedSize(500, 400)
                             View.setWindowTitle(_translate(FileName, FileName, None))
-                            self.scene = QtGui.QGraphicsScene(0, 0, 999, 400)
+                            self.scene = QtGui.QGraphicsScene(0, 0, 500, 400)
                             self.centralWidget = QtGui.QGraphicsView(self.scene, View)
                             self.pic = Pixmap(QtGui.QPixmap(os.getcwd() + "/TempSampleRenders/"+FileName), 1)
                             print os.getcwd() + "/TempSampleRenders/"+FileName

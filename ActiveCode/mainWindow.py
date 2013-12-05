@@ -44,25 +44,25 @@ except AttributeError:
 algaeList = []
 random.seed()
 windowScale = 1.0
-initWidth = 1000
+initWidth = 600
 initHeight = 792
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName(_fromUtf8("Digital Microscope"))
-        MainWindow.resize(1000 * windowScale, 792 * windowScale)
+        MainWindow.resize(initWidth * windowScale, 792 * windowScale)
         self.startUpFlag=False
         self.centralWidget = QtGui.QWidget(MainWindow)
         self.centralWidget.setObjectName(_fromUtf8("centralWidget"))
 
         
-        self.scene = QtGui.QGraphicsScene(0, 0, 1000 * windowScale, 490 * windowScale)
+        self.scene = QtGui.QGraphicsScene(0, 0, initWidth * windowScale, 490 * windowScale)
         self.view = QtGui.QGraphicsView(self.scene, self.centralWidget)
         self.scene.setBackgroundBrush(QtGui.QColor("white"))
         self.centralWidget.centralWidget = self.view
 
         self.submit_button = QtGui.QPushButton(self.centralWidget)
-        self.submit_button.setGeometry(QtCore.QRect(500 * windowScale - 231/2, 690 * windowScale, 231, 41))
+        self.submit_button.setGeometry(QtCore.QRect(initWidth/2 * windowScale - 231/2, 690 * windowScale, 231, 41))
         self.submit_button.setObjectName(_fromUtf8("submit_button"))
 
 
@@ -73,7 +73,7 @@ class Ui_MainWindow(object):
         
         #answer Table
         self.ans_table = QtGui.QTableWidget(self.centralWidget)
-        self.ans_table.setGeometry(QtCore.QRect(500  * windowScale - 411/2, 500 * windowScale, 411, 181))
+        self.ans_table.setGeometry(QtCore.QRect(initWidth/2  * windowScale - 411/2, 500 * windowScale, 411, 181))
         self.ans_table.setObjectName(_fromUtf8("ans_table"))
         self.ans_table.setColumnCount(2)
         self.ans_table.horizontalHeader().setResizeMode(QtGui.QHeaderView.Stretch)
@@ -150,9 +150,9 @@ class Ui_MainWindow(object):
 
     def redrawUi(self):
         print windowScale
-        self.scene.setSceneRect(0, 0, 1000 * windowScale, 400 * windowScale)
-        self.submit_button.setGeometry(QtCore.QRect(500 * windowScale - 231/2, 690 * windowScale, 231, 41))
-        self.ans_table.setGeometry(QtCore.QRect(500  * windowScale - 411/2, 500 * windowScale, 411, 181))
+        self.scene.setSceneRect(0, 0, initWidth * windowScale, 400 * windowScale)
+        self.submit_button.setGeometry(QtCore.QRect(initWidth/2 * windowScale - 231/2, 690 * windowScale, 231, 41))
+        self.ans_table.setGeometry(QtCore.QRect(initWidth/2  * windowScale - 411/2, 500 * windowScale, 411, 181))
         
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow", None))
@@ -168,13 +168,17 @@ class Ui_MainWindow(object):
         self.actionCreate_New_Sample.setText(_translate("MainWindow", "Create New Sample", None))
 
     def setUpScene(self,scene,view ):
-        print "Printing Algae:"
+        pic = Pixmap(QtGui.QPixmap(os.getcwd() + "/Assets/Beaker_BG.png"), windowScale)
+        pic.pos = QtCore.QPointF(0,0)
+        pic.pos = QtCore.QPointF(random.randint(-100, 100)-initWidth/2, 0)
+        self.scene.addItem(pic.pixmap_item) 
+        #print "Printing Algae:"
 
         for key in algaeTable.AlgaeLib:
             if algaeTable.Is_Active(key):
                 image = QtGui.QPixmap(os.getcwd() + "/Assets/20um/"+algaeTable.Get_File_Name(key))
                 Trial = algaeTable.Get_Current_Round()
-                print key + ": " + str(algaeTable.Get_Actual_Count(key, Trial)) + " (" + str(algaeTable.Get_Min(key)) + " - " + str(algaeTable.Get_Max(key)) + ")"
+                #print key + ": " + str(algaeTable.Get_Actual_Count(key, Trial)) + " (" + str(algaeTable.Get_Min(key)) + " - " + str(algaeTable.Get_Max(key)) + ")"
                 for y in xrange(algaeTable.Get_Actual_Count(key, Trial)):
                     #print "Drawing: " + algaeTable.Name_Array[x]
                     pic = Pixmap(image, .03)
@@ -184,14 +188,14 @@ class Ui_MainWindow(object):
                     testPos = QtCore.QPointF(radius,radius)
                     while((testPos.x()**2 + testPos.y()**2)**(1.0/2.0) > radius):
                         testPos = QtCore.QPointF(random.randint(-195, 195), random.randint(-195, 195))
-                    testPos = QtCore.QPointF((int)((testPos.x() + 499) * windowScale),(int)( (testPos.y() + 245) * windowScale))
+                    testPos = QtCore.QPointF((int)((testPos.x() + initWidth/2) * windowScale),(int)( (testPos.y() + 245) * windowScale))
                     pic.pos = testPos
                     pic.setRot(random.randint(0, 359))
                     pic.setScaleVariance(random.randint(-5, 10)/1000.0)
                     algaeList.append(pic)
                     self.scene.addItem(pic.pixmap_item)
-        pic = Pixmap(QtGui.QPixmap(os.getcwd() + "/Assets/CircleView.png"), windowScale)
-        pic.pos = QtCore.QPointF(0,0)
+        pic = Pixmap(QtGui.QPixmap(os.getcwd() + "/Assets/CircleView2.png"), windowScale)
+        pic.pos = QtCore.QPointF(-initWidth/2+95,0)
         self.scene.addItem(pic.pixmap_item) 
         print "\n"
         print "Remaining Trials:" + str(algaeTable.Get_Num_Trials())
