@@ -39,7 +39,6 @@ except AttributeError:
 #####################################################################################
 #####################################################################################
 
-
 #algaeTable = AlgaeTable()
 algaeList = []
 random.seed()
@@ -47,6 +46,7 @@ windowScale = 1.0
 initWidth = 600
 initHeight = 792
 
+#This is the function that sets up the Main Window Widget
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName(_fromUtf8("Digital Microscope"))
@@ -68,7 +68,7 @@ class Ui_MainWindow(object):
 
         # button actions
         self.submit_button.clicked.connect(self.openResults)
-      #  self.findButton.clicked.connect(self.addToChart)
+        # self.findButton.clicked.connect(self.addToChart)
 
         
         #answer Table
@@ -125,7 +125,7 @@ class Ui_MainWindow(object):
         
         self.actionCreate_New_Sample = QtGui.QAction(MainWindow)
         self.actionCreate_New_Sample.setObjectName(_fromUtf8("actionCreate_New_Sample"))
-
+ 
         self.actionPreferences = QtGui.QAction(MainWindow)
         self.actionPreferences.setObjectName(_fromUtf8("actionPreferences"))
         self.actionPreferences.triggered.connect(self.openPreferences)
@@ -137,7 +137,7 @@ class Ui_MainWindow(object):
         self.menuFile.addAction(self.actionImport_Sample)
         self.menuFile.addAction(self.actionCreate_New_Sample)
         self.menuFile.addSeparator()
-        self.menuFile.addAction(self.actionPreferences)
+        self.menuFile.addAction(self.actionPreferences) # This is actually the execution of creating a new Session. 
         
         self.menuTools.addAction(self.actionAbout)
         self.menuTools.addAction(self.actionControls)
@@ -336,20 +336,18 @@ class Ui_MainWindow(object):
             
     def openAbout(self) :
         print "About has been reached"
-        def __init__(self, parent = None):
-            QtGui.QComboBox.__init__(self, parent)
-            self.currentIndexChanged['QString'].connect(self.handleIndexChanged)
-        class Ui_View(object):
-            def setupUi(self, View, combo):
-                View.setFixedSize(400, 150)
-                self.combo = combo
-                self.promptLabel = QtGui.QLabel("This describes stuff about the program", View)
-                self.promptLabel.setGeometry(0,0, 231, 41)
-                self.okButton = QtGui.QPushButton(View)
-                self.okButton.setGeometry(QtCore.QRect(0,80, 231, 41))
-                self.okButton.setObjectName(_fromUtf8("submit_button"))
-                self.okButton.setText("OK")
-                self.okButton.clicked.connect(View.done)
+        class DefAbout():
+            skipOpen = True
+            def __init__(self, parent = None):
+                QtGui.QComboBox.__init__(self, parent)
+            class Ui_View(object):
+                def setupUi(self,View,combo) :
+                    View.setFixedSize(300,150)
+                    self.combo=combo
+                    self.okButton = QtGui.QPushButton(View)
+                    self.okButton.setGeomentry(QtCore.QRect(35,80,231,41))
+                    self.okButton.setText("OK")
+                    self.okButton.clicked.connect(View.done)
 
     #reset all relevant variables and restart the session    
     def setSession(self): #session):
