@@ -9,6 +9,7 @@
 import sys, os
 from PyQt4 import QtCore, QtGui
 import algaeTable
+import resources_qrc 
 from Globals import *
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
@@ -144,7 +145,7 @@ class Ui_Preferences(object):
             self.CurrentGraphicsView = QtGui.QLabel(self.List_Algae_Select)
             self.CurrentGraphicsView.setObjectName(_fromUtf8("CurrentGraphicsView"))
             self.formLayout.setWidget(Index, QtGui.QFormLayout.LabelRole, self.CurrentGraphicsView)
-            self.CurrentGraphicsView.setPixmap(QtGui.QPixmap(os.getcwd() + "/Assets/20um/"+algaeTable.AlgaeLib[key]["File"]+".png"))
+            self.CurrentGraphicsView.setPixmap(QtGui.QPixmap(":/Assets/20um/"+algaeTable.AlgaeLib[key]["File"]+".png"))
             self.CurrentGraphicsView.setFixedWidth(75)
             self.CurrentGraphicsView.setFixedHeight(75)
             #CurrentGraphicsView.setGeometry(0,0,90,90)

@@ -15,6 +15,7 @@ from Globals import *
 
 from PyQt4.QtCore import pyqtSlot,SIGNAL,SLOT
 import random
+import resources_qrc 
 from random import randint
 from PyQt4 import QtCore, QtGui,QtOpenGL
 from PyQt4.QtCore import *
@@ -44,7 +45,7 @@ algaeList = []
 random.seed()
 windowScale = 1.0
 initWidth = 600
-initHeight = 792
+initHeight = 700
 
 #This is the function that sets up the Main Window Widget
 class Ui_MainWindow(object):
@@ -168,7 +169,7 @@ class Ui_MainWindow(object):
         self.actionCreate_New_Sample.setText(_translate("MainWindow", "Create New Sample", None))
 
     def setUpScene(self,scene,view ):
-        pic = Pixmap(QtGui.QPixmap(os.getcwd() + "/Assets/Beaker_BG.png"), windowScale)
+        pic = Pixmap(QtGui.QPixmap(":/Assets/Beaker_BG.png"), windowScale)
         pic.pos = QtCore.QPointF(0,0)
         pic.pos = QtCore.QPointF(random.randint(-100, 100)-initWidth/2, 0)
         self.scene.addItem(pic.pixmap_item) 
@@ -176,7 +177,7 @@ class Ui_MainWindow(object):
 
         for key in algaeTable.AlgaeLib:
             if algaeTable.Is_Active(key):
-                image = QtGui.QPixmap(os.getcwd() + "/Assets/20um/"+algaeTable.Get_File_Name(key))
+                image = QtGui.QPixmap(":/Assets/20um/"+algaeTable.Get_File_Name(key))
                 Trial = algaeTable.Get_Current_Round()
                 #print key + ": " + str(algaeTable.Get_Actual_Count(key, Trial)) + " (" + str(algaeTable.Get_Min(key)) + " - " + str(algaeTable.Get_Max(key)) + ")"
                 for y in xrange(algaeTable.Get_Actual_Count(key, Trial)):
@@ -194,7 +195,7 @@ class Ui_MainWindow(object):
                     pic.setScaleVariance(random.randint(-5, 10)/1000.0)
                     algaeList.append(pic)
                     self.scene.addItem(pic.pixmap_item)
-        pic = Pixmap(QtGui.QPixmap(os.getcwd() + "/Assets/CircleView2.png"), windowScale)
+        pic = Pixmap(QtGui.QPixmap(":/Assets/CircleView2.png"), windowScale)
         pic.pos = QtCore.QPointF(-initWidth/2+95,0)
         self.scene.addItem(pic.pixmap_item) 
         print "\n"
@@ -293,8 +294,12 @@ class Ui_MainWindow(object):
         # Save Algae View as image for review later
         outImage = QPixmap(999, 400)
         painter = QPainter(outImage)        
-        self.scene.render(painter)        
-        if(not outImage.save(os.getcwd() + "/TempSampleRenders/Trial" + str(algaeTable.Get_Current_Round()+1) + ".png")):
+        self.scene.render(painter)
+        
+        mypath = os.getcwd()+"/TempSampleRenders"
+        if not os.path.isdir(mypath):
+           os.makedirs(mypath)
+        if(not outImage.save(os.getcwd()+"/TempSampleRenders/Trial" + str(algaeTable.Get_Current_Round()+1) + ".png")):
             print "failed to save render"
         painter.end()
 

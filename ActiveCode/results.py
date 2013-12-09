@@ -122,8 +122,8 @@ class Ui_results(object):
                             View.setWindowTitle(_translate(FileName, FileName, None))
                             self.scene = QtGui.QGraphicsScene(0, 0, 500, 400)
                             self.centralWidget = QtGui.QGraphicsView(self.scene, View)
-                            self.pic = Pixmap(QtGui.QPixmap(os.getcwd() + "/TempSampleRenders/"+FileName), 1)
-                            print os.getcwd() + "/TempSampleRenders/"+FileName
+                            self.pic = Pixmap(QtGui.QPixmap(os.getcwd()+"/TempSampleRenders/"+FileName), 1)
+                            print os.getcwd()+"/TempSampleRenders/"+FileName
                             self.pic.pos = QtCore.QPointF(0,0)
                             self.scene.addItem(self.pic.pixmap_item)
                     def Open_View(self):
