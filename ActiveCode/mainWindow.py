@@ -15,6 +15,7 @@ from Globals import *
 
 from PyQt4.QtCore import pyqtSlot,SIGNAL,SLOT
 import random
+import resources_qrc 
 from random import randint
 from PyQt4 import QtCore, QtGui,QtOpenGL
 from PyQt4.QtCore import *
@@ -44,7 +45,7 @@ algaeList = []
 random.seed()
 windowScale = 1.0
 initWidth = 600
-initHeight = 792
+initHeight = 700
 
 #This is the function that sets up the Main Window Widget
 class Ui_MainWindow(object):
@@ -168,7 +169,7 @@ class Ui_MainWindow(object):
         self.actionCreate_New_Sample.setText(_translate("MainWindow", "Create New Sample", None))
 
     def setUpScene(self,scene,view ):
-        pic = Pixmap(QtGui.QPixmap(os.getcwd() + "/Assets/Beaker_BG.png"), windowScale)
+        pic = Pixmap(QtGui.QPixmap(":/Assets/Beaker_BG.png"), windowScale)
         pic.pos = QtCore.QPointF(0,0)
         pic.pos = QtCore.QPointF(random.randint(-100, 100)-initWidth/2, 0)
         self.scene.addItem(pic.pixmap_item) 
@@ -176,7 +177,7 @@ class Ui_MainWindow(object):
 
         for key in algaeTable.AlgaeLib:
             if algaeTable.Is_Active(key):
-                image = QtGui.QPixmap(os.getcwd() + "/Assets/20um/"+algaeTable.Get_File_Name(key))
+                image = QtGui.QPixmap(":/Assets/20um/"+algaeTable.Get_File_Name(key))
                 Trial = algaeTable.Get_Current_Round()
                 #print key + ": " + str(algaeTable.Get_Actual_Count(key, Trial)) + " (" + str(algaeTable.Get_Min(key)) + " - " + str(algaeTable.Get_Max(key)) + ")"
                 for y in xrange(algaeTable.Get_Actual_Count(key, Trial)):
@@ -194,7 +195,7 @@ class Ui_MainWindow(object):
                     pic.setScaleVariance(random.randint(-5, 10)/1000.0)
                     algaeList.append(pic)
                     self.scene.addItem(pic.pixmap_item)
-        pic = Pixmap(QtGui.QPixmap(os.getcwd() + "/Assets/CircleView2.png"), windowScale)
+        pic = Pixmap(QtGui.QPixmap(":/Assets/CircleView2.png"), windowScale)
         pic.pos = QtCore.QPointF(-initWidth/2+95,0)
         self.scene.addItem(pic.pixmap_item) 
         print "\n"
@@ -247,11 +248,61 @@ class Ui_MainWindow(object):
                     View_Ui.exec_()
                     
             self.skipOpen = False
-
-            
+    #keep track of how many boxes are checked         
+    def CheckStateChanged(self,state):
+        if state== QtCore.Qt.Checked:
+            self.Count_Check+=1
+        else:
+            self.Count_Check-=1
+            self.Check_All.setCheckState(QtCore.Qt.Unchecked)
+     #list of all the groupboxes each contains a checkbox and 2 text lines
+    
     def setNames(self):
+        self.List_Algae_Select = QtGui.QWidget()
+        self.List_Algae_Select.setGeometry(QtCore.QRect(20, 30, 670, 230))
+        self.List_Algae_Select.setObjectName(_fromUtf8("List_Algae_Select"))
 
+        self.formLayout = QtGui.QFormLayout(self.List_Algae_Select)
+        self.formLayout.setFieldGrowthPolicy(QtGui.QFormLayout.AllNonFixedFieldsGrow)
+        self.formLayout.setObjectName(_fromUtf8("formLayout"))
+        
+        self.GroupBoxList=[]
+        self.List_Algae_Select = QtGui.QWidget()
+        Index =0
         for key in algaeTable.AlgaeLib:
+            Index += 7
+            self.CurrentGroupBox = QtGui.QGroupBox(self.List_Algae_Select)
+            self.CurrentGroupBox.setTitle(_fromUtf8(key))
+            self.CurrentGroupBox.setObjectName(_fromUtf8("CurrentGroupBox"))
+            
+            self.CurrentLayoutWidget = QtGui.QWidget(self.CurrentGroupBox)
+            self.CurrentLayoutWidget.setGeometry(QtCore.QRect(10,20,600,47))
+            self.CurrentLayoutWidget.setObjectName(_fromUtf8("CurrentLayoutWidget"))
+
+            self.CurrentGridLayout = QtGui.QGridLayout(self.CurrentLayoutWidget)
+            self.CurrentGridLayout.setMargin(0)
+            self.CurrentLayoutWidget.setObjectName(_fromUtf8("Check Updates"))
+
+            self.Check_include = QtGui.QCheckBox( self.CurrentLayoutWidget)
+            self.Check_include.setObjectName(_fromUtf8("Check_include"))
+            self.Check_include.setGeometry(QtCore.QRect(20, 0, 130, 47))
+            self.Check_include.stateChanged.connect(self.CheckStateChanged)
+            
+            self.GroupBoxList.append(self.CurrentLayoutWidget)#self.Check_include)
+
+            self.Label_Range=QtGui.QLabel("Count Range",self.CurrentLayoutWidget)
+            self.Label_Range.setGeometry(QtCore.QRect(100, -10, 100, 30))
+            
+            self.Text_Range_Low=QtGui.QLineEdit(self.CurrentLayoutWidget)
+            self.Text_Range_Low.setPlaceholderText("From")
+            self.Text_Range_Low.setGeometry(QtCore.QRect(100, 15, 100, 20))
+            self.Text_Range_Low.setText("20")
+
+            self.Text_Range_High=QtGui.QLineEdit(self.CurrentLayoutWidget)
+            self.Text_Range_High.setPlaceholderText("To")
+            self.Text_Range_High.setGeometry(QtCore.QRect(220, 15, 100, 20))
+            self.Text_Range_High.setText("60")
+            
             if algaeTable.Is_Active(key):
                 self.ans_table.insertRow(0)
                 self.ans_table.setItem(0,0,QtGui.QTableWidgetItem(key))
@@ -264,6 +315,8 @@ class Ui_MainWindow(object):
                 combo.addItem("32-64")                       
                 combo.addItem("32")
                 combo.setCurrentIndex(3)
+                self.Text_Range_Low = QtGui.QLineEdit(self.CurrentLayoutWidget)
+               # self.Text_Range_Low.setPlaceHolderText("From")
                 self.ans_table.setCellWidget(0,1, combo)
                 self.ans_table.item(0,0).setFlags(Qt.NoItemFlags)
                 self.ans_table.sortItems(0,Qt.AscendingOrder)
@@ -293,8 +346,12 @@ class Ui_MainWindow(object):
         # Save Algae View as image for review later
         outImage = QPixmap(999, 400)
         painter = QPainter(outImage)        
-        self.scene.render(painter)        
-        if(not outImage.save(os.getcwd() + "/TempSampleRenders/Trial" + str(algaeTable.Get_Current_Round()+1) + ".png")):
+        self.scene.render(painter)
+        
+        mypath = os.getcwd()+"/TempSampleRenders"
+        if not os.path.isdir(mypath):
+           os.makedirs(mypath)
+        if(not outImage.save(os.getcwd()+"/TempSampleRenders/Trial" + str(algaeTable.Get_Current_Round()+1) + ".png")):
             print "failed to save render"
         painter.end()
 

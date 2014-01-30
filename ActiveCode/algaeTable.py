@@ -30,7 +30,7 @@ class AlgaeTable:
         #this can be used as a 2d array run test.py for a sample :)
         
         self.AlgaeLib={
-            "Lepo Ovalis":{"File":"Attempt001"},
+            "Lepo Ovalis":{"File":"attempt001"},
             "Eucapsis":{"File":"eucapsis_jul6_11_400N_JUD"},
             "Aphaniz Akinetes":{"File":"aphaniz_akinetes_sep16_10_200N_TBIRD"}
             }

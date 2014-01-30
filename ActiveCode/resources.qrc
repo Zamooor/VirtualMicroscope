@@ -1,0 +1,9 @@
+<RCC>
+  <qresource prefix="/">
+    <file>Assets/20um/aphaniz_akinetes_sep16_10_200N_TBIRD.png</file>
+    <file>Assets/20um/attempt001.png</file>
+    <file>Assets/20um/eucapsis_jul6_11_400N_JUD.png</file>
+	<file>Assets/Beaker_BG.png</file>
+	<file>Assets/CircleView2.png</file>
+  </qresource>
+</RCC>
