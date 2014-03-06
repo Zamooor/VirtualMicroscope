@@ -279,30 +279,33 @@ class Ui_MainWindow(object):
                 self.CurrentLayoutWidget.setGeometry(QtCore.QRect(10,20,600,47))
                 self.CurrentLayoutWidget.setObjectName(_fromUtf8("CurrentLayoutWidget"))
 
-                self.submit_button = QtGui.QPushButton(self.centralWidget)
-                self.submit_button.setGeometry(QtCore.QRect(400,600,30,50))
-                self.submit_button.setObjectName(_fromUtf8("submit_button"))
+##                self.submit_button = QtGui.QPushButton(self.centralWidget)
+##                self.submit_button.setGeometry(QtCore.QRect(400,600,30,50))
+##                self.submit_button.setObjectName(_fromUtf8("submit_button"))
 
-                self.Label_Range = QtGui.QLineEdit(self.CurrentLayoutWidget)
-                self.Label_Range.setGeometry(QtCore.QRect(20 , 30 , 500, 50))
+                self.Range_High = QtGui.QLineEdit(self.CurrentLayoutWidget)
+                self.Range_High.setGeometry(QtCore.QRect(20 , 30 , 500, 50))
+                self.Range_High.setObjectName("High")
+                self.Range_High.setText("23,64")
+                
                 self.GroupBoxList.append(self.CurrentLayoutWidget)#self.Check_include)
-  
                 self.ans_table.insertRow(0)
                 self.ans_table.setItem(0,0,QtGui.QTableWidgetItem(key))
                 #change second cell to a comboBox
-                combo = self.myCombo()
-                combo.setEditable(False)
-                combo.addItem("256-512") 
-                combo.addItem("128-256")
-                combo.addItem("64-128")
-                combo.addItem("32-64")                       
-                combo.addItem("32")
-                combo.setCurrentIndex(3)
+##                combo = self.myCombo()
+##                combo.setEditable(False)
+##                combo.addItem("256-512") 
+##                combo.addItem("128-256")
+##                combo.addItem("64-128")
+##                combo.addItem("32-64")                       
+##                combo.addItem("32")
+##                combo.setCurrentIndex(3)
                 self.Text_Range_Low = QtGui.QLineEdit(self.CurrentLayoutWidget)
                # self.Text_Range_Low.setPlaceHolderText("From")
-                self.ans_table.setCellWidget(0,1, combo)
+                self.ans_table.setCellWidget(0,1, self.CurrentLayoutWidget)
                 self.ans_table.item(0,0).setFlags(Qt.NoItemFlags)
                 self.ans_table.sortItems(0,Qt.AscendingOrder)
+                print ' Print label : ' , self.Range_High.text()
         
             
     def resetForms(self):
@@ -316,7 +319,7 @@ class Ui_MainWindow(object):
 
     def openResults(self):
         def getGuess(qTableWidget, row):
-            candidate = qTableWidget.cellWidget(row, 1).currentText()
+            candidate = qTableWidget.cellWidget(row, 1)
             print candidate
             if(str(candidate).isdigit()):
                 return int(candidate)
