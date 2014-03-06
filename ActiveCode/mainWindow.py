@@ -209,7 +209,7 @@ class Ui_MainWindow(object):
         textAt4 = "32"
         skipOpen = True
         def __init__(self, parent = None):
-            QtGui.QComboBox.__init__(self, parent)
+            QtGui.QLineEdit.__init__(self, parent)
             self.currentIndexChanged['QString'].connect(self.handleIndexChanged)
 
         class Ui_View(object):
@@ -237,7 +237,6 @@ class Ui_MainWindow(object):
                         self.combo.textAt4 = value
 
 
-            
         def handleIndexChanged(self, value):
             if(not self.skipOpen):
                 if value == self.textAt4:
@@ -284,32 +283,10 @@ class Ui_MainWindow(object):
                 self.submit_button.setGeometry(QtCore.QRect(400,600,30,50))
                 self.submit_button.setObjectName(_fromUtf8("submit_button"))
 
-##                self.CurrentGridLayout = QtGui.QGridLayout(self.CurrentLayoutWidget)
-##                self.CurrentGridLayout.setMargin(0)
-##                self.CurrentLayoutWidget.setObjectName(_fromUtf8("Check Updates"))
-
-##                self.Check_include = QtGui.QCheckBox( self.CurrentLayoutWidget)
-##                self.Check_include.setObjectName(_fromUtf8("Check_include"))
-##                self.Check_include.setGeometry(QtCore.QRect(20, 0, 130, 47))
-##                self.Check_include.stateChanged.connect(self.CheckStateChanged)
-                
+                self.Label_Range = QtGui.QLineEdit(self.CurrentLayoutWidget)
+                self.Label_Range.setGeometry(QtCore.QRect(20 , 30 , 500, 50))
                 self.GroupBoxList.append(self.CurrentLayoutWidget)#self.Check_include)
-
-                self.Label_Range=QtGui.QLabel("Range Guess",self.CurrentLayoutWidget)
-                self.Label_Range.setGeometry(QtCore.QRect(50, 700 * windowScale, (initWidth  * windowScale - 50), 121))
-                
-                self.Text_Range_Low=QtGui.QLineEdit(self.CurrentLayoutWidget)
-                self.Text_Range_Low.setPlaceholderText("From")
-                self.Text_Range_Low.setGeometry(QtCore.QRect(400,800,50,60))
-                self.Text_Range_Low.setText("20")
-
-                self.Text_Range_High=QtGui.QLineEdit(self.CurrentLayoutWidget)
-                self.Text_Range_High.setPlaceholderText("To")
-                self.Text_Range_High.setGeometry(QtCore.QRect(220, 15, 100, 20))
-                self.Text_Range_High.setText("60")
-
-            
-            
+  
                 self.ans_table.insertRow(0)
                 self.ans_table.setItem(0,0,QtGui.QTableWidgetItem(key))
                 #change second cell to a comboBox
