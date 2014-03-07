@@ -286,7 +286,7 @@ class Ui_MainWindow(object):
                 self.Range_High = QtGui.QLineEdit(self.CurrentLayoutWidget)
                 self.Range_High.setGeometry(QtCore.QRect(20 , 30 , 500, 50))
                 self.Range_High.setObjectName("High")
-                self.Range_High.setText("23,64")
+                self.Range_High.setText("23 - 64")
                 
                 self.GroupBoxList.append(self.CurrentLayoutWidget)#self.Check_include)
                 self.ans_table.insertRow(0)
@@ -302,7 +302,7 @@ class Ui_MainWindow(object):
 ##                combo.setCurrentIndex(3)
                 self.Text_Range_Low = QtGui.QLineEdit(self.CurrentLayoutWidget)
                # self.Text_Range_Low.setPlaceHolderText("From")
-                self.ans_table.setCellWidget(0,1, self.CurrentLayoutWidget)
+                self.ans_table.setCellWidget(0,1, self.Range_High)
                 self.ans_table.item(0,0).setFlags(Qt.NoItemFlags)
                 self.ans_table.sortItems(0,Qt.AscendingOrder)
                 print ' Print label : ' , self.Range_High.text()
@@ -320,11 +320,10 @@ class Ui_MainWindow(object):
     def openResults(self):
         def getGuess(qTableWidget, row):
             candidate = qTableWidget.cellWidget(row, 1)
-            print candidate
             if(str(candidate).isdigit()):
                 return int(candidate)
-            else:                
-                return int((int(candidate.split("-")[0]) * int(candidate.split("-")[1])) ** (1.0/2.0))
+            else:
+                return int((int(candidate.text().split("-")[0]) * int(candidate.text().split("-")[1])) ** (1.0/2.0))
         def getName(qTableWidget, row):
             return str(qTableWidget.item(row, 0).text())
         
