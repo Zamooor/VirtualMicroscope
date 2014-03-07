@@ -279,10 +279,6 @@ class Ui_MainWindow(object):
                 self.CurrentLayoutWidget.setGeometry(QtCore.QRect(10,20,600,47))
                 self.CurrentLayoutWidget.setObjectName(_fromUtf8("CurrentLayoutWidget"))
 
-##                self.submit_button = QtGui.QPushButton(self.centralWidget)
-##                self.submit_button.setGeometry(QtCore.QRect(400,600,30,50))
-##                self.submit_button.setObjectName(_fromUtf8("submit_button"))
-
                 self.Range_High = QtGui.QLineEdit(self.CurrentLayoutWidget)
                 self.Range_High.setGeometry(QtCore.QRect(20 , 30 , 500, 50))
                 self.Range_High.setObjectName("High")
@@ -291,17 +287,7 @@ class Ui_MainWindow(object):
                 self.GroupBoxList.append(self.CurrentLayoutWidget)#self.Check_include)
                 self.ans_table.insertRow(0)
                 self.ans_table.setItem(0,0,QtGui.QTableWidgetItem(key))
-                #change second cell to a comboBox
-##                combo = self.myCombo()
-##                combo.setEditable(False)
-##                combo.addItem("256-512") 
-##                combo.addItem("128-256")
-##                combo.addItem("64-128")
-##                combo.addItem("32-64")                       
-##                combo.addItem("32")
-##                combo.setCurrentIndex(3)
                 self.Text_Range_Low = QtGui.QLineEdit(self.CurrentLayoutWidget)
-               # self.Text_Range_Low.setPlaceHolderText("From")
                 self.ans_table.setCellWidget(0,1, self.Range_High)
                 self.ans_table.item(0,0).setFlags(Qt.NoItemFlags)
                 self.ans_table.sortItems(0,Qt.AscendingOrder)
@@ -309,10 +295,7 @@ class Ui_MainWindow(object):
         
             
     def resetForms(self):
-      #  self.input_species.clear()
-      #  self.input_count.clear()
         self.scene.clear()
-        #self.ans_table.clear()
         self.ans_table.setRowCount(0)
         self.ans_table.clearContents()
         self.setNames()
@@ -393,10 +376,7 @@ class Ui_MainWindow(object):
 
     #reset all relevant variables and restart the session    
     def setSession(self): #session):
-        #algaeTable.Set_Num_Trials(session.pop())
         print " New Set Session "
-        #algaeList[:]=[]
-        #algaeTable.PrepareArrays()
         self.resetForms()
         algaeTable.Generate_Sample()
         self.setUpScene(self.scene, self.view) 
@@ -419,16 +399,6 @@ class Window(QtGui.QMainWindow):
                 os.unlink(filePath)
 
         event.accept()
-
-    ## First attempt at resizable windows
-    ## Not quite right, uncomment and see for yourself
-    ## -Jeff Rowland 12/2/2013
-##    def resizeEvent(self, resizeEvent):
-##        print "resizing"
-##        global windowScale
-##        windowScale = ((self.width() ** 2 + self.height() ** 2) **(1.0/2.0))/((initWidth**2 + initHeight**2)**(1.0/2.0))
-##        print windowScale
-##        self.ui.redrawUi()
 		
 if __name__ == '__main__':
 
