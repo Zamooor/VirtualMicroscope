@@ -63,7 +63,7 @@ class Ui_MainWindow(object):
         self.centralWidget.centralWidget = self.view
 
         self.submit_button = QtGui.QPushButton(self.centralWidget)
-        self.submit_button.setGeometry(QtCore.QRect(initWidth/2 * windowScale - 231/2, 690 * windowScale, 231, 41))
+        self.submit_button.setGeometry(QtCore.QRect(initWidth/2 * windowScale - 231/2, 640 * windowScale, 231, 30))
         self.submit_button.setObjectName(_fromUtf8("submit_button"))
 
 
@@ -74,7 +74,7 @@ class Ui_MainWindow(object):
         
         #answer Table
         self.ans_table = QtGui.QTableWidget(self.centralWidget)
-        self.ans_table.setGeometry(QtCore.QRect(50, 400 * windowScale, (initWidth  * windowScale - 100), 100))
+        self.ans_table.setGeometry(QtCore.QRect(50, 500 * windowScale, (initWidth  * windowScale - 100), 115))
         self.ans_table.setObjectName(_fromUtf8("ans_table"))
         self.ans_table.setColumnCount(2)
         self.ans_table.horizontalHeader().setResizeMode(QtGui.QHeaderView.Stretch)
@@ -152,7 +152,7 @@ class Ui_MainWindow(object):
     def redrawUi(self):
         print windowScale
         self.scene.setSceneRect(0, 0, initWidth * windowScale, 400 * windowScale)
-        self.submit_button.setGeometry(QtCore.QRect(initWidth/2 * windowScale - 231/2, 690 * windowScale, 231, 41))
+        self.submit_button.setGeometry(QtCore.QRect(initWidth/2 * windowScale - 231/2, 500 * windowScale, 100, 41))
         self.ans_table.setGeometry(QtCore.QRect(initWidth/2  * windowScale - 411/2, 500 * windowScale, 411, 181))
         
     def retranslateUi(self, MainWindow):
