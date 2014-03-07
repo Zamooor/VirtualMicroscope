@@ -74,7 +74,7 @@ class Ui_MainWindow(object):
         
         #answer Table
         self.ans_table = QtGui.QTableWidget(self.centralWidget)
-        self.ans_table.setGeometry(QtCore.QRect(50, 500 * windowScale, (initWidth  * windowScale - 100), 181))
+        self.ans_table.setGeometry(QtCore.QRect(50, 400 * windowScale, (initWidth  * windowScale - 100), 100))
         self.ans_table.setObjectName(_fromUtf8("ans_table"))
         self.ans_table.setColumnCount(2)
         self.ans_table.horizontalHeader().setResizeMode(QtGui.QHeaderView.Stretch)
